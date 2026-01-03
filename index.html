@@ -2,18 +2,18 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Login EXSCHOOL ICMS</title>
+  <title>Login ICMS EXSCHOOL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body { margin: 0; height: 100vh; background: linear-gradient(135deg, #0a1f44, #0d2c66); display: flex; justify-content: center; align-items: center; font-family: Arial, sans-serif; }
-    .login-box { background: #fff; padding: 30px; width: 340px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,.3); text-align: center; }
-    input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-    button { width: 100%; padding: 12px; background: #0a1f44; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold; }
+    .login-box { background: #fff; padding: 30px; width: 320px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.3); text-align: center; }
+    input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
+    button { width: 100%; padding: 12px; background: #0a1f44; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: bold; }
   </style>
 </head>
 <body>
   <div class="login-box">
-    <h2 style="color:#0a1f44">Login EXSCHOOL</h2>
+    <h2 style="color:#0a1f44">ICMS EXSCHOOL</h2>
     <input type="text" id="u" placeholder="Username">
     <input type="password" id="p" placeholder="Password">
     <button onclick="login()">MASUK</button>
@@ -34,9 +34,12 @@
       {u:"coachmusikicms", p:"icms2026", r:"coach", e:"Musik"}
     ];
     function login() {
-      const user = users.find(x => x.u === document.getElementById("u").value && x.p === document.getElementById("p").value);
-      if (!user) return alert("Salah!");
-      localStorage.setItem("role", user.r); localStorage.setItem("username", user.u);
+      const uVal = document.getElementById("u").value.trim();
+      const pVal = document.getElementById("p").value.trim();
+      const user = users.find(x => x.u === uVal && x.p === pVal);
+      if (!user) return alert("Username/Password Salah!");
+      localStorage.setItem("role", user.r); 
+      localStorage.setItem("username", user.u);
       if (user.r === "koordinator") location.replace("dashboard_koordinator.html");
       else { localStorage.setItem("ekskul", user.e); location.replace("coach.html"); }
     }
