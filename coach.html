@@ -3,47 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Input Coach - ICMS</title>
+  <title>Coach ICMS</title>
   <style>
     body { font-family: Arial; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
     header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
     .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     canvas { border: 2px dashed #ccc; width: 100%; height: 150px; background: #fff; }
-    .btn-save { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; }
-    textarea, input[type="date"] { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-    .siswa-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+    textarea, input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+    .btn { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
 <body>
 <header><div id="eks" style="font-weight:bold; font-size:18px;"></div><div id="cName" style="font-size:12px;"></div></header>
+
+<button onclick="bukaJadwalKaldik()" style="width: 92%; margin: 10px 4%; padding: 12px; background: #8e44ad; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">📅 JADWAL EKSKUL & KALDIK</button>
+
 <div class="card">
-  <label>Tanggal Pertemuan</label><input type="date" id="tgl">
-  <label>Materi</label><textarea id="mat" rows="2" placeholder="Tulis materi latihan..."></textarea>
-  <label>Kendala/Alasan (Isi jika tidak hadir krn Perpulangan)</label><textarea id="als" rows="1" placeholder="Contoh: Perpulangan Siswa"></textarea>
+  <label>Tanggal</label><input type="date" id="tgl">
+  <label>Materi</label><textarea id="mat" rows="2"></textarea>
+  <label>Alasan (Isi jika perpulangan/sekolah)</label><input type="text" id="als">
 </div>
+
 <div class="card"><h3>Presensi Siswa</h3><div id="sList"></div></div>
-<div class="card"><label>Tanda Tangan Coach</label><canvas id="ttd"></canvas><button onclick="ctx.clearRect(0,0,canvas.width,canvas.height)">Hapus TTD</button></div>
-<div style="padding:15px;"><button class="btn-save" onclick="simpan()">SIMPAN LAPORAN</button></div>
+
+<div class="card">
+  <label>TTD Coach</label><canvas id="ttd"></canvas>
+  <button onclick="ctx.clearRect(0,0,canvas.width,canvas.height)">Hapus TTD</button>
+</div>
+
+<div style="padding:15px;"><button class="btn" onclick="simpan()">SIMPAN LAPORAN</button></div>
+
 <script>
-  if (localStorage.getItem("role") !== "coach") window.location.replace("index.html");
   const eks = localStorage.getItem("ekskul"); document.getElementById("eks").innerText = eks;
-  document.getElementById("cName").innerText = "Coach: " + localStorage.getItem("username");
+  document.getElementById("cName").innerText = "Pelatih: " + localStorage.getItem("username");
   const siswa = JSON.parse(localStorage.getItem("siswa_" + eks)) || [];
-  const container = document.getElementById("sList");
-  if(siswa.length === 0) container.innerHTML = "<p style='color:red'>Siswa belum diinput Koordinator.</p>";
-  siswa.forEach(n => { container.innerHTML += `<div class="siswa-row"><span>${n}</span><input type="checkbox" class="c" checked></div>`; });
+  siswa.forEach(n => { document.getElementById("sList").innerHTML += `<div><input type="checkbox" class="c" checked> ${n}</div>`; });
   const canvas = document.getElementById("ttd"); const ctx = canvas.getContext("2d"); let draw = false;
-  canvas.addEventListener("mousedown", () => { draw = true; ctx.beginPath(); });
-  canvas.addEventListener("mouseup", () => draw = false);
-  canvas.addEventListener("mousemove", (e) => { if(!draw) return; let r = canvas.getBoundingClientRect(); ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke(); });
+  canvas.onmousedown = () => { draw = true; ctx.beginPath(); };
+  canvas.onmouseup = () => draw = false;
+  canvas.onmousemove = (e) => { if(!draw) return; let r = canvas.getBoundingClientRect(); ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke(); };
+
   function simpan() {
     const tgl = document.getElementById("tgl").value; const mat = document.getElementById("mat").value; const als = document.getElementById("als").value;
-    if(!tgl || !mat) return alert("Isi Tanggal & Materi!");
+    if(!tgl || !mat) return alert("Isi Data!");
     let db = JSON.parse(localStorage.getItem("data_" + eks)) || [];
-    db.push({ tgl, mat, hadir: document.querySelectorAll('.c:checked').length });
-    localStorage.setItem("data_" + eks, JSON.stringify(db));
+    db.push({ tgl, mat }); localStorage.setItem("data_" + eks, JSON.stringify(db));
     if(als) localStorage.setItem("alasan_" + eks, als);
-    alert("Laporan Terkirim!"); location.reload();
+    alert("Berhasil!"); location.reload();
+  }
+
+  function bukaJadwalKaldik() {
+    const modal = document.createElement("div");
+    modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; display:flex; justify-content:center; align-items:center; overflow-y:auto; padding:20px;";
+    modal.innerHTML = `<div style="background:white; padding:20px; border-radius:12px; max-width:600px; width:100%; position:relative;">
+      <button onclick="this.parentElement.parentElement.remove()" style="position:absolute; right:10px; top:10px; border:none; background:none; font-size:24px;">&times;</button>
+      <h3 style="text-align:center; color:#0a1f44;">JADWAL & KALDIK</h3>
+      <img src="jadwal_ekskul.jpeg" style="width:100%; border-radius:8px; margin-bottom:15px;">
+      <div style="font-size:12px; background:#f9f9f9; padding:10px; border-radius:8px;">
+        • 21 Juli: Hari Pertama KBM<br>• 28-30 Nov: Perpulangan Reguler<br>• 01-13 Des: Ujian Akhir
+      </div>
+    </div>`;
+    document.body.appendChild(modal);
   }
 </script>
 </body>
