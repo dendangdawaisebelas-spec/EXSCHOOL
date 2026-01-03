@@ -1,18 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+  <meta charset="UTF-8">
   <title>Dashboard Coach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }
+    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    h1 { color: #0a1f44; }
+    .ekskul-name { font-size: 24px; font-weight: bold; color: #1c7c54; }
+    button { padding: 10px 20px; background: #0a1f44; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+  </style>
 </head>
-<body style="font-family:Arial; background:#eef;">
-  <h1>✅ LOGIN BERHASIL</h1>
-  <h2>Dashboard Coach Ekskul</h2>
-</body>
+<body>
+  <div class="card">
+    <h1>Halo Coach, <span id="displayNama"></span></h1>
+    <p>Anda bertugas di:</p>
+    <div class="ekskul-name" id="displayEkskul"></div>
+    <hr>
+    <button onclick="logout()">LOGOUT</button>
+  </div>
+
   <script>
-  if (localStorage.getItem("role") !== "coach") {
-    alert("Akses ditolak!");
-    window.location.href = "index.html";
-  }
-</script>
+    // Penjaga Halaman (Role Guard)
+    if (localStorage.getItem("login") !== "true" || localStorage.getItem("role") !== "coach") {
+      window.location.replace("index.html");
+    }
 
+    // Ambil data dari memori browser
+    document.getElementById("displayNama").innerText = localStorage.getItem("username");
+    document.getElementById("displayEkskul").innerText = localStorage.getItem("ekskul");
+
+    function logout() {
+      localStorage.clear();
+      window.location.replace("index.html");
+    }
+  </script>
+</body>
 </html>
-
