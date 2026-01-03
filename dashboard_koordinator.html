@@ -11,84 +11,71 @@
         header { background: #0a1f44; color: white; padding: 20px; text-align: center; }
         .container { padding: 20px; max-width: 1200px; margin: auto; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #0a1f44; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #0a1f44; position: relative; }
         .badge { font-size: 11px; padding: 4px 8px; border-radius: 20px; text-transform: uppercase; font-weight: bold; float: right; }
         .clear { background: #d4edda; color: #155724; } .pending { background: #fff3cd; color: #856404; }
-        .btn-rab { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
+        .btn-main { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 10px; font-size: 14px; }
         .btn-act { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 11px; border: 1px solid #ddd; font-weight: bold; }
         .logout { background: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; float: right; margin-top: -55px; }
     </style>
 </head>
 <body>
-<header><h1>Dashboard Koordinator</h1><p>Insan Cendekia Magnet School</p></header>
+<header>
+    <h1>Pusat Komando Koordinator</h1>
+    <p>SMP - SMA INSAN CENDEKIA MAGNET SCHOOL</p>
+</header>
 <div class="container">
     <button class="logout" onclick="localStorage.clear(); location.replace('index.html')">Logout</button>
-    <button class="btn-rab" onclick="cetakRAB()">📄 DOWNLOAD RAB (TA 2025-2026)</button>
+    
+    <button class="btn-main" onclick="cetakRAB()">📥 CETAK RAB (RENCANA ANGGARAN BIAYA)</button>
+    <button class="btn-main" style="background: #0a1f44;" onclick="cetakLaporanBulanan()">📘 CETAK LAPORAN BULANAN FORMAL</button>
+
     <div class="grid" id="grid"></div>
 </div>
+
 <script>
     const { jsPDF } = window.jspdf;
 
-    // DATA TARIF OTOMATIS (Sesuai dokumen RAB Bapak)
+    // DATA TARIF PER PERTEMUAN
     const tarifData = {
-        "Panahan": 300000,     // 
-        "Futsal": 250000,      // 
-        "Dokter Kecil": 100000, // 
-        "Badminton": 150000,   // 
-        "Basket": 250000,      // 
-        "Renang": 150000,      // 
-        "Pramuka": 160000,     // 
-        "Musik": 500000,       // [cite: 15]
-        "Taekwondo": 0,        // Diisi manual sesuai Invoice per murid
-        "Nihonggo Club": 0,    // Silakan sesuaikan jika ada
-        "English Club": 0      // Silakan sesuaikan jika ada
+        "Panahan": 300000, "Futsal": 250000, "Dokter Kecil": 100000, 
+        "Badminton": 150000, "Basket": 250000, "Renang": 150000, 
+        "Pramuka": 160000, "Musik": 500000, "Taekwondo": 0,
+        "Nihonggo Club": 0, "English Club": 0
     };
 
     const ekskuls = Object.keys(tarifData);
-    
+
     function render() {
         const g = document.getElementById("grid"); g.innerHTML = "";
-        let grandTotal = 0;
-
         ekskuls.forEach(n => {
             const d = JSON.parse(localStorage.getItem("data_" + n)) || [];
             const s = JSON.parse(localStorage.getItem("siswa_" + n)) || [];
             const a = localStorage.getItem("alasan_" + n) || "";
             
-            // Hitung Honor
-            let sub = 0;
-            if (n === "Musik") {
-                sub = 500000; // Flat per bulan [cite: 15]
-            } else if (n === "Taekwondo") {
-                sub = parseInt(localStorage.getItem("tarif_Taekwondo")) || 0; 
-            } else {
-                sub = d.length * tarifData[n];
-            }
-            grandTotal += sub;
-
-            // Logika Status Clear
+            let honor = (n === "Musik") ? 500000 : (n === "Taekwondo" ? (parseInt(localStorage.getItem("tarif_Taekwondo")) || 0) : d.length * tarifData[n]);
             let isClear = (d.length >= 3); 
             if(n === "Musik") isClear = (d.length >= 4 || a !== "");
-            
+
             g.innerHTML += `<div class="card">
                 <span class="badge ${isClear ? 'clear':'pending'}">${isClear ? 'Clear':'Proses'}</span>
                 <div style="font-weight:bold; color:#0a1f44;">${n}</div>
                 <div style="font-size:13px; color:#666; margin-top:10px;">
-                    <p>Pertemuan: ${d.length} | Siswa: ${s.length}</p>
-                    <p>Tarif: Rp ${tarifData[n].toLocaleString()}/pertemuan</p>
-                    <p>Sub-Total: <b style="color:#1c7c54;">Rp ${sub.toLocaleString()}</b></p>
+                    <p>Pertemuan: <b>${d.length}</b> | Siswa: <b>${s.length}</b></p>
+                    <p>Sub-Total: <b style="color:#1c7c54;">Rp ${honor.toLocaleString()}</b></p>
+                    ${a ? `<p style="color:red; font-style:italic;">Ket: ${a}</p>` : ''}
                 </div>
                 <div style="display:flex; gap:5px; margin-top:10px;">
-                    ${n === "Taekwondo" ? `<button class="btn-act" onclick="setTaekwondo()">💰 INPUT INVOICE</button>` : ''}
+                    ${n === "Taekwondo" ? `<button class="btn-act" onclick="setTaekwondo()">💰 INVOICE</button>` : ''}
                     <button class="btn-act" onclick="setSiswa('${n}')">👤 SISWA</button>
-                    <button class="btn-act" onclick="alert('Laporan ${n}: '+JSON.stringify(d))">📋 DATA</button>
+                    <button class="btn-act" onclick="lihatDetail('${n}')">📋 DETAIL</button>
                 </div>
             </div>`;
         });
     }
 
     function setTaekwondo() {
-        const t = prompt("Masukkan Total Invoice Taekwondo (Angka saja):", 0);
+        const t = prompt("Masukkan Total Invoice Taekwondo:", 0);
         if(t) { localStorage.setItem("tarif_Taekwondo", t); render(); }
     }
 
@@ -97,33 +84,6 @@
         if(s) { localStorage.setItem("siswa_"+n, JSON.stringify(s.split(",").map(x => x.trim()))); render(); }
     }
 
-    function cetakRAB() {
-        const doc = new jsPDF(); 
-        doc.setFontSize(14); doc.text("RENCANA ANGGARAN BIAYA - ICMS", 105, 20, {align:"center"});
-        doc.setFontSize(10); doc.text("Jl. Tangkil No.123, Caringin, Bogor", 105, 26, {align:"center"});
-        doc.line(20, 30, 190, 30);
-        
-        let rows = []; let total = 0;
-        ekskuls.forEach((n, i) => {
-            const d = JSON.parse(localStorage.getItem("data_"+n))||[];
-            let sub = (n === "Musik") ? 500000 : (n === "Taekwondo" ? parseInt(localStorage.getItem("tarif_Taekwondo"))||0 : d.length * tarifData[n]);
-            total += sub;
-            rows.push([i+1, n, d.length, "Rp "+sub.toLocaleString()]);
-        });
-
-        doc.autoTable({ startY: 40, head: [['No','Ekstrakurikuler','Pertemuan','Insentif/Bulan']], body: rows });
-        const finalY = doc.lastAutoTable.finalY + 10;
-        doc.text("TOTAL PENGELUARAN: Rp "+total.toLocaleString(), 140, finalY, {align:"right"});
-        
-        const aMus = localStorage.getItem("alasan_Musik") || "";
-        if(aMus) doc.text("Catatan Musik: " + aMus, 20, finalY + 10);
-        
-        doc.text("Bogor, " + new Date().toLocaleDateString('id-ID'), 140, finalY + 30);
-        doc.text("Pemohon (Koordinator):", 140, finalY + 35);
-        doc.text("( Ditya Manggala, S.Sn. )", 140, finalY + 60); // 
-        doc.save("RAB_ICMS_FINAL.pdf");
-    }
-    render();
-</script>
-</body>
-</html>
+    function lihatDetail(n) {
+        const d = JSON.parse(localStorage.getItem("data_"+n)) || [];
+        alert(`Data ${n}:\n` + d
