@@ -1,19 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Dashboard Koordinator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Koordinator - ICMS</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f0f2f5; }
+        header { background: #0a1f44; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        .container { padding: 20px; max-width: 1200px; margin: auto; }
+        .welcome-msg { margin-bottom: 20px; color: #333; }
+        
+        /* Grid Kartu Ekskul */
+        .grid-ekskul { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+        }
+        
+        .card { 
+            background: white; 
+            border-radius: 12px; 
+            padding: 20px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            border-top: 5px solid #0a1f44;
+            transition: transform 0.2s;
+        }
+        .card:hover { transform: translateY(-5px); }
+        
+        .ekskul-title { font-size: 18px; font-weight: bold; color: #0a1f44; margin-bottom: 10px; display: flex; justify-content: space-between; }
+        .status-badge { font-size: 11px; padding: 4px 8px; border-radius: 20px; text-transform: uppercase; }
+        .clear { background: #d4edda; color: #155724; }
+        .pending { background: #fff3cd; color: #856404; }
+        
+        .info-row { display: flex; justify-content: space-between; margin: 8px 0; font-size: 14px; color: #666; }
+        .info-val { font-weight: bold; color: #333; }
+        
+        .btn-detail { 
+            width: 100%; padding: 10px; margin-top: 15px; 
+            background: #f8f9fa; border: 1px solid #ddd; 
+            border-radius: 6px; cursor: pointer; font-weight: bold;
+        }
+        .btn-detail:hover { background: #e2e6ea; }
+        
+        .summary-box { 
+            background: #fff; padding: 20px; border-radius: 12px; 
+            margin-bottom: 30px; display: flex; justify-content: space-around;
+            text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .summary-item h4 { margin: 0; color: #666; font-size: 14px; }
+        .summary-item p { margin: 5px 0 0; font-size: 24px; font-weight: bold; color: #0a1f44; }
+
+        .logout-btn { background: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; float: right; margin-top: -50px; }
+    </style>
 </head>
-<body style="font-family:Arial; background:#f5f5f5;">
-  <h1>✅ LOGIN BERHASIL</h1>
-  <h2>Dashboard Koordinator</h2>
-  <p>Selamat datang, Koordinator Ekskul ICMS</p>
-</body>
-  <script>
-  if (localStorage.getItem("role") !== "koordinator") {
-    alert("Akses ditolak!");
-    window.location.href = "index.html";
-  }
+<body>
+
+<header>
+    <h1>Monitoring Ekstrakurikuler</h1>
+    <p>SMP-SMA Insan Cendekia Magnet School</p>
+</header>
+
+<div class="container">
+    <button class="logout-btn" onclick="logout()">Logout</button>
+    <div class="welcome-msg">
+        <h2>Selamat Datang, Pak Ditya</h2>
+        <p>Pantau realisasi pertemuan dan absensi siswa hari ini.</p>
+    </div>
+
+    <div class="summary-box">
+        <div class="summary-item">
+            <h4>Total Ekskul</h4>
+            <p>11</p>
+        </div>
+        <div class="summary-item">
+            <h4>Laporan Clear</h4>
+            <p style="color: #1c7c54;">8</p>
+        </div>
+        <div class="summary-item">
+            <h4>Belum Lapor</h4>
+            <p style="color: #d9534f;">3</p>
+        </div>
+    </div>
+
+    <div class="grid-ekskul" id="gridEkskul">
+        </div>
+</div>
+
+<script>
+    // 1. Keamanan: Cek apakah yang masuk benar Koordinator
+    if (localStorage.getItem("login") !== "true" || localStorage.getItem("role") !== "koordinator") {
+        window.location.replace("index.html");
+    }
+
+    // 2. Data 11 Ekskul
+    const daftarEkskul = [
+        "Pramuka", "Nihonggo Club", "English Club", "Taekwondo", 
+        "Badminton", "Futsal", "Basket", "Panahan", 
+        "Dokter Kecil", "Renang", "Musik"
+    ];
+
+    // 3. Menampilkan Kartu Ekskul
+    const grid = document.getElementById("gridEkskul");
+
+    daftarEkskul.forEach(nama => {
+        // Simulasi status (nanti akan diambil dari data asli)
+        const isClear = Math.random() > 0.3; 
+        const statusTeks = isClear ? "Clear" : "Belum Lapor";
+        const statusClass = isClear ? "clear" : "pending";
+
+        grid.innerHTML += `
+            <div class="card">
+                <div class="ekskul-title">
+                    ${nama}
+                    <span class="status-badge ${statusClass}">${statusTeks}</span>
+                </div>
+                <div class="info-row">
+                    <span>Realisasi Pertemuan</span>
+                    <span class="info-val">${isClear ? '3/3' : '2/3'}</span>
+                </div>
+                <div class="info-row">
+                    <span>Kehadiran Siswa</span>
+                    <span class="info-val">${Math.floor(Math.random() * 10) + 20}/30</span>
+                </div>
+                <div class="info-row">
+                    <span>Deadline Laporan</span>
+                    <span class="info-val">25 Jan</span>
+                </div>
+                <button class="btn-detail" onclick="alert('Membuka detail ${nama}...')">LIHAT LAPORAN</button>
+            </div>
+        `;
+    });
+
+    function logout() {
+        localStorage.clear();
+        window.location.replace("index.html");
+    }
 </script>
 
+</body>
 </html>
-
