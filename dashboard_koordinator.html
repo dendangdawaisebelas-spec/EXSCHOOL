@@ -3,104 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pusat Komando Koordinator - ICMS</title>
+    <title>Koordinator ICMS</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 50px; }
-        header { background: #0a1f44; color: white; padding: 20px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .container { padding: 20px; max-width: 1200px; margin: auto; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-        
-        /* Dashboard Card */
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #0a1f44; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); }
-        
-        /* Status Badge */
-        .badge { font-size: 11px; padding: 5px 10px; border-radius: 20px; text-transform: uppercase; font-weight: bold; float: right; }
-        .clear { background: #d4edda; color: #155724; }
-        .pending { background: #fff3cd; color: #856404; }
-        
-        /* Buttons */
-        .btn-main { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 12px; font-size: 14px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-sub { background: #0a1f44; color: white; }
-        .btn-kaldik { background: #8e44ad; color: white; }
-        .btn-act { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 11px; border: 1px solid #ddd; font-weight: bold; background: #f8f9fa; }
-        .logout { background: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; float: right; margin-top: -55px; }
+        body { font-family: 'Times New Roman', Times, serif; margin: 0; background: #f0f2f5; padding-bottom: 50px; }
+        header { background: #0a1f44; color: white; padding: 20px; text-align: center; }
+        .container { padding: 20px; max-width: 1100px; margin: auto; }
+        .btn-main { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .card { background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #0a1f44; }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>Pusat Komando Koordinator</h1>
-    <p>SMP - SMA INSAN CENDEKIA MAGNET SCHOOL</p>
-</header>
-
+<header><h1>Dashboard Koordinator ICMS</h1></header>
 <div class="container">
-    <button class="logout" onclick="localStorage.clear(); location.replace('index.html')">Logout</button>
-    
-    <button class="btn-main" onclick="cetakRAB()">📥 CETAK RAB (RENCANA ANGGARAN BIAYA)</button>
-    <button class="btn-main btn-sub" onclick="cetakLaporanBulanan()">📘 CETAK LAPORAN BULANAN FORMAL</button>
-    <button class="btn-main btn-kaldik" onclick="bukaJadwalKaldik()">📅 JADWAL EKSKUL & KALDIK</button>
-
-    <div class="grid" id="gridEkskul"></div>
+    <button class="btn-main" onclick="cetakRAB()">📥 DOWNLOAD RAB HONOR</button>
+    <button class="btn-main" style="background:#0a1f44" onclick="cetakLaporanBulanan()">📘 DOWNLOAD LAPORAN BULANAN</button>
+    <div class="grid" id="gridE"></div>
 </div>
 
 <script>
     const { jsPDF } = window.jspdf;
+    const tData = { "Panahan": 300000, "Futsal": 250000, "Dokter Kecil": 100000, "Badminton": 150000, "Basket": 250000, "Renang": 150000, "Pramuka": 160000, "Musik": 500000, "Taekwondo": 0 };
+    const ekskuls = Object.keys(tData);
 
-    // DATA TARIF OTOMATIS SESUAI RAB NOVEMBER 2025
-    const tarifData = {
-        "Panahan": 300000,     //
-        "Futsal": 250000,      //
-        "Dokter Kecil": 100000, //
-        "Badminton": 150000,   //
-        "Basket": 250000,      //
-        "Renang": 150000,      //
-        "Pramuka": 160000,     //
-        "Musik": 500000,       // Biaya Flat Per Bulan
-        "Taekwondo": 0,        // Diinput manual via Invoice
-        "Nihonggo Club": 0,
-        "English Club": 0
-    };
+    function render() {
+        const g = document.getElementById("gridE"); g.innerHTML = "";
+        ekskuls.forEach(n => {
+            const d = JSON.parse(localStorage.getItem("data_" + n)) || [];
+            const ev = JSON.parse(localStorage.getItem("eval_" + n)) || null;
+            let sub = (n === "Musik") ? 500000 : (n === "Taekwondo" ? (parseInt(localStorage.getItem("t_Taek")) || 0) : d.length * tData[n]);
+            g.innerHTML += `<div class="card">
+                <b>${n}</b><br><small>Pertemuan: ${d.length}</small><br>
+                Sub-Total: <b>Rp ${sub.toLocaleString()}</b><br>
+                Laporan: ${ev ? '<span style="color:green">Ada</span>' : '<span style="color:red">Belum</span>'}
+            </div>`;
+        });
+    }
 
-    const ekskuls = Object.keys(tarifData);
+    function cetakRAB() {
+        const doc = new jsPDF();
+        doc.setFontSize(14); doc.text("RENCANA ANGGARAN BIAYA - ICMS", 105, 15, {align:"center"});
+        let rows = []; let tot = 0;
+        ekskuls.forEach((n, i) => {
+            let d = JSON.parse(localStorage.getItem("data_"+n))||[];
+            let sub = (n === "Musik") ? 500000 : (n === "Taekwondo" ? parseInt(localStorage.getItem("t_Taek"))||0 : d.length * tData[n]);
+            tot += sub; rows.push([i+1, n, tData[n].toLocaleString(), d.length, "Rp "+sub.toLocaleString()]);
+        });
+        doc.autoTable({ startY: 25, head: [['No','Ekskul','Satuan','Vol','Total']], body: rows });
+        doc.text("Bogor, 29 Nov 2025", 140, doc.lastAutoTable.finalY + 15);
+        doc.text("( Ditya Manggala, S.Sn )", 140, doc.lastAutoTable.finalY + 35);
+        doc.save("RAB_ICMS.pdf");
+    }
 
-    function renderDashboard() {
-        const grid = document.getElementById("gridEkskul");
-        grid.innerHTML = "";
+    function cetakLaporanBulanan() {
+        const doc = new jsPDF();
+        doc.setFont("times", "bold"); doc.text("LAPORAN BULANAN PEMBINA EKSKUL", 105, 40, {align:"center"});
+        doc.setFontSize(12); doc.text("Ditya Manggala, S.Sn", 105, 50, {align:"center"});
         
-        ekskuls.forEach(nama => {
-            const data = JSON.parse(localStorage.getItem("data_" + nama)) || [];
-            const siswa = JSON.parse(localStorage.getItem("siswa_" + nama)) || [];
-            const alasan = localStorage.getItem("alasan_" + nama) || "";
-            const eval = JSON.parse(localStorage.getItem("eval_" + nama)) || null;
-            
-            // Kalkulasi Honor
-            let subTotal = 0;
-            if (nama === "Musik") {
-                subTotal = 500000;
-            } else if (nama === "Taekwondo") {
-                subTotal = parseInt(localStorage.getItem("tarif_Taek")) || 0;
-            } else {
-                subTotal = data.length * tarifData[nama];
+        ekskuls.forEach(n => {
+            const ev = JSON.parse(localStorage.getItem("eval_" + n));
+            if(ev) {
+                doc.addPage();
+                doc.text("LAPORAN: " + n, 20, 20);
+                doc.setFont("times", "normal");
+                doc.text("Kendala: " + ev.kendala, 20, 35);
+                if(ev.fotos) {
+                    doc.addImage(ev.fotos[0], 'JPEG', 20, 50, 80, 50);
+                    doc.addImage(ev.fotos[1], 'JPEG', 110, 50, 80, 50);
+                    doc.addImage(ev.fotos[2], 'JPEG', 20, 110, 80, 50);
+                }
             }
-
-            // Status Check (Minimal 3 pertemuan, Musik fleksibel jika ada alasan perpulangan)
-            let isClear = (data.length >= 3);
-            if(nama === "Musik") isClear = (data.length >= 4 || alasan !== "");
-
-            const card = document.createElement("div");
-            card.className = "card";
-            card.innerHTML = `
-                <span class="badge ${isClear ? 'clear' : 'pending'}">${isClear ? 'Clear' : 'Proses'}</span>
-                <div style="font-weight:bold; color:#0a1f44; font-size:16px; margin-bottom:10px;">${nama}</div>
-                <div style="font-size:13px; color:#666; line-height:1.6;">
-                    <p>Realisasi: <b>${data.length} Pertemuan</b></p>
-                    <p>Sub-Total Honor: <b style="color:#1c7c54;">Rp ${subTotal.toLocaleString('id-ID')}</b></p>
-                    <p>Laporan Naratif: ${eval ? '<b style="color:green;">✓ Terisi</b>' : '<b style="color:red;">✗ Belum</b>'}</p>
-                    ${alasan ? `<p style="color:#d35400; font-style:italic;">Ket: ${alasan}</p>` : ''}
-                </div>
-                <div style="display:flex; gap:5px; margin-top:15px;">
-                    ${nama === "Taekwondo" ? `<button class="btn-act" onclick="setTaek()">💰 INVOICE</button>` : ''}
-                    <button class="btn-act" onclick="setSiswa('${nama}')">👤 SISWA</button>
+        });
+        doc.save("Laporan_Lengkap.pdf");
+    }
+    render();
+</script>
+</body>
+</html>
