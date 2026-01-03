@@ -9,8 +9,9 @@
     header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
     .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     canvas { border: 2px dashed #ccc; width: 100%; height: 150px; background: #fff; }
-    textarea, input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
-    .btn { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    textarea, input { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; font-size: 14px; }
+    .btn { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    label { font-weight: bold; display: block; margin-top: 10px; color: #0a1f44; }
   </style>
 </head>
 <body>
@@ -19,37 +20,53 @@
 <button onclick="bukaJadwalKaldik()" style="width: 92%; margin: 10px 4%; padding: 12px; background: #8e44ad; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">📅 JADWAL EKSKUL & KALDIK</button>
 
 <div class="card">
+  <h3>1. Input Pertemuan Harian</h3>
   <label>Tanggal</label><input type="date" id="tgl">
-  <label>Materi</label><textarea id="mat" rows="2"></textarea>
-  <label>Alasan (Isi jika perpulangan/sekolah)</label><input type="text" id="als">
+  <label>Materi Latihan</label><textarea id="mat" rows="2" placeholder="Apa yang diajarkan hari ini?"></textarea>
+  <label>Keterangan Khusus (Jika ada perpulangan/kendala hari ini)</label><input type="text" id="als_harian" placeholder="Misal: Siswa perpulangan">
+  <button class="btn" style="background:#2980b9" onclick="simpanPertemuan()">SIMPAN PERTEMUAN</button>
+</div>
+
+<div class="card">
+  <h3>2. Laporan Evaluasi Bulanan (Wajib)</h3>
+  <p style="font-size: 12px; color: red;">*Diisi setiap akhir bulan sebagai bahan Laporan Koordinator</p>
+  <label>Agenda yang telah dilakukan</label><textarea id="eval_agenda" rows="2"></textarea>
+  <label>Capaian Siswa</label><textarea id="eval_capaian" rows="2"></textarea>
+  <label>Kendala</label><textarea id="eval_kendala" rows="2"></textarea>
+  <label>Solusi yang dilakukan</label><textarea id="eval_solusi" rows="2"></textarea>
+  <label>Saran ke depan</label><textarea id="eval_saran" rows="2"></textarea>
+  <button class="btn" onclick="simpanEvaluasi()">UPDATE EVALUASI BULANAN</button>
 </div>
 
 <div class="card"><h3>Presensi Siswa</h3><div id="sList"></div></div>
 
-<div class="card">
-  <label>TTD Coach</label><canvas id="ttd"></canvas>
-  <button onclick="ctx.clearRect(0,0,canvas.width,canvas.height)">Hapus TTD</button>
-</div>
-
-<div style="padding:15px;"><button class="btn" onclick="simpan()">SIMPAN LAPORAN</button></div>
-
 <script>
   const eks = localStorage.getItem("ekskul"); document.getElementById("eks").innerText = eks;
   document.getElementById("cName").innerText = "Pelatih: " + localStorage.getItem("username");
+  
+  // Render Siswa
   const siswa = JSON.parse(localStorage.getItem("siswa_" + eks)) || [];
   siswa.forEach(n => { document.getElementById("sList").innerHTML += `<div><input type="checkbox" class="c" checked> ${n}</div>`; });
-  const canvas = document.getElementById("ttd"); const ctx = canvas.getContext("2d"); let draw = false;
-  canvas.onmousedown = () => { draw = true; ctx.beginPath(); };
-  canvas.onmouseup = () => draw = false;
-  canvas.onmousemove = (e) => { if(!draw) return; let r = canvas.getBoundingClientRect(); ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke(); };
 
-  function simpan() {
-    const tgl = document.getElementById("tgl").value; const mat = document.getElementById("mat").value; const als = document.getElementById("als").value;
-    if(!tgl || !mat) return alert("Isi Data!");
+  function simpanPertemuan() {
+    const tgl = document.getElementById("tgl").value; const mat = document.getElementById("mat").value;
+    if(!tgl || !mat) return alert("Isi Tanggal & Materi!");
     let db = JSON.parse(localStorage.getItem("data_" + eks)) || [];
-    db.push({ tgl, mat }); localStorage.setItem("data_" + eks, JSON.stringify(db));
-    if(als) localStorage.setItem("alasan_" + eks, als);
-    alert("Berhasil!"); location.reload();
+    db.push({ tgl, mat, ket: document.getElementById("als_harian").value });
+    localStorage.setItem("data_" + eks, JSON.stringify(db));
+    alert("Data Pertemuan Disimpan!"); location.reload();
+  }
+
+  function simpanEvaluasi() {
+    const eval = {
+      agenda: document.getElementById("eval_agenda").value,
+      capaian: document.getElementById("eval_capaian").value,
+      kendala: document.getElementById("eval_kendala").value,
+      solusi: document.getElementById("eval_solusi").value,
+      saran: document.getElementById("eval_saran").value
+    };
+    localStorage.setItem("eval_" + eks, JSON.stringify(eval));
+    alert("Laporan Bulanan Berhasil Diperbarui!");
   }
 
   function bukaJadwalKaldik() {
@@ -57,11 +74,7 @@
     modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; display:flex; justify-content:center; align-items:center; overflow-y:auto; padding:20px;";
     modal.innerHTML = `<div style="background:white; padding:20px; border-radius:12px; max-width:600px; width:100%; position:relative;">
       <button onclick="this.parentElement.parentElement.remove()" style="position:absolute; right:10px; top:10px; border:none; background:none; font-size:24px;">&times;</button>
-      <h3 style="text-align:center; color:#0a1f44;">JADWAL & KALDIK</h3>
-      <img src="jadwal_ekskul.jpeg" style="width:100%; border-radius:8px; margin-bottom:15px;">
-      <div style="font-size:12px; background:#f9f9f9; padding:10px; border-radius:8px;">
-        • 21 Juli: Hari Pertama KBM<br>• 28-30 Nov: Perpulangan Reguler<br>• 01-13 Des: Ujian Akhir
-      </div>
+      <img src="jadwal_ekskul.jpeg" style="width:100%; border-radius:8px;">
     </div>`;
     document.body.appendChild(modal);
   }
