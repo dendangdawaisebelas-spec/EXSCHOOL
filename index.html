@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Login Sistem Ekskul</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <style>
     body {
       margin: 0;
@@ -15,7 +14,6 @@
       align-items: center;
       font-family: Arial, sans-serif;
     }
-
     .login-box {
       background: #fff;
       padding: 30px;
@@ -23,86 +21,41 @@
       border-radius: 10px;
       box-shadow: 0 10px 25px rgba(0,0,0,.3);
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #0a1f44;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #102e6d;
-    }
-
-    .note {
-      text-align: center;
-      font-size: 12px;
-      color: #666;
-      margin-top: 10px;
-    }
+    h2 { text-align: center; margin-bottom: 20px; }
+    input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
+    button { width: 100%; padding: 12px; background: #0a1f44; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+    button:hover { background: #102e6d; }
+    .note { text-align: center; font-size: 12px; color: #666; margin-top: 10px; }
   </style>
 </head>
-
 <body>
-
   <div class="login-box">
     <h2>Login Sistem Ekskul</h2>
-
     <input type="text" id="username" placeholder="Username">
     <input type="password" id="password" placeholder="Password">
-
     <button onclick="login()">LOGIN</button>
-
     <div class="note">Koordinator / Coach Ekskul</div>
   </div>
 
   <script>
     const users = [
-      {
-        username: "pakdityapembinaekskulicms",
-        password: "savepalestine",
-        role: "koordinator"
-      },
-      {
-        username: "coachbasketicms",
-        password: "coach123",
-        role: "coach"
-      },
-      {
-        username: "coachfutsalicms",
-        password: "coach123",
-        role: "coach"
-      },
-      {
-        username: "coachvolleyicms",
-        password: "coach123",
-        role: "coach"
-      }
+      { username: "pakdityapembinaekskulicms", password: "savepalestine", role: "koordinator" },
+      { username: "coachpramukaicms", password: "icms2026", role: "coach", ekskul: "Pramuka" },
+      { username: "coachnihonggoicms", password: "icms2026", role: "coach", ekskul: "Nihonggo Club" },
+      { username: "coachenglishicms", password: "icms2026", role: "coach", ekskul: "English Club" },
+      { username: "coachtaekwondoicms", password: "icms2026", role: "coach", ekskul: "Taekwondo" },
+      { username: "coachbadmintonicms", password: "icms2026", role: "coach", ekskul: "Badminton" },
+      { username: "coachfutsalicms", password: "icms2026", role: "coach", ekskul: "Futsal" },
+      { username: "coachbasketicms", password: "icms2026", role: "coach", ekskul: "Basket" },
+      { username: "coachpanahanicms", password: "icms2026", role: "coach", ekskul: "Panahan" },
+      { username: "coachdokterkecilicms", password: "icms2026", role: "coach", ekskul: "Dokter Kecil" },
+      { username: "coachrenangicms", password: "icms2026", role: "coach", ekskul: "Renang" },
+      { username: "coachmusikicms", password: "icms2026", role: "coach", ekskul: "Musik" }
     ];
 
     function login() {
       const u = document.getElementById("username").value.trim();
       const p = document.getElementById("password").value.trim();
-
       const user = users.find(x => x.username === u && x.password === p);
 
       if (!user) {
@@ -110,20 +63,18 @@
         return;
       }
 
-      // SIMPAN LOGIN
       localStorage.clear();
       localStorage.setItem("login", "true");
       localStorage.setItem("role", user.role);
       localStorage.setItem("username", user.username);
-
-      // ARAHKAN
+      
       if (user.role === "koordinator") {
         window.location.replace("dashboard_koordinator.html");
       } else {
+        localStorage.setItem("ekskul", user.ekskul);
         window.location.replace("coach.html");
       }
     }
   </script>
-
 </body>
 </html>
