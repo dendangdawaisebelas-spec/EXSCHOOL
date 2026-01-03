@@ -1,176 +1,50 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Presensi Ekskul</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
-        header { background: #0a1f44; color: white; padding: 15px; text-align: center; position: sticky; top: 0; z-index: 100; }
-        .container { padding: 15px; max-width: 500px; margin: auto; }
-        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        h3 { margin-top: 0; color: #0a1f44; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        label { display: block; margin-top: 15px; font-weight: bold; font-size: 14px; }
-        input[type="text"], input[type="date"], textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .siswa-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #eee; }
-        .siswa-name { font-size: 14px; }
-        input[type="checkbox"] { transform: scale(1.5); }
-        canvas { border: 2px dashed #ccc; border-radius: 5px; width: 100%; height: 150px; background: #fff; cursor: crosshair; }
-        .btn-save { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-size: 16px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-        .btn-clear { background: #666; color: white; border: none; padding: 8px; border-radius: 5px; margin-top: 5px; cursor: pointer; }
-        .logout { color: #ff4d4d; text-decoration: none; font-size: 12px; display: block; margin-top: 10px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Coach - ICMS</title>
+  <style>
+    body { font-family: Arial; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
+    header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
+    .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    canvas { border: 2px dashed #ccc; width: 100%; height: 150px; background: #fff; }
+    .btn-save { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    textarea, input[type="date"] { width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; box-sizing: border-box; }
+    .siswa-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; }
+  </style>
 </head>
 <body>
-
-<header>
-    <div id="displayEkskul" style="font-weight: bold; font-size: 18px;">Memuat...</div>
-    <div id="displayNama" style="font-size: 12px; opacity: 0.8;"></div>
-</header>
-
-<div class="container">
-    <div class="card">
-        <h3>Detail Pertemuan</h3>
-        <label>Tanggal Pertemuan</label>
-        <input type="date" id="tgl">
-        
-        <label>Materi Kegiatan</label>
-        <textarea id="materi" rows="3" placeholder="Contoh: Teknik dasar dribbling"></textarea>
-        
-        <label>Durasi Latihan</label>
-        <input type="text" value="90 Menit" disabled>
-    </div>
-
-    <div class="card">
-        <h3>Presensi Siswa</h3>
-        <p style="font-size: 12px; color: #666;">Centang jika siswa <b>HADIR</b></p>
-        <div id="daftarSiswa"></div>
-    </div>
-
-    <div class="card">
-        <h3>Tanda Tangan Coach</h3>
-        <p style="font-size: 12px; color: red;">Wajib diisi sebagai syarat sah honor</p>
-        <canvas id="canvasTTD"></canvas>
-        <button class="btn-clear" onclick="clearCanvas()">Hapus Tanda Tangan</button>
-    </div>
-
-    <button class="btn-save" onclick="simpanPertemuan()">SIMPAN & KIRIM LAPORAN</button>
-    <center><a href="#" class="logout" onclick="logout()">Keluar Aplikasi</a></center>
+<header><div id="eks" style="font-weight:bold; font-size:18px;"></div><div id="cName" style="font-size:12px;"></div></header>
+<div class="card">
+  <label>Tanggal Pertemuan</label><input type="date" id="tgl">
+  <label>Materi</label><textarea id="mat" rows="2" placeholder="Tulis materi latihan..."></textarea>
+  <label>Kendala/Alasan (Isi jika tidak hadir krn Perpulangan)</label><textarea id="als" rows="1" placeholder="Contoh: Perpulangan Siswa"></textarea>
 </div>
-
+<div class="card"><h3>Presensi Siswa</h3><div id="sList"></div></div>
+<div class="card"><label>Tanda Tangan Coach</label><canvas id="ttd"></canvas><button onclick="ctx.clearRect(0,0,canvas.width,canvas.height)">Hapus TTD</button></div>
+<div style="padding:15px;"><button class="btn-save" onclick="simpan()">SIMPAN LAPORAN</button></div>
 <script>
-    // 1. KEAMANAN HALAMAN (Hanya bisa dibuka jika sudah login sebagai coach)
-    if (localStorage.getItem("login") !== "true" || localStorage.getItem("role") !== "coach") {
-        window.location.replace("index.html");
-    }
-
-    // 2. TAMPILKAN IDENTITAS COACH & EKSKUL
-    const namaEkskul = localStorage.getItem("ekskul");
-    document.getElementById("displayEkskul").innerText = namaEkskul;
-    document.getElementById("displayNama").innerText = "Coach: " + localStorage.getItem("username");
-
-    // 3. GENERATE DAFTAR SISWA (Menampilkan 30 Siswa Otomatis)
-    const containerSiswa = document.getElementById("daftarSiswa");
-    for (let i = 1; i <= 30; i++) {
-        containerSiswa.innerHTML += `
-            <div class="siswa-item">
-                <span class="siswa-name">Siswa Nomor Absen ${i}</span>
-                <input type="checkbox" class="presensi-check" checked>
-            </div>
-        `;
-    }
-
-    // 4. LOGIKA TANDA TANGAN DIGITAL (CANVAS)
-    const canvas = document.getElementById("canvasTTD");
-    const ctx = canvas.getContext("2d");
-    let drawing = false;
-
-    // Mendukung Sentuhan HP (Touchscreen)
-    canvas.addEventListener("touchstart", (e) => { 
-        e.preventDefault(); 
-        drawing = true; 
-        ctx.beginPath(); 
-        let touch = e.touches[0];
-        let rect = canvas.getBoundingClientRect();
-        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
-    });
-    canvas.addEventListener("touchend", () => drawing = false);
-    canvas.addEventListener("touchmove", (e) => {
-        if (!drawing) return;
-        let touch = e.touches[0];
-        let rect = canvas.getBoundingClientRect();
-        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
-        ctx.stroke();
-    });
-
-    // Mendukung Mouse Laptop
-    canvas.addEventListener("mousedown", (e) => { 
-        drawing = true; 
-        ctx.beginPath(); 
-        let rect = canvas.getBoundingClientRect();
-        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-    });
-    canvas.addEventListener("mouseup", () => drawing = false);
-    canvas.addEventListener("mousemove", (e) => {
-        if (!drawing) return;
-        let rect = canvas.getBoundingClientRect();
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-        ctx.stroke();
-    });
-
-    function clearCanvas() { 
-        ctx.clearRect(0, 0, canvas.width, canvas.height); 
-    }
-
-    // 5. SIMPAN DATA KE LOCALSTORAGE (HUBUNGKAN KE DASHBOARD)
-    function simpanPertemuan() {
-        const tgl = document.getElementById("tgl").value;
-        const materi = document.getElementById("materi").value;
-        const namaEkskul = localStorage.getItem("ekskul");
-        
-        // Cek apakah Tanda Tangan sudah diisi (tidak kosong)
-        const isCanvasEmpty = canvas.toDataURL() === document.createElement('canvas').toDataURL();
-        
-        if (!tgl || !materi) {
-            alert("Harap isi Tanggal dan Materi Latihan!");
-            return;
-        }
-
-        if (isCanvasEmpty) {
-            alert("Tanda Tangan Coach Wajib Diisi!");
-            return;
-        }
-
-        // Hitung jumlah siswa yang hadir (yang dicentang)
-        const totalHadir = document.querySelectorAll('.presensi-check:checked').length;
-
-        // Ambil data lama dari memori (jika ada)
-        let dataEkskul = JSON.parse(localStorage.getItem("data_" + namaEkskul)) || [];
-        
-        // Tambahkan data pertemuan baru
-        dataEkskul.push({
-            tanggal: tgl,
-            materi: materi,
-            hadir: totalHadir,
-            waktuSimpan: new Date().toLocaleString('id-ID')
-        });
-
-        // Simpan permanen di memori browser
-        localStorage.setItem("data_" + namaEkskul, JSON.stringify(dataEkskul));
-
-        alert("LAPORAN SAH!\nData Pertemuan Berhasil Dikirim ke Koordinator.");
-        
-        // Reset form
-        location.reload(); 
-    }
-
-    // 6. FUNGSI LOGOUT
-    function logout() { 
-        localStorage.clear(); 
-        window.location.replace("index.html"); 
-    }
+  if (localStorage.getItem("role") !== "coach") window.location.replace("index.html");
+  const eks = localStorage.getItem("ekskul"); document.getElementById("eks").innerText = eks;
+  document.getElementById("cName").innerText = "Coach: " + localStorage.getItem("username");
+  const siswa = JSON.parse(localStorage.getItem("siswa_" + eks)) || [];
+  const container = document.getElementById("sList");
+  if(siswa.length === 0) container.innerHTML = "<p style='color:red'>Siswa belum diinput Koordinator.</p>";
+  siswa.forEach(n => { container.innerHTML += `<div class="siswa-row"><span>${n}</span><input type="checkbox" class="c" checked></div>`; });
+  const canvas = document.getElementById("ttd"); const ctx = canvas.getContext("2d"); let draw = false;
+  canvas.addEventListener("mousedown", () => { draw = true; ctx.beginPath(); });
+  canvas.addEventListener("mouseup", () => draw = false);
+  canvas.addEventListener("mousemove", (e) => { if(!draw) return; let r = canvas.getBoundingClientRect(); ctx.lineTo(e.clientX - r.left, e.clientY - r.top); ctx.stroke(); });
+  function simpan() {
+    const tgl = document.getElementById("tgl").value; const mat = document.getElementById("mat").value; const als = document.getElementById("als").value;
+    if(!tgl || !mat) return alert("Isi Tanggal & Materi!");
+    let db = JSON.parse(localStorage.getItem("data_" + eks)) || [];
+    db.push({ tgl, mat, hadir: document.querySelectorAll('.c:checked').length });
+    localStorage.setItem("data_" + eks, JSON.stringify(db));
+    if(als) localStorage.setItem("alasan_" + eks, als);
+    alert("Laporan Terkirim!"); location.reload();
+  }
 </script>
-
 </body>
 </html>
-
