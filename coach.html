@@ -6,6 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+<script>
+if (localStorage.getItem("role") !== "coach") {
+  alert("Akses ditolak");
+  window.location.href = "index.html";
+}
+</script>
 
 <h2>Presensi Ekskul</h2>
 Ekstrakurikuler:
@@ -56,3 +62,4 @@ function simpan(){
 
 </body>
 </html>
+
