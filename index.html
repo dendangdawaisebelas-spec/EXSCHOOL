@@ -100,50 +100,30 @@
     ];
 
     function login() {
-      <script>
-const users = [
-  {
-    username: "pakdityapembinaekskulicms",
-    password: "savepalestine",
-    role: "koordinator"
-  },
-  {
-    username: "coachbasketicms",
-    password: "coach123",
-    role: "coach"
-  },
-  {
-    username: "coachfutsalicms",
-    password: "coach123",
-    role: "coach"
-  }
-];
+      const u = document.getElementById("username").value.trim();
+      const p = document.getElementById("password").value.trim();
 
-function login() {
-  const u = document.getElementById("username").value.trim();
-  const p = document.getElementById("password").value.trim();
+      const user = users.find(x => x.username === u && x.password === p);
 
-  const user = users.find(x => x.username === u && x.password === p);
+      if (!user) {
+        alert("Username atau password salah");
+        return;
+      }
 
-  if (!user) {
-    alert("Username atau password salah");
-    return;
-  }
+      // SIMPAN LOGIN
+      localStorage.clear();
+      localStorage.setItem("login", "true");
+      localStorage.setItem("role", user.role);
+      localStorage.setItem("username", user.username);
 
-  // 🔐 SIMPAN ROLE
-  localStorage.setItem("role", user.role);
-  localStorage.setItem("username", user.username);
-
-  // 🚪 ARAHKAN SESUAI ROLE
-  if (user.role === "koordinator") {
-    window.location.href = "dashboard_koordinator.html";
-  } else {
-    window.location.href = "coach.html";
-  }
-}
-</script>
-
+      // ARAHKAN
+      if (user.role === "koordinator") {
+        window.location.replace("dashboard_koordinator.html");
+      } else {
+        window.location.replace("coach.html");
+      }
+    }
+  </script>
 
 </body>
 </html>
-
