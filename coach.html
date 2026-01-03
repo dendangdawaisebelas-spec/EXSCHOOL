@@ -1,65 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Presensi Coach</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard Coach</title>
 </head>
-<body>
-<script>
-if (localStorage.getItem("role") !== "coach") {
-  alert("Akses ditolak");
-  window.location.href = "index.html";
-}
-</script>
-
-<h2>Presensi Ekskul</h2>
-Ekstrakurikuler:
-<input id="ekskul" disabled><br><br>
-
-Tanggal:
-<input type="date" id="tgl"><br><br>
-
-Materi:
-<input id="materi"><br><br>
-
-Jumlah Hadir:
-<input type="number" id="hadir"><br><br>
-
-<button onclick="simpan()">SIMPAN</button>
-
-<script>
-if(localStorage.getItem("role")!=="coach"){
- alert("Akses ditolak");location.href="index.html";
-}
-
-const ekskul=localStorage.getItem("ekskul");
-document.getElementById("ekskul").value=ekskul;
-
-function bulanKey(){
- const d=new Date();
- return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
-}
-function isLocked(){return new Date().getDate()>27;}
-
-function simpan(){
- if(isLocked()){alert("Bulan dikunci");return;}
-
- const bulan=bulanKey();
- const key="pertemuan_"+ekskul+"_"+bulan;
- const data=JSON.parse(localStorage.getItem(key)||"[]");
-
- data.push({
-  tanggal: tgl.value,
-  materi: materi.value,
-  hadir: hadir.value
- });
-
- localStorage.setItem(key,JSON.stringify(data));
- alert("Tersimpan");
-}
-</script>
-
+<body style="font-family:Arial; background:#eef;">
+  <h1>✅ LOGIN BERHASIL</h1>
+  <h2>Dashboard Coach Ekskul</h2>
 </body>
 </html>
-
