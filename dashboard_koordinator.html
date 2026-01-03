@@ -3,82 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Koordinator ICMS</title>
+    <title>Dashboard Koordinator - ICMS</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
-        body { font-family: 'Times New Roman', Times, serif; margin: 0; background: #f0f2f5; padding-bottom: 50px; }
-        header { background: #0a1f44; color: white; padding: 20px; text-align: center; }
-        .container { padding: 20px; max-width: 1100px; margin: auto; }
-        .btn-main { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .card { background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 5px solid #0a1f44; }
+        body { font-family: 'Times New Roman', serif; margin: 0; background: #f0f2f5; padding-bottom: 50px; }
+        header { background: #0a1f44; color: white; padding: 25px; text-align: center; }
+        .container { padding: 20px; max-width: 1200px; margin: auto; }
+        .btn-main { background: #1c7c54; color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; cursor: pointer; margin-bottom: 15px; font-size: 16px; transition: 0.3s; }
+        .btn-main:hover { background: #145c3e; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-top: 6px solid #0a1f44; }
+        .status-badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .status-ok { background: #e8f5e9; color: #2e7d32; }
+        .status-no { background: #ffebee; color: #c62828; }
     </style>
 </head>
 <body>
-<header><h1>Dashboard Koordinator ICMS</h1></header>
+
+<header>
+    <h1>Pusat Komando Koordinator ICMS</h1>
+    <p>Pembina: Ditya Manggala, S.Sn</p>
+</header>
+
 <div class="container">
-    <button class="btn-main" onclick="cetakRAB()">📥 DOWNLOAD RAB HONOR</button>
-    <button class="btn-main" style="background:#0a1f44" onclick="cetakLaporanBulanan()">📘 DOWNLOAD LAPORAN BULANAN</button>
-    <div class="grid" id="gridE"></div>
+    <button class="btn-main" onclick="cetakRAB()">📥 DOWNLOAD RAB HONOR PELATIH (PDF)</button>
+    <button class="btn-main" style="background:#0a1f44" onclick="cetakLaporanBulanan()">📘 DOWNLOAD LAPORAN BULANAN FORMAL (PDF)</button>
+    
+    <h2 style="color:#0a1f44; border-bottom: 2px solid #0a1f44; padding-bottom: 10px;">Monitoring Evaluasi Ekskul</h2>
+    
+    <div class="grid" id="gridEkskul">
+        </div>
 </div>
 
 <script>
     const { jsPDF } = window.jspdf;
-    const tData = { "Panahan": 300000, "Futsal": 250000, "Dokter Kecil": 100000, "Badminton": 150000, "Basket": 250000, "Renang": 150000, "Pramuka": 160000, "Musik": 500000, "Taekwondo": 0 };
+
+    // Database Tarif per Pertemuan (Sesuai RAB Bapak)
+    const tData = { 
+        "Panahan": 300000, 
+        "Futsal": 250000, 
+        "Dokter Kecil": 100000, 
+        "Badminton": 150000, 
+        "Basket": 250000, 
+        "Renang": 150000, 
+        "Pramuka": 160000, 
+        "Musik": 500000, // Tarif Flat per Bulan
+        "Taekwondo": 0,  // Diinput manual via invoice
+        "Nihonggo Club": 0,
+        "English Club": 0
+    };
+
     const ekskuls = Object.keys(tData);
 
-    function render() {
-        const g = document.getElementById("gridE"); g.innerHTML = "";
-        ekskuls.forEach(n => {
-            const d = JSON.parse(localStorage.getItem("data_" + n)) || [];
-            const ev = JSON.parse(localStorage.getItem("eval_" + n)) || null;
-            let sub = (n === "Musik") ? 500000 : (n === "Taekwondo" ? (parseInt(localStorage.getItem("t_Taek")) || 0) : d.length * tData[n]);
-            g.innerHTML += `<div class="card">
-                <b>${n}</b><br><small>Pertemuan: ${d.length}</small><br>
-                Sub-Total: <b>Rp ${sub.toLocaleString()}</b><br>
-                Laporan: ${ev ? '<span style="color:green">Ada</span>' : '<span style="color:red">Belum</span>'}
-            </div>`;
+    function renderDashboard() {
+        const grid = document.getElementById("gridEkskul");
+        grid.innerHTML = "";
+
+        ekskuls.forEach(nama => {
+            const dataHarian = JSON.parse(localStorage.getItem("data_" + nama)) || [];
+            const evaluasi = JSON.parse(localStorage.getItem("eval_" + nama)) || null;
+            
+            // Hitung Honor
+            let totalHonor = 0;
+            if (nama === "Musik") {
+                totalHonor = 500000;
+            } else if (nama === "Taekwondo") {
+                totalHonor = parseInt(localStorage.getItem("t_Taek")) || 0;
+            } else {
+                totalHonor = dataHarian.length * tData[nama];
+            }
+
+            grid.innerHTML += `
+                <div class="card">
+                    <h3 style="margin: 0 0 10px 0;">${nama}</h3>
+                    <p>Jumlah Pertemuan: <b>${dataHarian.length} kali</b></p>
+                    <p>Estimasi Honor: <b>Rp ${totalHonor.toLocaleString()}</b></p>
+                    <hr>
+                    <p>Status Evaluasi Bulanan: 
+                        ${evaluasi 
+                            ? '<span class="status-badge status-ok">LENGKAP + 3 FOTO</span>' 
+                            : '<span class="status-badge status-no">BELUM DIISI</span>'}
+                    </p>
+                </div>
+            `;
         });
     }
 
+    // FUNGSI 1: CETAK RAB
     function cetakRAB() {
         const doc = new jsPDF();
-        doc.setFontSize(14); doc.text("RENCANA ANGGARAN BIAYA - ICMS", 105, 15, {align:"center"});
-        let rows = []; let tot = 0;
-        ekskuls.forEach((n, i) => {
-            let d = JSON.parse(localStorage.getItem("data_"+n))||[];
-            let sub = (n === "Musik") ? 500000 : (n === "Taekwondo" ? parseInt(localStorage.getItem("t_Taek"))||0 : d.length * tData[n]);
-            tot += sub; rows.push([i+1, n, tData[n].toLocaleString(), d.length, "Rp "+sub.toLocaleString()]);
+        doc.setFontSize(14);
+        doc.text("RENCANA ANGGARAN BIAYA (RAB) HONOR PELATIH", 105, 15, {align:"center"});
+        doc.text("ICMS - NOVEMBER 2025", 105, 22, {align:"center"});
+
+        let rows = [];
+        let grandTotal = 0;
+
+        ekskuls.forEach((nama, i) => {
+            let dataHarian = JSON.parse(localStorage.getItem("data_" + nama)) || [];
+            let sub = (nama === "Musik") ? 500000 : (nama === "Taekwondo" ? parseInt(localStorage.getItem("t_Taek")) || 0 : dataHarian.length * tData[nama]);
+            grandTotal += sub;
+            rows.push([i+1, nama, "Rp " + tData[nama].toLocaleString(), dataHarian.length, "Rp " + sub.toLocaleString()]);
         });
-        doc.autoTable({ startY: 25, head: [['No','Ekskul','Satuan','Vol','Total']], body: rows });
-        doc.text("Bogor, 29 Nov 2025", 140, doc.lastAutoTable.finalY + 15);
-        doc.text("( Ditya Manggala, S.Sn )", 140, doc.lastAutoTable.finalY + 35);
-        doc.save("RAB_ICMS.pdf");
+
+        doc.autoTable({
+            startY: 30,
+            head: [['No', 'Ekstrakurikuler', 'Tarif Satuan', 'Vol', 'Total']],
+            body: rows,
+            foot: [['', '', '', 'GRAND TOTAL', "Rp " + grandTotal.toLocaleString()]]
+        });
+
+        doc.text("Bogor, 25 November 2025", 140, doc.lastAutoTable.finalY + 20);
+        doc.text("Koordinator Ekskul,", 140, doc.lastAutoTable.finalY + 27);
+        doc.text("( Ditya Manggala, S.Sn )", 140, doc.lastAutoTable.finalY + 50);
+
+        doc.save("RAB_Honor_ICMS.pdf");
     }
 
+    // FUNGSI 2: CETAK LAPORAN BULANAN FORMAL + FOTO
     function cetakLaporanBulanan() {
         const doc = new jsPDF();
-        doc.setFont("times", "bold"); doc.text("LAPORAN BULANAN PEMBINA EKSKUL", 105, 40, {align:"center"});
-        doc.setFontSize(12); doc.text("Ditya Manggala, S.Sn", 105, 50, {align:"center"});
+        const periode = prompt("Masukkan Periode Laporan:", "NOVEMBER 2025");
+
+        // --- HALAMAN COVER ---
+        doc.setFont("times", "bold"); doc.setFontSize(18);
+        doc.text("LAPORAN BULANAN EKSTRAKURIKULER", 105, 80, {align:"center"});
+        doc.text("SMP - SMA INSAN CENDEKIA MAGNET SCHOOL", 105, 90, {align:"center"});
+        doc.setFontSize(14); doc.text(periode, 105, 100, {align:"center"});
         
-        ekskuls.forEach(n => {
-            const ev = JSON.parse(localStorage.getItem("eval_" + n));
+        doc.setFontSize(12);
+        doc.text("Disusun Oleh:", 105, 150, {align:"center"});
+        doc.text("Ditya Manggala, S.Sn", 105, 157, {align:"center"});
+
+        // --- LOOPING DATA TIAP EKSKUL ---
+        ekskuls.forEach(nama => {
+            const ev = JSON.parse(localStorage.getItem("eval_" + nama));
+            
             if(ev) {
+                // Halaman Narasi
                 doc.addPage();
-                doc.text("LAPORAN: " + n, 20, 20);
-                doc.setFont("times", "normal");
-                doc.text("Kendala: " + ev.kendala, 20, 35);
-                if(ev.fotos) {
-                    doc.addImage(ev.fotos[0], 'JPEG', 20, 50, 80, 50);
-                    doc.addImage(ev.fotos[1], 'JPEG', 110, 50, 80, 50);
-                    doc.addImage(ev.fotos[2], 'JPEG', 20, 110, 80, 50);
+                doc.setFont("times", "bold"); doc.setFontSize(14);
+                doc.text("EVALUASI BULANAN: " + nama.toUpperCase(), 20, 20);
+                
+                doc.setFont("times", "normal"); doc.setFontSize(11);
+                let y = 35;
+                doc.text("1. Agenda Kegiatan:", 20, y);
+                doc.text(doc.splitTextToSize(ev.agenda || "-", 170), 25, y + 7);
+                
+                y += 25;
+                doc.text("2. Hasil & Capaian Siswa:", 20, y);
+                doc.text(doc.splitTextToSize(ev.capaian || "-", 170), 25, y + 7);
+                
+                y += 25;
+                doc.text("3. Kendala & Hambatan:", 20, y);
+                doc.text(doc.splitTextToSize(ev.kendala || "-", 170), 25, y + 7);
+
+                // Halaman Lampiran Foto (Jika Ada)
+                if(ev.fotos && ev.fotos.length >= 3) {
+                    doc.addPage();
+                    doc.setFont("times", "bold");
+                    doc.text("LAMPIRAN FOTO KEGIATAN: " + nama.toUpperCase(), 105, 20, {align:"center"});
+                    
+                    // Tata letak 3 foto
+                    try {
+                        doc.addImage(ev.fotos[0], 'JPEG', 30, 30, 150, 75);
+                        doc.addImage(ev.fotos[1], 'JPEG', 30, 115, 150, 75);
+                        doc.addPage();
+                        doc.addImage(ev.fotos[2], 'JPEG', 30, 30, 150, 75);
+                    } catch (e) {
+                        doc.text("[Gagal memuat foto - Pastikan format gambar benar]", 50, 50);
+                    }
                 }
             }
         });
-        doc.save("Laporan_Lengkap.pdf");
+
+        doc.save(`Laporan_Formal_ICMS_${periode}.pdf`);
     }
-    render();
+
+    // Jalankan render saat halaman dibuka
+    renderDashboard();
 </script>
+
 </body>
 </html>
