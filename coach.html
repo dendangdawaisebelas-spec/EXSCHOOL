@@ -7,4 +7,12 @@
   <h1>✅ LOGIN BERHASIL</h1>
   <h2>Dashboard Coach Ekskul</h2>
 </body>
+  <script>
+  if (localStorage.getItem("role") !== "coach") {
+    alert("Akses ditolak!");
+    window.location.href = "index.html";
+  }
+</script>
+
 </html>
+
