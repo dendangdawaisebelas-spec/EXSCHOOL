@@ -5,6 +5,12 @@
 <title>Dashboard Koordinator</title>
 </head>
 <body>
+<script>
+if (localStorage.getItem("role") !== "koordinator") {
+  alert("Akses ditolak");
+  window.location.href = "index.html";
+}
+</script>
 
 <h2>Dashboard Koordinator</h2>
 
@@ -87,3 +93,4 @@ function restore(){
 
 </body>
 </html>
+
