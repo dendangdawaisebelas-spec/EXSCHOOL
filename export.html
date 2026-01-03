@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Export Presensi</title>
+</head>
+<body>
+
+<button onclick="window.print()">CETAK / PDF</button>
+
+<h2>Laporan Presensi</h2>
+<p>Ekskul: <b id="e"></b></p>
+
+<table border="1" width="100%">
+<tr><th>No</th><th>Tanggal</th><th>Materi</th><th>Hadir</th></tr>
+<tbody id="t"></tbody>
+</table>
+
+<p style="margin-top:40px">
+Pembina Ekskul,<br><br><br>
+<b id="c"></b>
+</p>
+
+<script>
+const e=localStorage.getItem("ekskul");
+const b=new Date();
+const key="pertemuan_"+e+"_"+b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");
+const d=JSON.parse(localStorage.getItem(key)||"[]");
+
+document.getElementById("e").innerText=e;
+document.getElementById("c").innerText=localStorage.getItem("username");
+
+let h="";
+d.forEach((x,i)=>{
+ h+=`<tr><td>${i+1}</td><td>${x.tanggal}</td><td>${x.materi}</td><td>${x.hadir}</td></tr>`;
+});
+document.getElementById("t").innerHTML=h;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Rekap Honor</title>
+</head>
+<body>
+
+<button onclick="window.print()">CETAK</button>
+<h2>Rekap Honor Ekskul</h2>
+
+<table border="1" width="100%">
+<tr><th>No</th><th>Ekskul</th><th>Pertemuan</th><th>Honor</th></tr>
+<tbody id="r"></tbody>
+</table>
+
+<script>
+if(localStorage.getItem("role")!=="koordinator"){
+ alert("Akses ditolak");location.href="index.html";
+}
+
+const ekskulList=["Basket","Futsal","Pramuka","Musik"];
+const TARIF=50000;
+const b=new Date();
+const bulan=b.getFullYear()+"-"+String(b.getMonth()+1).padStart(2,"0");
+
+let h="",t=0;
+ekskulList.forEach((e,i)=>{
+ const d=JSON.parse(localStorage.getItem("pertemuan_"+e+"_"+bulan)||"[]");
+ const honor=d.length*TARIF; t+=honor;
+ h+=`<tr><td>${i+1}</td><td>${e}</td><td>${d.length}</td><td>Rp ${honor.toLocaleString()}</td></tr>`;
+});
+document.getElementById("r").innerHTML=h+`<tr><td colspan="3"><b>Total</b></td><td><b>Rp ${t.toLocaleString()}</b></td></tr>`;
+</script>
+
+</body>
+</html>

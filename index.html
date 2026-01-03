@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Login Presensi Ekskul</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  font-family:Arial;
+  background:linear-gradient(135deg,#0a1f44,#163d7a);
+  height:100vh;display:flex;justify-content:center;align-items:center
+}
+.box{
+  background:#fff;padding:25px;border-radius:10px;
+  width:90%;max-width:360px
+}
+input,button{width:100%;padding:10px;margin-top:10px}
+button{background:#0a1f44;color:#fff;border:none}
+</style>
+</head>
+<body>
+
+<div class="box">
+<h2>Login Sistem Ekskul</h2>
+<input id="user" placeholder="Username">
+<input id="pass" type="password" placeholder="Password">
+<button onclick="login()">LOGIN</button>
+</div>
+
+<script>
+const akun={
+ admin:{pass:"admin123",role:"koordinator"},
+ coach_basket:{pass:"basket123",role:"coach",ekskul:"Basket"},
+ coach_futsal:{pass:"futsal123",role:"coach",ekskul:"Futsal"},
+ coach_pramuka:{pass:"pramuka123",role:"coach",ekskul:"Pramuka"},
+ coach_musik:{pass:"musik123",role:"coach",ekskul:"Musik"}
+};
+
+function login(){
+ const u=user.value,p=pass.value;
+ if(akun[u]&&akun[u].pass===p){
+  localStorage.setItem("role",akun[u].role);
+  localStorage.setItem("ekskul",akun[u].ekskul||"");
+  localStorage.setItem("username",u);
+  location.href=akun[u].role==="koordinator"
+   ?"dashboard_koordinator.html":"coach.html";
+ }else alert("Login gagal");
+}
+</script>
+
+</body>
+</html>

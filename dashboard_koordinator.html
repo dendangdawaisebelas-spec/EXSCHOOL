@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Koordinator</title>
+</head>
+<body>
+
+<h2>Dashboard Koordinator</h2>
+
+<script>
+if(localStorage.getItem("role")!=="koordinator"){
+ alert("Akses ditolak");location.href="index.html";
+}
+
+const TARIF=50000;
+const ekskulList=["Basket","Futsal","Pramuka","Musik"];
+
+function bulanKey(){
+ const d=new Date();
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+}
+function rupiah(n){return "Rp "+n.toLocaleString("id-ID");}
+
+function hitungStatus(e){
+ const bulan=bulanKey();
+ const key="pertemuan_"+e+"_"+bulan;
+ const j=(JSON.parse(localStorage.getItem(key)||"[]")).length;
+ const tung=Number(localStorage.getItem("tunggakan_"+e)||0);
+ const target=3+tung;
+ let status="BELUM CLEAR";
+
+ if(j>=target){
+  status=(new Date().getDate()<=25)?"CLEAR":"CLEAR TERLAMBAT";
+  localStorage.setItem("tunggakan_"+e,0);
+ }else localStorage.setItem("tunggakan_"+e,target-j);
+
+ localStorage.setItem("status_"+e+"_"+bulan,status);
+ return status;
+}
+</script>
+
+<ul>
+<script>
+let total=0;
+ekskulList.forEach(e=>{
+ const bulan=bulanKey();
+ const key="pertemuan_"+e+"_"+bulan;
+ const j=(JSON.parse(localStorage.getItem(key)||"[]")).length;
+ const honor=j*TARIF;
+ total+=honor;
+ document.write(`<li>${e} | ${hitungStatus(e)} | ${rupiah(honor)}</li>`);
+});
+document.write("<b>Total: "+rupiah(total)+"</b>");
+</script>
+</ul>
+
+<hr>
+<h3>Backup / Restore</h3>
+<button onclick="backup()">Backup</button>
+<input type="file" id="file">
+<button onclick="restore()">Restore</button>
+
+<script>
+function backup(){
+ const d={};
+ for(let i=0;i<localStorage.length;i++){
+  const k=localStorage.key(i);
+  d[k]=localStorage.getItem(k);
+ }
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(new Blob([JSON.stringify(d)],{type:"json"}));
+ a.download="backup_ekskul.json";a.click();
+}
+function restore(){
+ const f=file.files[0]; if(!f)return;
+ const r=new FileReader();
+ r.onload=e=>{
+  const d=JSON.parse(e.target.result);
+  localStorage.clear();
+  for(let k in d)localStorage.setItem(k,d[k]);
+  alert("Restore selesai");
+ };
+ r.readAsText(f);
+}
+</script>
+
+</body>
+</html>
