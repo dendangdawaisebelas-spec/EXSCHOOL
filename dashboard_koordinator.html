@@ -3,134 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Koordinator ICMS</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title>Pusat Koordinator ICMS</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; background: #f0f2f5; padding-bottom: 50px; }
+        body { font-family: 'Segoe UI', Arial; margin: 0; background: #f0f2f5; padding-bottom: 50px; }
         header { background: #0a1f44; color: white; padding: 20px; text-align: center; }
         .container { padding: 20px; max-width: 1200px; margin: auto; }
-        .grid-ekskul { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
         .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid #0a1f44; }
-        
-        /* Dashboard Stats */
-        .stats-container { display: flex; gap: 15px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
-        .stat-box { background: white; padding: 15px; border-radius: 10px; flex: 1; min-width: 150px; text-align: center; border-bottom: 4px solid #0a1f44; }
-        .stat-box h4 { margin: 0; color: #666; font-size: 12px; }
-        .stat-box p { margin: 5px 0 0; font-size: 20px; font-weight: bold; }
-
-        .status-badge { font-size: 11px; padding: 4px 8px; border-radius: 20px; text-transform: uppercase; font-weight: bold; }
-        .clear { background: #d4edda; color: #155724; }
-        .pending { background: #fff3cd; color: #856404; }
-        .late { background: #f8d7da; color: #721c24; }
-
-        .btn-main { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-size: 16px; cursor: pointer; margin-bottom: 20px; font-weight: bold; }
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-action { flex: 1; padding: 10px; border-radius: 8px; cursor: pointer; font-size: 11px; border: 1px solid #ddd; font-weight: bold; }
-        
-        /* Warning Table */
-        .warning-box { background: #fff1f1; border: 1px solid #ffcccc; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .warning-box h3 { margin: 0 0 10px 0; color: #d9534f; font-size: 16px; }
+        .badge { font-size: 11px; padding: 4px 8px; border-radius: 20px; text-transform: uppercase; font-weight: bold; float: right; }
+        .clear { background: #d4edda; color: #155724; } .pending { background: #fff3cd; color: #856404; }
+        .btn-rab { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
+        .btn-act { flex: 1; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 11px; border: 1px solid #ddd; font-weight: bold; }
+        .logout { background: #ff4d4d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; float: right; margin-top: -55px; }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>Pusat Komando Koordinator</h1>
-    <p>SMP-SMA Insan Cendekia Magnet School</p>
-</header>
-
+<header><h1>Dashboard Koordinator</h1><p>Insan Cendekia Magnet School</p></header>
 <div class="container">
-    <div class="stats-container">
-        <div class="stat-box"><h4>Target Pertemuan</h4><p>3 / Bulan</p></div>
-        <div class="stat-box"><h4>Total Honor</h4><p id="totalHonor">Rp 0</p></div>
-        <div class="stat-box"><h4>Deadline</h4><p>Tgl 25</p></div>
-    </div>
-
-    <div class="warning-box" id="warningBox" style="display:none;">
-        <h3>⚠️ PERINGATAN SISWA (ALFA > 2X)</h3>
-        <div id="warningList" style="font-size:13px; color:#333;"></div>
-    </div>
-
-    <button class="btn-main" onclick="exportKeExcel()">📥 DOWNLOAD REKAP LAPORAN (EXCEL)</button>
-
-    <div class="grid-ekskul" id="gridEkskul"></div>
+    <button class="logout" onclick="localStorage.clear(); location.replace('index.html')">Logout</button>
+    <button class="btn-rab" onclick="cetakRAB()">📄 DOWNLOAD RAB (NOVEMBER 2025)</button>
+    <div class="grid" id="grid"></div>
 </div>
-
 <script>
-    const daftarEkskul = ["Pramuka", "Nihonggo Club", "English Club", "Taekwondo", "Badminton", "Futsal", "Basket", "Panahan", "Dokter Kecil", "Renang", "Musik"];
-    const HONOR = 50000;
-
-    function renderDashboard() {
-        const grid = document.getElementById("gridEkskul");
-        grid.innerHTML = "";
-        let grandTotalHonor = 0;
-        let warningContent = "";
-
-        daftarEkskul.forEach(nama => {
-            const dataPertemuan = JSON.parse(localStorage.getItem("data_" + nama)) || [];
-            const daftarSiswa = JSON.parse(localStorage.getItem("siswa_" + nama)) || [];
-            const honorEkskul = dataPertemuan.length * HONOR;
-            grandTotalHonor += honorEkskul;
-
-            // Logika Status
-            let statusTeks = "Proses"; let statusClass = "pending";
-            if (dataPertemuan.length >= 3) { statusTeks = "Clear"; statusClass = "clear"; }
-            else if (new Date().getDate() > 25) { statusTeks = "Terlambat"; statusClass = "late"; }
-
-            const card = document.createElement("div");
-            card.className = "card";
-            card.innerHTML = `
-                <div style="font-weight:bold; color:#0a1f44; margin-bottom:10px; display:flex; justify-content:space-between;">
-                    ${nama} <span class="status-badge ${statusClass}">${statusTeks}</span>
+    const { jsPDF } = window.jspdf;
+    const ekskuls = ["Panahan", "Futsal", "Dokter Kecil", "Badminton", "Basket", "Renang", "Pramuka", "Musik", "Taekwondo", "Nihonggo Club", "English Club"];
+    
+    function render() {
+        const g = document.getElementById("grid"); g.innerHTML = "";
+        ekskuls.forEach(n => {
+            const d = JSON.parse(localStorage.getItem("data_" + n)) || [];
+            const s = JSON.parse(localStorage.getItem("siswa_" + n)) || [];
+            const t = localStorage.getItem("tarif_" + n) || 0;
+            const a = localStorage.getItem("alasan_" + n) || "";
+            let isClear = (d.length >= 3); if(n === "Musik") isClear = (d.length >= 4 || a !== "");
+            
+            g.innerHTML += `<div class="card">
+                <span class="badge ${isClear ? 'clear':'pending'}">${isClear ? 'Clear':'Proses'}</span>
+                <div style="font-weight:bold; color:#0a1f44;">${n}</div>
+                <div style="font-size:13px; color:#666; margin-top:10px;">
+                    <p>Pertemuan: ${d.length} | Siswa: ${s.length}</p>
+                    <p>Honor: <b>Rp ${(n === "Musik" ? 500000 : d.length * t).toLocaleString()}</b></p>
                 </div>
-                <div style="font-size:13px; color:#666;">
-                    <p>Realisasi: <b>${dataPertemuan.length} / 3 Pertemuan</b></p>
-                    <p>Anggota: <b>${daftarSiswa.length} Siswa</b></p>
-                    <p>Honor: <b style="color:#1c7c54;">Rp ${honorEkskul.toLocaleString()}</b></p>
+                <div style="display:flex; gap:5px; margin-top:10px;">
+                    <button class="btn-act" onclick="setTarif('${n}')">💰 TARIF</button>
+                    <button class="btn-act" onclick="setSiswa('${n}')">👤 SISWA</button>
+                    <button class="btn-act" onclick="alert('Laporan ${n}: '+JSON.stringify(d))">📋 DATA</button>
                 </div>
-                <div class="btn-group">
-                    <button class="btn-action" onclick="panggilInputSiswa('${nama}')">👤 KELOLA SISWA</button>
-                    <button class="btn-action" style="background:#0a1f44; color:white;" onclick="lihatDetail('${nama}')">📋 DETAIL</button>
-                </div>
-            `;
-            grid.appendChild(card);
+            </div>`;
         });
-
-        document.getElementById("totalHonor").innerText = "Rp " + grandTotalHonor.toLocaleString();
     }
 
-    function panggilInputSiswa(namaEkskul) {
-        const siswaLama = JSON.parse(localStorage.getItem("siswa_" + namaEkskul)) || [];
-        const input = prompt("Input Nama Siswa (Pisahkan dengan koma):", siswaLama.join(", "));
-        if (input !== null) {
-            localStorage.setItem("siswa_" + namaEkskul, JSON.stringify(input.split(",").map(s => s.trim()).filter(s => s !== "")));
-            renderDashboard();
-        }
-    }
+    function setTarif(n) { const t = prompt(`Set Tarif ${n}:`, 0); if(t) { localStorage.setItem("tarif_"+n, t); render(); } }
+    function setSiswa(n) { const s = prompt(`Input Nama Siswa ${n} (pisahkan koma):`, ""); if(s) { localStorage.setItem("siswa_"+n, JSON.stringify(s.split(",").map(x => x.trim()))); render(); } }
 
-    function lihatDetail(nama) {
-        const data = JSON.parse(localStorage.getItem("data_" + nama)) || [];
-        if(data.length === 0) return alert("Belum ada laporan.");
-        let teks = `DETAIL LAPORAN ${nama.toUpperCase()}\n------------------------\n`;
-        data.forEach((p, i) => teks += `${i+1}. Tgl: ${p.tanggal} | Materi: ${p.materi} | Hadir: ${p.hadir}\n`);
-        alert(teks);
-    }
-
-    function exportKeExcel() {
-        let wb = XLSX.utils.book_new();
-        let dataRekap = [["Nama Ekskul", "Jumlah Pertemuan", "Total Honor", "Status"]];
-        
-        daftarEkskul.forEach(nama => {
-            const data = JSON.parse(localStorage.getItem("data_" + nama)) || [];
-            dataRekap.push([nama, data.length, data.length * HONOR, data.length >= 3 ? "CLEAR" : "PENDING"]);
+    function cetakRAB() {
+        const doc = new jsPDF(); 
+        doc.setFontSize(14); doc.text("RENCANA ANGGARAN BIAYA - ICMS", 105, 20, {align:"center"});
+        doc.setFontSize(10); doc.text("Jl. Tangkil No.123, Caringin, Bogor", 105, 26, {align:"center"});
+        doc.line(20, 30, 190, 30);
+        let rows = []; let total = 0;
+        ekskuls.forEach((n, i) => {
+            const d = JSON.parse(localStorage.getItem("data_"+n))||[];
+            const t = parseInt(localStorage.getItem("tarif_"+n))||0;
+            let sub = (n === "Musik") ? 500000 : d.length * t; total += sub;
+            rows.push([i+1, n, d.length, "Rp "+sub.toLocaleString()]);
         });
-
-        let ws = XLSX.utils.aoa_to_sheet(dataRekap);
-        XLSX.utils.book_append_sheet(wb, ws, "Rekap_Honor");
-        XLSX.writeFile(wb, "Laporan_Ekskul_ICMS.xlsx");
+        doc.autoTable({ startY: 40, head: [['No','Ekskul','Pertemuan','Insentif']], body: rows });
+        const finalY = doc.lastAutoTable.finalY + 10;
+        doc.text("TOTAL: Rp "+total.toLocaleString(), 140, finalY);
+        const aMus = localStorage.getItem("alasan_Musik") || "";
+        if(aMus) doc.text("Note Musik: "+aMus, 20, finalY + 10);
+        doc.text("Koordinator: Ditya Manggala, S.Sn.", 130, finalY + 30);
+        doc.save("RAB_ICMS_NOVEMBER_2025.pdf");
     }
-
-    renderDashboard();
+    render();
 </script>
 </body>
 </html>
