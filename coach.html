@@ -59,16 +59,17 @@
 </div>
 
 <script>
-    // 1. KEAMANAN HALAMAN
+    // 1. KEAMANAN HALAMAN (Hanya bisa dibuka jika sudah login sebagai coach)
     if (localStorage.getItem("login") !== "true" || localStorage.getItem("role") !== "coach") {
         window.location.replace("index.html");
     }
 
+    // 2. TAMPILKAN IDENTITAS COACH & EKSKUL
     const namaEkskul = localStorage.getItem("ekskul");
     document.getElementById("displayEkskul").innerText = namaEkskul;
     document.getElementById("displayNama").innerText = "Coach: " + localStorage.getItem("username");
 
-    // 2. GENERATE DAFTAR SISWA (Simulasi 30 Siswa)
+    // 3. GENERATE DAFTAR SISWA (Menampilkan 30 Siswa Otomatis)
     const containerSiswa = document.getElementById("daftarSiswa");
     for (let i = 1; i <= 30; i++) {
         containerSiswa.innerHTML += `
@@ -79,13 +80,20 @@
         `;
     }
 
-    // 3. LOGIKA TANDA TANGAN (CANVAS)
+    // 4. LOGIKA TANDA TANGAN DIGITAL (CANVAS)
     const canvas = document.getElementById("canvasTTD");
     const ctx = canvas.getContext("2d");
     let drawing = false;
 
-    // Mendukung Sentuhan HP
-    canvas.addEventListener("touchstart", (e) => { e.preventDefault(); drawing = true; ctx.beginPath(); });
+    // Mendukung Sentuhan HP (Touchscreen)
+    canvas.addEventListener("touchstart", (e) => { 
+        e.preventDefault(); 
+        drawing = true; 
+        ctx.beginPath(); 
+        let touch = e.touches[0];
+        let rect = canvas.getBoundingClientRect();
+        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+    });
     canvas.addEventListener("touchend", () => drawing = false);
     canvas.addEventListener("touchmove", (e) => {
         if (!drawing) return;
@@ -96,7 +104,12 @@
     });
 
     // Mendukung Mouse Laptop
-    canvas.addEventListener("mousedown", () => { drawing = true; ctx.beginPath(); });
+    canvas.addEventListener("mousedown", (e) => { 
+        drawing = true; 
+        ctx.beginPath(); 
+        let rect = canvas.getBoundingClientRect();
+        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+    });
     canvas.addEventListener("mouseup", () => drawing = false);
     canvas.addEventListener("mousemove", (e) => {
         if (!drawing) return;
@@ -105,25 +118,59 @@
         ctx.stroke();
     });
 
-    function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    function clearCanvas() { 
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+    }
 
-    // 4. SIMPAN DATA
+    // 5. SIMPAN DATA KE LOCALSTORAGE (HUBUNGKAN KE DASHBOARD)
     function simpanPertemuan() {
         const tgl = document.getElementById("tgl").value;
         const materi = document.getElementById("materi").value;
+        const namaEkskul = localStorage.getItem("ekskul");
+        
+        // Cek apakah Tanda Tangan sudah diisi (tidak kosong)
+        const isCanvasEmpty = canvas.toDataURL() === document.createElement('canvas').toDataURL();
         
         if (!tgl || !materi) {
-            alert("Harap isi Tanggal dan Materi!");
+            alert("Harap isi Tanggal dan Materi Latihan!");
             return;
         }
 
-        // Simpan Data (Simulasi)
-        alert("Laporan Sah! Data berhasil disimpan untuk ekskul " + namaEkskul);
-        location.reload();
+        if (isCanvasEmpty) {
+            alert("Tanda Tangan Coach Wajib Diisi!");
+            return;
+        }
+
+        // Hitung jumlah siswa yang hadir (yang dicentang)
+        const totalHadir = document.querySelectorAll('.presensi-check:checked').length;
+
+        // Ambil data lama dari memori (jika ada)
+        let dataEkskul = JSON.parse(localStorage.getItem("data_" + namaEkskul)) || [];
+        
+        // Tambahkan data pertemuan baru
+        dataEkskul.push({
+            tanggal: tgl,
+            materi: materi,
+            hadir: totalHadir,
+            waktuSimpan: new Date().toLocaleString('id-ID')
+        });
+
+        // Simpan permanen di memori browser
+        localStorage.setItem("data_" + namaEkskul, JSON.stringify(dataEkskul));
+
+        alert("LAPORAN SAH!\nData Pertemuan Berhasil Dikirim ke Koordinator.");
+        
+        // Reset form
+        location.reload(); 
     }
 
-    function logout() { localStorage.clear(); window.location.replace("index.html"); }
+    // 6. FUNGSI LOGOUT
+    function logout() { 
+        localStorage.clear(); 
+        window.location.replace("index.html"); 
+    }
 </script>
 
 </body>
 </html>
+
