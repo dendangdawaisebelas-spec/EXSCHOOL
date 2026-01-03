@@ -23,31 +23,63 @@
 <header><h1>Dashboard Koordinator</h1><p>Insan Cendekia Magnet School</p></header>
 <div class="container">
     <button class="logout" onclick="localStorage.clear(); location.replace('index.html')">Logout</button>
-    <button class="btn-rab" onclick="cetakRAB()">📄 DOWNLOAD RAB (NOVEMBER 2025)</button>
+    <button class="btn-rab" onclick="cetakRAB()">📄 DOWNLOAD RAB (TA 2025-2026)</button>
     <div class="grid" id="grid"></div>
 </div>
 <script>
     const { jsPDF } = window.jspdf;
-    const ekskuls = ["Panahan", "Futsal", "Dokter Kecil", "Badminton", "Basket", "Renang", "Pramuka", "Musik", "Taekwondo", "Nihonggo Club", "English Club"];
+
+    // DATA TARIF OTOMATIS (Sesuai dokumen RAB Bapak)
+    const tarifData = {
+        "Panahan": 300000,     // 
+        "Futsal": 250000,      // 
+        "Dokter Kecil": 100000, // 
+        "Badminton": 150000,   // 
+        "Basket": 250000,      // 
+        "Renang": 150000,      // 
+        "Pramuka": 160000,     // 
+        "Musik": 500000,       // [cite: 15]
+        "Taekwondo": 0,        // Diisi manual sesuai Invoice per murid
+        "Nihonggo Club": 0,    // Silakan sesuaikan jika ada
+        "English Club": 0      // Silakan sesuaikan jika ada
+    };
+
+    const ekskuls = Object.keys(tarifData);
     
     function render() {
         const g = document.getElementById("grid"); g.innerHTML = "";
+        let grandTotal = 0;
+
         ekskuls.forEach(n => {
             const d = JSON.parse(localStorage.getItem("data_" + n)) || [];
             const s = JSON.parse(localStorage.getItem("siswa_" + n)) || [];
-            const t = localStorage.getItem("tarif_" + n) || 0;
             const a = localStorage.getItem("alasan_" + n) || "";
-            let isClear = (d.length >= 3); if(n === "Musik") isClear = (d.length >= 4 || a !== "");
+            
+            // Hitung Honor
+            let sub = 0;
+            if (n === "Musik") {
+                sub = 500000; // Flat per bulan [cite: 15]
+            } else if (n === "Taekwondo") {
+                sub = parseInt(localStorage.getItem("tarif_Taekwondo")) || 0; 
+            } else {
+                sub = d.length * tarifData[n];
+            }
+            grandTotal += sub;
+
+            // Logika Status Clear
+            let isClear = (d.length >= 3); 
+            if(n === "Musik") isClear = (d.length >= 4 || a !== "");
             
             g.innerHTML += `<div class="card">
                 <span class="badge ${isClear ? 'clear':'pending'}">${isClear ? 'Clear':'Proses'}</span>
                 <div style="font-weight:bold; color:#0a1f44;">${n}</div>
                 <div style="font-size:13px; color:#666; margin-top:10px;">
                     <p>Pertemuan: ${d.length} | Siswa: ${s.length}</p>
-                    <p>Honor: <b>Rp ${(n === "Musik" ? 500000 : d.length * t).toLocaleString()}</b></p>
+                    <p>Tarif: Rp ${tarifData[n].toLocaleString()}/pertemuan</p>
+                    <p>Sub-Total: <b style="color:#1c7c54;">Rp ${sub.toLocaleString()}</b></p>
                 </div>
                 <div style="display:flex; gap:5px; margin-top:10px;">
-                    <button class="btn-act" onclick="setTarif('${n}')">💰 TARIF</button>
+                    ${n === "Taekwondo" ? `<button class="btn-act" onclick="setTaekwondo()">💰 INPUT INVOICE</button>` : ''}
                     <button class="btn-act" onclick="setSiswa('${n}')">👤 SISWA</button>
                     <button class="btn-act" onclick="alert('Laporan ${n}: '+JSON.stringify(d))">📋 DATA</button>
                 </div>
@@ -55,28 +87,41 @@
         });
     }
 
-    function setTarif(n) { const t = prompt(`Set Tarif ${n}:`, 0); if(t) { localStorage.setItem("tarif_"+n, t); render(); } }
-    function setSiswa(n) { const s = prompt(`Input Nama Siswa ${n} (pisahkan koma):`, ""); if(s) { localStorage.setItem("siswa_"+n, JSON.stringify(s.split(",").map(x => x.trim()))); render(); } }
+    function setTaekwondo() {
+        const t = prompt("Masukkan Total Invoice Taekwondo (Angka saja):", 0);
+        if(t) { localStorage.setItem("tarif_Taekwondo", t); render(); }
+    }
+
+    function setSiswa(n) {
+        const s = prompt(`Input Nama Siswa ${n} (pisahkan koma):`, "");
+        if(s) { localStorage.setItem("siswa_"+n, JSON.stringify(s.split(",").map(x => x.trim()))); render(); }
+    }
 
     function cetakRAB() {
         const doc = new jsPDF(); 
         doc.setFontSize(14); doc.text("RENCANA ANGGARAN BIAYA - ICMS", 105, 20, {align:"center"});
         doc.setFontSize(10); doc.text("Jl. Tangkil No.123, Caringin, Bogor", 105, 26, {align:"center"});
         doc.line(20, 30, 190, 30);
+        
         let rows = []; let total = 0;
         ekskuls.forEach((n, i) => {
             const d = JSON.parse(localStorage.getItem("data_"+n))||[];
-            const t = parseInt(localStorage.getItem("tarif_"+n))||0;
-            let sub = (n === "Musik") ? 500000 : d.length * t; total += sub;
+            let sub = (n === "Musik") ? 500000 : (n === "Taekwondo" ? parseInt(localStorage.getItem("tarif_Taekwondo"))||0 : d.length * tarifData[n]);
+            total += sub;
             rows.push([i+1, n, d.length, "Rp "+sub.toLocaleString()]);
         });
-        doc.autoTable({ startY: 40, head: [['No','Ekskul','Pertemuan','Insentif']], body: rows });
+
+        doc.autoTable({ startY: 40, head: [['No','Ekstrakurikuler','Pertemuan','Insentif/Bulan']], body: rows });
         const finalY = doc.lastAutoTable.finalY + 10;
-        doc.text("TOTAL: Rp "+total.toLocaleString(), 140, finalY);
+        doc.text("TOTAL PENGELUARAN: Rp "+total.toLocaleString(), 140, finalY, {align:"right"});
+        
         const aMus = localStorage.getItem("alasan_Musik") || "";
-        if(aMus) doc.text("Note Musik: "+aMus, 20, finalY + 10);
-        doc.text("Koordinator: Ditya Manggala, S.Sn.", 130, finalY + 30);
-        doc.save("RAB_ICMS_NOVEMBER_2025.pdf");
+        if(aMus) doc.text("Catatan Musik: " + aMus, 20, finalY + 10);
+        
+        doc.text("Bogor, " + new Date().toLocaleDateString('id-ID'), 140, finalY + 30);
+        doc.text("Pemohon (Koordinator):", 140, finalY + 35);
+        doc.text("( Ditya Manggala, S.Sn. )", 140, finalY + 60); // 
+        doc.save("RAB_ICMS_FINAL.pdf");
     }
     render();
 </script>
