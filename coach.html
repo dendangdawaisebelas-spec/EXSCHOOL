@@ -3,242 +3,156 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ICMS Coach - Smart Reporting</title>
+  <title>ICMS Coach - Smart Reporting System</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   
   <style>
     :root {
-      --primary: #0a1f44;
+      --navy: #0a1f44;
+      --gold: #FFD700;
       --accent: #3498db;
-      --glass: rgba(255, 255, 255, 0.95);
-      --gradient: linear-gradient(135deg, #0a1f44 0%, #1e3c72 100%);
+      --glass: rgba(255, 255, 255, 0.94);
     }
 
     body { 
       font-family: 'Plus Jakarta Sans', sans-serif; 
-      margin: 0; 
-      background: #f0f4f8; 
-      color: #2d3436;
-      padding-bottom: 50px;
-      background-image: radial-gradient(circle at top right, #e1e9f5, transparent);
+      margin: 0; background: #f4f7fa; color: #2d3436; padding-bottom: 50px;
+      min-height: 100vh; position: relative;
+    }
+
+    /* BACKGROUND OVERLAY UNTUK GAMBAR SPESIFIK EKSKUL */
+    .bg-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-size: 80% auto; background-position: center 70%;
+      background-repeat: no-repeat; opacity: 0.04; /* Sangat tipis & elegan */
+      filter: grayscale(100%); z-index: -1; pointer-events: none;
     }
 
     header { 
-      background: var(--gradient); 
-      color: white; 
-      padding: 40px 20px; 
-      text-align: center; 
-      border-radius: 0 0 40px 40px;
-      box-shadow: 0 10px 30px rgba(10, 31, 68, 0.2);
+      background: var(--navy); color: white; padding: 15px 25px; 
+      display: flex; justify-content: space-between; align-items: center;
+      border-radius: 0 0 35px 35px; box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+      position: sticky; top: 0; z-index: 100;
     }
 
-    .eks-badge {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 5px 20px;
-      border-radius: 50px;
-      font-size: 12px;
-      letter-spacing: 2px;
-      display: inline-block;
-      margin-bottom: 10px;
-      backdrop-filter: blur(5px);
+    .logo-side { height: 45px; width: auto; object-fit: contain; }
+    .header-center { text-align: center; }
+    .header-center h1 { margin: 0; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; }
+    .eks-badge { 
+      background: var(--gold); color: var(--navy); padding: 4px 15px; 
+      border-radius: 50px; font-size: 10px; font-weight: 800; margin-top: 6px; display: inline-block;
     }
-
-    h1 { margin: 0; font-weight: 800; font-size: 26px; text-transform: uppercase; }
 
     .card { 
-      background: var(--glass); 
-      padding: 25px; 
-      border-radius: 24px; 
-      margin: -30px 20px 25px 20px; 
-      box-shadow: 0 15px 35px rgba(0,0,0,0.05);
-      border: 1px solid rgba(255,255,255,0.8);
-      position: relative;
+      background: var(--glass); padding: 25px; border-radius: 28px; 
+      margin: 25px 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+      border: 1px solid rgba(255,255,255,0.7); backdrop-filter: blur(10px);
     }
 
     .card-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px; font-size: 17px;
+      font-weight: 700; color: var(--navy); margin-bottom: 22px;
+      border-left: 5px solid var(--accent); padding-left: 12px;
     }
 
     .card-title i { color: var(--accent); }
+    
+    label { font-weight: 600; display: block; margin-top: 18px; color: #636e72; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-    label { font-weight: 600; display: block; margin-top: 15px; color: #636e72; font-size: 14px; }
-
-    textarea, input[type="date"], input[type="file"] { 
-      width: 100%; 
-      padding: 14px; 
-      margin-top: 8px; 
-      border-radius: 12px; 
-      border: 1.5px solid #e1e9f5; 
-      box-sizing: border-box; 
-      font-family: inherit;
-      transition: 0.3s;
-      background: #fbfcfe;
+    textarea, input { 
+      width: 100%; padding: 15px; margin-top: 8px; border-radius: 14px; 
+      border: 1.5px solid #eef2f7; box-sizing: border-box; font-family: inherit;
+      background: rgba(255,255,255,0.5); transition: 0.3s;
     }
 
-    textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1); }
+    textarea:focus { border-color: var(--accent); outline: none; background: #fff; }
 
     .btn { 
-      color: white; border: none; padding: 16px; width: 100%; border-radius: 16px; 
-      font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.3s;
-      display: flex; align-items: center; justify-content: center; gap: 10px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; 
+      font-weight: 700; cursor: pointer; margin-top: 25px; display: flex; 
+      align-items: center; justify-content: center; gap: 10px;
+      background: var(--accent); box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      transition: 0.3s;
     }
 
-    .btn-blue { background: linear-gradient(135deg, #3498db, #2980b9); }
-    .btn-green { background: linear-gradient(135deg, #27ae60, #2ecc71); }
-    .btn:active { transform: scale(0.98); }
+    .btn:hover { transform: translateY(-3px); filter: brightness(1.1); }
 
     .pedoman-box { 
-      background: #f0f7ff; border-radius: 16px; padding: 18px; 
-      margin: 15px 0; font-size: 13px; line-height: 1.6; color: #455a64;
-      border: 1px dashed #3498db;
+      background: rgba(0,0,0,0.02); border-radius: 18px; padding: 18px; 
+      font-size: 12px; line-height: 1.7; color: #555; border: 1px dashed var(--accent);
     }
-
-    .info-wajib { color: #d63031; font-size: 11px; font-weight: 600; margin: 10px 0; display: block; }
-
-    .riwayat-item {
-      background: white; border: 1px solid #f0f0f0; padding: 15px; border-radius: 16px; margin-bottom: 10px;
-      transition: 0.3s; display: flex; justify-content: space-between; align-items: center;
-    }
-
-    .sync-badge { background: #e3fcef; color: #00b894; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; }
   </style>
 </head>
 <body>
 
+<div class="bg-overlay" id="eks_bg"></div>
+
 <header>
-  <div class="eks-badge" id="eks_badge">Loading...</div>
-  <h1 id="eks_title">DASHBOARD COACH</h1>
+    <img src="logo_icms.png" class="logo-side" alt="ICMS">
+    <div class="header-center">
+        <h1>Dashboard Coach</h1>
+        <div class="eks-badge" id="eks_badge">Loading...</div>
+    </div>
+    <img src="logo_ekskul_default.png" id="logo_kanan" class="logo-side" alt="Ekskul">
 </header>
 
 <div class="card">
-  <div class="card-title"><i class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</div>
-  <label>Pilih Tanggal</label>
-  <input type="date" id="tgl">
-  
-  <label>Rangkuman Materi</label>
-  <textarea id="mat" rows="3" placeholder="Apa yang dilatih hari ini?"></textarea>
-  
-  <button class="btn btn-blue" onclick="simpanPertemuan()">
-    <i class="fa-solid fa-paper-plane"></i> SIMPAN & SINKRON
-  </button>
+    <div class="card-title"><i id="icon_p" class="fa-solid fa-bolt"></i> 1. Pertemuan Pekanan</div>
+    <label>Waktu Latihan</label>
+    <input type="date" id="tgl">
+    <label>Intisari Materi</label>
+    <textarea id="mat" rows="3" placeholder="Deskripsikan teknik yang dilatih..."></textarea>
+    <button class="btn" onclick="simpanPertemuan()"><i class="fa-solid fa-shield-halved"></i> Simpan & Sinkronisasi</button>
 </div>
 
-<div class="card" style="margin-top: 10px;">
-  <div class="card-title" style="color:#27ae60;"><i class="fa-solid fa-chart-line"></i> 2. Evaluasi Bulanan</div>
-  
-  <div class="pedoman-box">
-    <strong><i class="fa-solid fa-lightbulb"></i> Tips Pengisian:</strong><br>
-    Fokus pada pencapaian siswa dan solusi atas kendala lapangan. Sertakan foto terbaik untuk laporan ke Yayasan.
-  </div>
-  
-  <label>Agenda Utama</label>
-  <textarea id="ev_agenda" placeholder="Agenda besar bulan ini..."></textarea>
-  
-  <label>Kendala & Solusi</label>
-  <textarea id="ev_kendala" placeholder="Masalah yang muncul & cara mengatasinya..."></textarea>
-  
-  <label>Capaian Siswa</label>
-  <textarea id="ev_solusi" placeholder="Progres perkembangan siswa..."></textarea>
-  
-  <label style="margin-top:20px;"><i class="fa-solid fa-camera"></i> Dokumentasi (3 Foto):</label>
-  <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan.</span>
-  
-  <input type="file" id="f1" accept="image/*">
-  <input type="file" id="f2" accept="image/*" style="margin-top:5px;">
-  <input type="file" id="f3" accept="image/*" style="margin-top:5px;">
-  
-  <button class="btn btn-green" onclick="simpanEvaluasi()">
-    <i class="fa-solid fa-cloud-arrow-up"></i> KIRIM LAPORAN BULANAN
-  </button>
-</div>
-
-<div class="card" style="margin-top: 10px; border-top: 5px solid #636e72;">
-  <div class="card-title"><i class="fa-solid fa-database"></i> Riwayat Backup</div>
-  <div id="riwayat_list"></div>
-  <button class="btn" style="background:#636e72; font-size: 13px;" onclick="eksporBackup()">
-    <i class="fa-solid fa-download"></i> EXPORT DATA KE TXT
-  </button>
+<div class="card">
+    <div class="card-title" style="border-color: #27ae60;"><i class="fa-solid fa-trophy" style="color:#27ae60;"></i> 2. Evaluasi Bulanan</div>
+    <div class="pedoman-box">
+        <strong><i class="fa-solid fa-circle-info"></i> Pedoman:</strong><br>
+        Uraikan perkembangan signifikan siswa dan lampirkan bukti visual terbaik.
+    </div>
+    <label>Narasi Capaian</label>
+    <textarea id="ev_agenda" placeholder="Tuliskan progres bulanan..."></textarea>
+    <label>Dokumentasi Visual</label>
+    <input type="file" id="f1" accept="image/*">
+    <input type="file" id="f2" accept="image/*" style="margin-top:8px;">
+    <input type="file" id="f3" accept="image/*" style="margin-top:8px;">
+    <button class="btn" style="background:#27ae60;" onclick="simpanEvaluasi()"><i class="fa-solid fa-cloud-arrow-up"></i> Kirim Laporan</button>
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmwU65KCwU5_glM-WaLHYlDTudXoWgdV_LSrQ1PpqAt2KNPjiKYOW8id6IPMY98vND/exec"; 
-  const ekskul = localStorage.getItem("ekskul") || "Ekskul";
-  
-  document.getElementById("eks_badge").innerText = ekskul;
-  document.getElementById("eks_title").innerText = "Laporan " + ekskul;
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmwU65KCwU5_glM-WaLHYlDTudXoWgdV_LSrQ1PpqAt2KNPjiKYOW8id6IPMY98vND/exec";
+    const ekskul = localStorage.getItem("ekskul") || "Musik";
 
-  const placeholders = {
-    "Taekwondo": "Latihan tendangan Dolyo Chagi & Poomsae...",
-    "Futsal": "Teknik control bola & strategi serangan balik...",
-    "Musik": "Praktik akord & teknik petikan gitar dasar...",
-    "Pramuka": "Sandi Morse & pionering tiang jemuran...",
-    "English Club": "Speaking drill & vocabulary harian asrama..."
-  };
-  document.getElementById("mat").placeholder = placeholders[ekskul] || "Rincian materi pekan ini...";
+    // KONFIGURASI TEMA & GAMBAR SPESIFIK (ELEGAN & NYENI)
+    // Gunakan URL gambar siluet/artistik yang transparan (PNG)
+    const config = {
+        "Futsal": { color: "#e67e22", icon: "fa-futbol", bg: "url('https://cdn-icons-png.flaticon.com/512/53/53254.png')" },
+        "Basket": { color: "#d35400", icon: "fa-basketball", bg: "url('https://cdn-icons-png.flaticon.com/512/33/33736.png')" },
+        "Musik": { color: "#8e44ad", icon: "fa-music", bg: "url('https://cdn-icons-png.flaticon.com/512/65/65612.png')" },
+        "Taekwondo": { color: "#c0392b", icon: "fa-hand-fist", bg: "url('https://cdn-icons-png.flaticon.com/512/2620/2620716.png')" },
+        "Panahan": { color: "#27ae60", icon: "fa-bullseye", bg: "url('https://cdn-icons-png.flaticon.com/512/3222/3222685.png')" }
+    };
 
-  async function simpanPertemuan() {
-    const tgl = document.getElementById("tgl").value;
-    const mat = document.getElementById("mat").value;
-    if (!tgl || !mat) return alert("Mohon lengkapi data!");
+    const cur = config[ekskul] || { color: "#3498db", icon: "fa-star", bg: "none" };
 
-    let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    db.push({ tgl, mat, tipe: "Pekanan" });
-    localStorage.setItem("data_" + ekskul, JSON.stringify(db));
-
-    try {
-      await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" }) });
-      alert("🚀 Data Tersinkronisasi!");
-    } catch (e) {
-      alert("⚠️ Tersimpan Offline.");
-    }
-    tampilkanRiwayat();
-  }
-
-  async function simpanEvaluasi() {
-    const agenda = document.getElementById("ev_agenda").value;
-    const f1 = document.getElementById("f1").files[0];
-    if (!agenda || !f1) return alert("Agenda & Foto Wajib!");
+    // Inject CSS & Data
+    document.documentElement.style.setProperty('--accent', cur.color);
+    document.getElementById("eks_bg").style.backgroundImage = cur.bg;
+    document.getElementById("eks_badge").innerText = ekskul;
+    document.getElementById("icon_p").className = "fa-solid " + cur.icon;
     
-    localStorage.setItem("eval_" + ekskul, JSON.stringify({ agenda, date: new Date().toLocaleDateString() }));
-    
-    try {
-      await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ tgl: new Date().toLocaleDateString(), agenda, ekskul, tipe: "Evaluasi" }) });
-      alert("✅ Evaluasi Terkirim!");
-    } catch (e) {
-      alert("⚠️ Tersimpan di HP.");
+    // Fungsi Simpan (Tetap Sinkron ke Google Sheets)
+    async function simpanPertemuan() {
+        const tgl = document.getElementById("tgl").value;
+        const mat = document.getElementById("mat").value;
+        if (!tgl || !mat) return alert("Lengkapi data!");
+        try {
+            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" }) });
+            alert("Suksess! Laporan Pekanan " + ekskul + " Terkirim.");
+        } catch (e) { alert("Gagal Sinkronisasi!"); }
     }
-  }
-
-  function tampilkanRiwayat() {
-    const list = document.getElementById("riwayat_list");
-    const data = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    if(data.length === 0) { list.innerHTML = "<p style='color:#999'>Kosong.</p>"; return; }
-    list.innerHTML = data.map(d => `
-      <div class="riwayat-item">
-        <div><b>${d.tgl}</b><br><small>${d.mat.substring(0,30)}...</small></div>
-        <div class="sync-badge">SECURED</div>
-      </div>
-    `).reverse().join('');
-  }
-
-  function eksporBackup() {
-    const data = localStorage.getItem("data_" + ekskul);
-    const blob = new Blob([data], {type: "text/plain"});
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "Backup_" + ekskul + ".txt";
-    link.click();
-  }
-
-  window.onload = tampilkanRiwayat;
 </script>
 </body>
 </html>
