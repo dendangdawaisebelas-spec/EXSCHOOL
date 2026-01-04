@@ -3,126 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EXSCHOOL</title>
+    <title>EXSCHOOL - Gateway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* CSS Langsung di dalam file agar tidak bergantung link luar */
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background-color: #0a1f44; /* Warna Biru Navy Bapak */
-            font-family: sans-serif;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        .login-box {
-            background: #ffffff; /* Kotak Putih agar kontras dan pasti kelihatan */
-            padding: 30px;
-            border-radius: 20px;
-            width: 300px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-            z-index: 999;
-        }
-
-        .logo-box img {
-            width: 150px;
-            height: auto;
-            margin-bottom: 15px;
-        }
-
-        h2 { color: #0a1f44; margin: 0; font-size: 24px; }
-        p { color: #666; font-size: 12px; margin-bottom: 20px; }
-
-        .input-group { position: relative; margin-bottom: 15px; }
-        
-        input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            font-size: 14px;
-        }
-
-        /* Tombol Masuk */
-        .btn-masuk {
-            width: 100%;
-            padding: 14px;
-            background: #FFD700; /* Warna Emas */
-            border: none;
-            border-radius: 8px;
-            color: #0a1f44;
-            font-weight: bold;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        .show-pw {
-            font-size: 11px;
-            color: #0a1f44;
-            cursor: pointer;
-            display: block;
-            margin-top: 5px;
-            text-align: right;
-        }
+        :root { --navy: #0a1f44; --gold: #FFD700; }
+        body, html { margin: 0; height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--navy); display: flex; justify-content: center; align-items: center; }
+        .login-box { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; width: 320px; text-align: center; border: 1px solid rgba(255, 215, 0, 0.2); }
+        .logo-img { width: 160px; margin-bottom: 10px; }
+        h2 { color: white; margin: 0; font-size: 26px; letter-spacing: 2px; }
+        .sub { color: var(--gold); font-size: 10px; margin-bottom: 30px; text-transform: uppercase; }
+        .input-group { position: relative; margin-bottom: 20px; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: none; background: white; box-sizing: border-box; font-weight: 600; }
+        .eye-icon { position: absolute; right: 15px; top: 15px; color: #333; cursor: pointer; font-size: 18px; }
+        button { width: 100%; padding: 16px; border: none; border-radius: 12px; background: linear-gradient(135deg, #bf953f, #fcf6ba, #aa771c); color: var(--navy); font-weight: 800; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
     <div class="login-box">
-        <div class="logo-box">
-            <img src="logo2.png" alt="Logo EXSCHOOL" onerror="this.src='https://via.placeholder.com/150?text=Logo+Tidak+Ada'">
-        </div>
-
+        <img src="logo2.png" class="logo-img" alt="LOGO">
         <h2>EXSCHOOL</h2>
-        <p>Terintegrasi dalam satu genggaman</p>
+        <div class="sub">Terintegrasi dalam satu genggaman</div>
 
         <div class="input-group">
-            <input type="text" id="u" placeholder="Username">
+            <input type="text" id="user" placeholder="Username">
         </div>
-
         <div class="input-group">
-            <input type="password" id="p" placeholder="Password">
-            <div class="show-pw" onclick="toggleMata()">Lihat Password</div>
+            <input type="password" id="pass" placeholder="Password">
+            <i class="fa-solid fa-eye eye-icon" id="toggleIcon" onclick="toggleView()"></i>
         </div>
-
-        <button class="btn-masuk" onclick="validasi()">MASUK</button>
+        <button onclick="prosesLogin()">MASUK</button>
     </div>
 
-    <script>
-        // Fitur Lihat Password tanpa icon (pakai teks agar pasti muncul)
-        function toggleMata() {
-            var x = document.getElementById("p");
-            if (x.type === "password") { x.type = "text"; } 
-            else { x.type = "password"; }
+<script>
+    function toggleView() {
+        const p = document.getElementById("pass");
+        const icon = document.getElementById("toggleIcon");
+        if (p.type === "password") {
+            p.type = "text";
+            icon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+            p.type = "password";
+            icon.classList.replace("fa-eye-slash", "fa-eye");
         }
+    }
 
-        function validasi() {
-            var user = document.getElementById("u").value;
-            var pass = document.getElementById("p").value;
+    function prosesLogin() {
+        const u = document.getElementById("user").value.toLowerCase().trim();
+        const p = document.getElementById("pass").value.trim();
 
-            // Database User
-            var data = [
-                {u:"pakdityapembinaekskulicms", p:"savepalestine", r:"koordinator"},
-                {u:"coachmusikicms", p:"icms2026", r:"coach", e:"Musik"},
-                {u:"coachfutsalicms", p:"icms2026", r:"coach", e:"Futsal"},
-                {u:"coachtaekwondoicms", p:"icms2026", r:"coach", e:"Taekwondo"},
-                {u:"coachbasketicms", p:"icms2026", r:"coach", e:"Basket"},
-                {u:"coachpanahanicms", p:"icms2026", r:"coach", e:"Panahan"}
-            ];
+        // DATABASE USERNAME SIMPEL
+        const users = [
+            {u:"pakditya", p:"savepalestine", r:"koordinator"},
+            {u:"musik", p:"icms2026", r:"coach", e:"Musik"},
+            {u:"nihongo", p:"icms2026", r:"coach", e:"Nihongo Club"},
+            {u:"dokcil", p:"icms2026", r:"coach", e:"Dokter Kecil"},
+            {u:"english", p:"icms2026", r:"coach", e:"English Club"},
+            {u:"taekwondo", p:"icms2026", r:"coach", e:"Taekwondo"},
+            {u:"futsal", p:"icms2026", r:"coach", e:"Futsal"},
+            {u:"basket", p:"icms2026", r:"coach", e:"Basket"},
+            {u:"panahan", p:"icms2026", r:"coach", e:"Panahan"}
+        ];
 
-            var cek = data.find(function(item) { return item.u === user && item.p === pass; });
+        const acc = users.find(x => x.u === u && x.p === p);
 
-            if (cek) {
-                localStorage.setItem("role", cek.r);
-                if (cek.r === "koordinator") { window.location.href = "dashboard_koordinator.html"; } 
-                else { 
-                    localStorage.setItem("ekskul", cek.e);
-                    window.location.href = "coach.html"; 
-                }
+        if (acc) {
+            localStorage.setItem("role", acc.r);
+            localStorage.setItem("username", acc.u);
+            if (acc.r === "koordinator") {
+                window.location.href = "dashboard_koordinator.html";
             } else {
-                alert("Salah Password atau Username!");
+                localStorage.setItem("ekskul", acc.e);
+                window.location.href = "coach.html";
             }
+        } else {
+            alert("Username atau Password Salah!");
         }
-    </script>
+    }
+</script>
 </body>
 </html>
