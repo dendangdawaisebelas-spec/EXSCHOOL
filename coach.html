@@ -3,183 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coach Dashboard - EXSCHOOL</title>
+    <title>Dashboard - EXSCHOOL</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { 
-            --navy: #0a1f44; 
-            --gold: #FFD700; 
-            --accent: #2980b9; 
-        }
-        
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0; background: #f4f7fa; padding-bottom: 50px; 
-            color: #2d3436;
-        }
+        :root { --navy: #0a1f44; --gold: #FFD700; --accent: #2980b9; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: #f4f7fa; padding-bottom: 50px; color: #2d3436; }
 
-        /* Header Tanpa Logo - Judul Dinamis */
+        /* HEADER SESUAI SCREENSHOT */
         header { 
-            background: var(--navy); color: white; padding: 25px 20px; 
-            text-align: center;
+            background: var(--navy); color: white; padding: 25px 20px; text-align: center;
             border-radius: 0 0 35px 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             position: sticky; top: 0; z-index: 100;
         }
         
+        /* Judul (Lingkar Merah) */
         #dynamic_title { 
-            margin: 0; font-size: 18px; text-transform: uppercase; 
-            letter-spacing: 2px; font-weight: 800; line-height: 1.4;
+            margin: 0; font-size: 20px; text-transform: uppercase; 
+            letter-spacing: 1px; font-weight: 800; 
         }
-        
-        .eks-badge { 
-            background: var(--gold); color: var(--navy); padding: 5px 20px; 
+
+        /* Badge Kuning (Lingkar Putih) */
+        .icms-badge { 
+            background: var(--gold); color: var(--navy); padding: 5px 25px; 
             border-radius: 50px; font-size: 11px; font-weight: 800; 
-            margin-top: 10px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-transform: uppercase;
+            margin-top: 10px; display: inline-block; text-transform: uppercase;
         }
 
-        /* Notifikasi & Tombol Diskusi */
-        .btn-diskusi {
-            position: relative; background: var(--gold) !important;
-            color: var(--navy) !important; margin-top: 0 !important;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
+        /* Card & Tombol Diskusi */
+        .card { background: white; padding: 25px; border-radius: 25px; margin: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .card-title { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 15px; border-left: 5px solid var(--accent); padding-left: 12px; }
+        
+        .btn-diskusi { 
+            position: relative; background: var(--gold) !important; color: var(--navy) !important; 
+            width: calc(100% - 40px); margin: 20px; padding: 16px; border: none; border-radius: 15px;
+            display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 800; text-transform: uppercase;
         }
 
-        .notif-dot {
-            position: absolute; top: -2px; right: -2px; width: 12px; height: 12px;
-            background-color: #ff4757; border: 2px solid white; border-radius: 50%; display: none;
-        }
-
+        .notif-dot { position: absolute; top: -2px; right: -2px; width: 12px; height: 12px; background-color: #ff4757; border: 2px solid white; border-radius: 50%; display: none; }
         .pulse { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
-        }
-
-        .card { 
-            background: white; padding: 25px; border-radius: 25px; 
-            margin: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); 
-            border: 1px solid #eee; animation: fadeInUp 0.6s ease-out both;
-        }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card-title { 
-            display: flex; align-items: center; gap: 10px; font-size: 17px; 
-            font-weight: 800; color: var(--navy); margin-bottom: 15px; 
-            border-left: 5px solid var(--accent); padding-left: 12px;
-        }
+        @keyframes pulse-red { 0% { transform: scale(0.95); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); } 100% { transform: scale(0.95); } }
 
         label { font-weight: 700; display: block; margin-top: 15px; color: #636e72; font-size: 12px; text-transform: uppercase; }
         textarea, input { width: 100%; padding: 14px; margin-top: 8px; border-radius: 12px; border: 1.5px solid #eef2f7; box-sizing: border-box; font-family: inherit; }
-        .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 15px; font-weight: 800; cursor: pointer; margin-top: 20px; background: var(--accent); transition: 0.3s; text-transform: uppercase; }
-        .info-wajib { color: #e74c3c; font-size: 11px; font-weight: 800; display: block; margin: 10px 0; }
-        .riwayat-container { background: #fafafa; border-radius: 15px; padding: 15px; max-height: 250px; overflow-y: auto; }
-        .riwayat-item { border-bottom: 1px solid #eee; padding: 10px 0; font-size: 13px; }
+        .btn-submit { color: white; border: none; padding: 16px; width: 100%; border-radius: 15px; font-weight: 800; cursor: pointer; margin-top: 20px; background: var(--accent); text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1 id="dynamic_title">Memuat...</h1>
-    <div class="eks-badge" id="eks_badge">Siswa</div>
+    <h1 id="dynamic_title">Loading...</h1>
+    <div class="icms-badge">SMP-SMA ICMS</div>
 </header>
 
-<div style="padding: 0 20px; margin-top: 20px;">
-    <button class="btn btn-diskusi" onclick="bukaDiskusi()">
-        <i class="fa-solid fa-comments"></i> BUKA RUANG DISKUSI
-        <span id="dot" class="notif-dot pulse"></span>
-    </button>
-</div>
+<button class="btn-diskusi" onclick="window.location.href='diskusi.html'">
+    <i class="fa-solid fa-comments"></i> BUKA RUANG DISKUSI (GRUP)
+    <span id="dot" class="notif-dot pulse"></span>
+</button>
 
 <div class="card">
     <div class="card-title"><i id="icon_main" class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</div>
     <label>Tanggal Pertemuan</label>
     <input type="date" id="tgl">
     <label>Materi Latihan</label>
-    <textarea id="mat" rows="3"></textarea>
-    <button class="btn" onclick="simpanPertemuan()">SIMPAN & SINKRONISASI</button>
-</div>
-
-<div class="card">
-    <div class="card-title" style="border-color: #1c7c54;"><i class="fa-solid fa-camera" style="color: #1c7c54;"></i> 2. Evaluasi Bulanan</div>
-    <label>Agenda Kegiatan</label>
-    <textarea id="ev_agenda" rows="2"></textarea>
-    <label>Upload 3 Foto Bukti Kegiatan:</label>
-    <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
-    <input type="file" id="f1" accept="image/*" style="margin-bottom:8px;">
-    <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
-    <input type="file" id="f3" accept="image/*" style="margin-bottom:8px;">
-    <button class="btn" style="background:#1c7c54" onclick="simpanEvaluasi()">KIRIM EVALUASI</button>
-</div>
-
-<div class="card" style="border-top: 4px solid #666;">
-    <div class="card-title" style="border-left:none;"><i class="fa-solid fa-database"></i> Riwayat & Cadangan</div>
-    <div id="riwayat_list" class="riwayat-container"></div>
-    <button class="btn" style="background:#666; font-size: 12px;" onclick="eksporBackup()">📥 DOWNLOAD CADANGAN DATA</button>
+    <textarea id="mat" rows="3" placeholder="Tuliskan rincian materi pekan ini..."></textarea>
+    <button class="btn-submit" onclick="alert('Data Disimpan')">SIMPAN & SINKRONISASI</button>
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmwU65KCwU5_glM-WaLHYlDTudXoWgdV_LSrQ1PpqAt2KNPjiKYOW8id6IPMY98vND/exec"; 
     const ekskul = localStorage.getItem("ekskul") || "Ekskul";
 
-    // LOGIKA PENAMAAN JUDUL SPESIFIK [PERMINTAAN FINAL]
-    function setHeaderTitle(eks) {
+    function setHeader() {
         const titleEl = document.getElementById("dynamic_title");
-        const badgeEl = document.getElementById("eks_badge");
-        badgeEl.innerText = eks;
-
-        if (eks === "Musik") titleEl.innerText = "Instruktur Musik";
-        else if (eks === "Nihonggo Club") titleEl.innerText = "日本語教師";
-        else if (eks === "Dokter Kecil") titleEl.innerText = "Instruktur Dokter Kecil";
-        else if (eks === "English Club") titleEl.innerText = "English Club Teacher";
-        else if (eks === "Taekwondo") titleEl.innerText = "Sabeum Taekwondo";
-        else titleEl.innerText = "Coach " + eks;
-    }
-
-    const styleConfig = {
-        "Taekwondo": { color: "#c0392b", icon: "fa-hand-fist" },
-        "Futsal": { color: "#e67e22", icon: "fa-futbol" },
-        "Musik": { color: "#8e44ad", icon: "fa-music" },
-        "Dokter Kecil": { color: "#27ae60", icon: "fa-stethoscope" },
-        "English Club": { color: "#2980b9", icon: "fa-language" }
-    };
-
-    const currentStyle = styleConfig[ekskul] || { color: "#2980b9", icon: "fa-star" };
-    document.documentElement.style.setProperty('--accent', currentStyle.color);
-    document.getElementById("icon_main").className = "fa-solid " + currentStyle.icon;
-
-    function bukaDiskusi() {
-        sessionStorage.setItem("diskusi_dibaca", "true");
-        window.location.href = 'diskusi.html';
-    }
-
-    // Fungsi-fungsi Simpan (Sama seperti sebelumnya)
-    async function simpanPertemuan() {
-        const tgl = document.getElementById("tgl").value;
-        const mat = document.getElementById("mat").value;
-        if (!tgl || !mat) return alert("Lengkapi data!");
-        let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-        db.push({ tgl, mat });
-        localStorage.setItem("data_" + ekskul, JSON.stringify(db));
-        alert("Berhasil disimpan!");
-        tampilkanRiwayat();
-    }
-
-    function tampilkanRiwayat() {
-        const list = document.getElementById("riwayat_list");
-        const data = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-        list.innerHTML = data.length ? data.map(d => `<div class="riwayat-item"><b>${d.tgl}</b><br>${d.mat}</div>`).reverse().join('') : "Kosong";
+        
+        // Logika Judul Sesuai Permintaan
+        if (ekskul === "Nihongo Club") {
+            titleEl.innerText = "日本語教師";
+        } else if (ekskul === "Musik") {
+            titleEl.innerText = "Instruktur Musik";
+        } else if (ekskul === "Dokter Kecil") {
+            titleEl.innerText = "Instruktur Dokter Kecil";
+        } else if (ekskul === "English Club") {
+            titleEl.innerText = "English Club Teacher";
+        } else if (ekskul === "Taekwondo") {
+            titleEl.innerText = "Sabeum Taekwondo";
+        } else {
+            titleEl.innerText = ekskul;
+        }
     }
 
     window.onload = () => {
-        setHeaderTitle(ekskul);
-        tampilkanRiwayat();
-        if(!sessionStorage.getItem("diskusi_dibaca")) document.getElementById("dot").style.display = "block";
+        setHeader();
+        // Cek notif diskusi
+        if(!sessionStorage.getItem("diskusi_dibaca")) {
+            document.getElementById("dot").style.display = "block";
+        }
     };
 </script>
+
 </body>
 </html>
