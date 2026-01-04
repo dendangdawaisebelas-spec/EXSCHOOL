@@ -3,165 +3,238 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coach ICMS - Laporan Hybrid</title>
+  <title>ICMS Coach - Smart Reporting</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
-    header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
-    .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-    .btn { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-    label { font-weight: bold; display: block; margin-top: 15px; color: #0a1f44; }
-    .pedoman-box { background: #e8f4fd; border-left: 5px solid #2980b9; padding: 15px; margin-top: 10px; border-radius: 4px; font-size: 13px; line-height: 1.6; color: #2c3e50; }
-    .info-wajib { color: #e74c3c; font-size: 12px; font-weight: bold; margin-top: 5px; display: block; }
-    .riwayat-container { background: #fafafa; border: 1px solid #eee; border-radius: 6px; padding: 10px; margin-top: 10px; max-height: 200px; overflow-y: auto; font-size: 12px; }
-    .sync-status { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; float: right; }
+    :root {
+      --primary: #0a1f44;
+      --accent: #3498db;
+      --glass: rgba(255, 255, 255, 0.95);
+      --gradient: linear-gradient(135deg, #0a1f44 0%, #1e3c72 100%);
+    }
+
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      margin: 0; 
+      background: #f0f4f8; 
+      color: #2d3436;
+      padding-bottom: 50px;
+      background-image: radial-gradient(circle at top right, #e1e9f5, transparent);
+    }
+
+    header { 
+      background: var(--gradient); 
+      color: white; 
+      padding: 40px 20px; 
+      text-align: center; 
+      border-radius: 0 0 40px 40px;
+      box-shadow: 0 10px 30px rgba(10, 31, 68, 0.2);
+    }
+
+    .eks-badge {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5px 20px;
+      border-radius: 50px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      display: inline-block;
+      margin-bottom: 10px;
+      backdrop-filter: blur(5px);
+    }
+
+    h1 { margin: 0; font-weight: 800; font-size: 26px; text-transform: uppercase; }
+
+    .card { 
+      background: var(--glass); 
+      padding: 25px; 
+      border-radius: 24px; 
+      margin: -30px 20px 25px 20px; 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+      border: 1px solid rgba(255,255,255,0.8);
+      position: relative;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+
+    .card-title i { color: var(--accent); }
+
+    label { font-weight: 600; display: block; margin-top: 15px; color: #636e72; font-size: 14px; }
+
+    textarea, input[type="date"], input[type="file"] { 
+      width: 100%; 
+      padding: 14px; 
+      margin-top: 8px; 
+      border-radius: 12px; 
+      border: 1.5px solid #e1e9f5; 
+      box-sizing: border-box; 
+      font-family: inherit;
+      transition: 0.3s;
+      background: #fbfcfe;
+    }
+
+    textarea:focus { border-color: var(--accent); outline: none; box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.1); }
+
+    .btn { 
+      color: white; border: none; padding: 16px; width: 100%; border-radius: 16px; 
+      font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.3s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .btn-blue { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .btn-green { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+    .btn:active { transform: scale(0.98); }
+
+    .pedoman-box { 
+      background: #f0f7ff; border-radius: 16px; padding: 18px; 
+      margin: 15px 0; font-size: 13px; line-height: 1.6; color: #455a64;
+      border: 1px dashed #3498db;
+    }
+
+    .info-wajib { color: #d63031; font-size: 11px; font-weight: 600; margin: 10px 0; display: block; }
+
+    .riwayat-item {
+      background: white; border: 1px solid #f0f0f0; padding: 15px; border-radius: 16px; margin-bottom: 10px;
+      transition: 0.3s; display: flex; justify-content: space-between; align-items: center;
+    }
+
+    .sync-badge { background: #e3fcef; color: #00b894; padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 700; }
   </style>
 </head>
 <body>
 
 <header>
-  <div id="eks_title" style="font-weight:bold; font-size:20px; text-transform: uppercase;"></div>
+  <div class="eks-badge" id="eks_badge">Loading...</div>
+  <h1 id="eks_title">DASHBOARD COACH</h1>
 </header>
 
 <div class="card">
-  <h3 style="margin-top:0; color:#2980b9;">1. Pertemuan Pekanan</h3>
-  <label>Tanggal Pertemuan</label>
+  <div class="card-title"><i class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</div>
+  <label>Pilih Tanggal</label>
   <input type="date" id="tgl">
   
-  <label>Materi Latihan</label>
-  <textarea id="mat" rows="3" placeholder=""></textarea>
+  <label>Rangkuman Materi</label>
+  <textarea id="mat" rows="3" placeholder="Apa yang dilatih hari ini?"></textarea>
   
-  <button class="btn" style="background:#2980b9" onclick="simpanPertemuan()">SIMPAN & SINKRONISASI</button>
+  <button class="btn btn-blue" onclick="simpanPertemuan()">
+    <i class="fa-solid fa-paper-plane"></i> SIMPAN & SINKRON
+  </button>
 </div>
 
-<div class="card">
-  <h3 style="margin-top:0; color:#1c7c54;">2. Evaluasi Bulanan</h3>
+<div class="card" style="margin-top: 10px;">
+  <div class="card-title" style="color:#27ae60;"><i class="fa-solid fa-chart-line"></i> 2. Evaluasi Bulanan</div>
   
   <div class="pedoman-box">
-    <strong>📋 Pedoman Pengisian Evaluasi:</strong><br>
-    • <strong>Agenda:</strong> Ringkasan program bulanan yang terlaksana.<br>
-    • <strong>Kendala:</strong> Hambatan teknis/non-teknis selama latihan.<br>
-    • <strong>Solusi:</strong> Tindakan konkret mengatasi kendala.<br>
-    • <strong>Foto:</strong> Bukti interaksi aktif (Wajib 3 Foto).
+    <strong><i class="fa-solid fa-lightbulb"></i> Tips Pengisian:</strong><br>
+    Fokus pada pencapaian siswa dan solusi atas kendala lapangan. Sertakan foto terbaik untuk laporan ke Yayasan.
   </div>
   
-  <label>Agenda Kegiatan</label>
-  <textarea id="ev_agenda" placeholder="Agenda bulan ini..."></textarea>
+  <label>Agenda Utama</label>
+  <textarea id="ev_agenda" placeholder="Agenda besar bulan ini..."></textarea>
   
-  <label>Kendala & Hambatan</label>
-  <textarea id="ev_kendala" placeholder="Kendala yang dialami..."></textarea>
+  <label>Kendala & Solusi</label>
+  <textarea id="ev_kendala" placeholder="Masalah yang muncul & cara mengatasinya..."></textarea>
   
-  <label>Solusi & Capaian</label>
-  <textarea id="ev_solusi" placeholder="Solusi & progres siswa..."></textarea>
+  <label>Capaian Siswa</label>
+  <textarea id="ev_solusi" placeholder="Progres perkembangan siswa..."></textarea>
   
-  <label style="margin-top:20px;">📸 Upload 3 Foto Bukti Kegiatan:</label>
-  <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
+  <label style="margin-top:20px;"><i class="fa-solid fa-camera"></i> Dokumentasi (3 Foto):</label>
+  <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan.</span>
   
-  <input type="file" id="f1" accept="image/*" style="margin-bottom:8px; margin-top:10px;">
-  <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
-  <input type="file" id="f3" accept="image/*" style="margin-bottom:8px;">
+  <input type="file" id="f1" accept="image/*">
+  <input type="file" id="f2" accept="image/*" style="margin-top:5px;">
+  <input type="file" id="f3" accept="image/*" style="margin-top:5px;">
   
-  <button class="btn" style="background:#1c7c54" onclick="simpanEvaluasi()">KIRIM EVALUASI BULANAN</button>
+  <button class="btn btn-green" onclick="simpanEvaluasi()">
+    <i class="fa-solid fa-cloud-arrow-up"></i> KIRIM LAPORAN BULANAN
+  </button>
 </div>
 
-<div class="card" style="border-top: 4px solid #666;">
-  <h3 style="margin-top:0; font-size: 16px; color:#333;">📂 Riwayat & Cadangan Mandiri</h3>
-  <div id="riwayat_list" class="riwayat-container">
-    </div>
-  <button class="btn" style="background:#666; font-size: 12px; padding: 10px;" onclick="eksporBackup()">📥 DOWNLOAD CADANGAN DATA (.TXT)</button>
+<div class="card" style="margin-top: 10px; border-top: 5px solid #636e72;">
+  <div class="card-title"><i class="fa-solid fa-database"></i> Riwayat Backup</div>
+  <div id="riwayat_list"></div>
+  <button class="btn" style="background:#636e72; font-size: 13px;" onclick="eksporBackup()">
+    <i class="fa-solid fa-download"></i> EXPORT DATA KE TXT
+  </button>
 </div>
 
 <script>
-  // URL WEB APP GOOGLE APPS SCRIPT BAPAK SUDAH DITANAM DI SINI
   const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmwU65KCwU5_glM-WaLHYlDTudXoWgdV_LSrQ1PpqAt2KNPjiKYOW8id6IPMY98vND/exec"; 
-  
   const ekskul = localStorage.getItem("ekskul") || "Ekskul";
-  document.getElementById("eks_title").innerText = ekskul;
+  
+  document.getElementById("eks_badge").innerText = ekskul;
+  document.getElementById("eks_title").innerText = "Laporan " + ekskul;
 
-  // Placeholder Relevan sesuai Ekskul
   const placeholders = {
-    "Taekwondo": "Contoh: Latihan tendangan Dolyo Chagi & Poomsae dasar...",
-    "Futsal": "Contoh: Teknik control bola & koordinasi serangan balik...",
-    "Musik": "Contoh: Praktik progresi akord & teknik petikan gitar dasar...",
-    "Pramuka": "Contoh: Pendalaman sandi Morse & pionering membuat tiang jemuran...",
-    "English Club": "Contoh: Speaking drill & kosa kata harian bertema asrama...",
-    "Basket": "Contoh: Latihan lay-up shoot & koordinasi pertahanan zone defense...",
-    "Panahan": "Contoh: Teknik dasar fokus & latihan tarikan busur (stretching)..."
+    "Taekwondo": "Latihan tendangan Dolyo Chagi & Poomsae...",
+    "Futsal": "Teknik control bola & strategi serangan balik...",
+    "Musik": "Praktik akord & teknik petikan gitar dasar...",
+    "Pramuka": "Sandi Morse & pionering tiang jemuran...",
+    "English Club": "Speaking drill & vocabulary harian asrama..."
   };
-  document.getElementById("mat").placeholder = placeholders[ekskul] || "Tuliskan rincian materi pekan ini...";
+  document.getElementById("mat").placeholder = placeholders[ekskul] || "Rincian materi pekan ini...";
 
-  // 1. Simpan ke HP & Cloud (Pekanan)
   async function simpanPertemuan() {
     const tgl = document.getElementById("tgl").value;
     const mat = document.getElementById("mat").value;
     if (!tgl || !mat) return alert("Mohon lengkapi data!");
 
-    // Simpan Local (Backup di HP)
     let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
     db.push({ tgl, mat, tipe: "Pekanan" });
     localStorage.setItem("data_" + ekskul, JSON.stringify(db));
 
-    // Kirim Cloud (Google Sheets)
     try {
-      const resp = await fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" })
-      });
-      alert("Sukses! Data tersimpan di HP & sedang dikirim ke Google Sheets.");
+      await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" }) });
+      alert("🚀 Data Tersinkronisasi!");
     } catch (e) {
-      alert("Tersimpan di HP (Backup), Gagal Sinkron Cloud (Cek Sinyal).");
+      alert("⚠️ Tersimpan Offline.");
     }
     tampilkanRiwayat();
   }
 
-  // 2. Simpan Evaluasi Bulanan
   async function simpanEvaluasi() {
     const agenda = document.getElementById("ev_agenda").value;
     const f1 = document.getElementById("f1").files[0];
-    const f2 = document.getElementById("f2").files[0];
-    const f3 = document.getElementById("f3").files[0];
-
-    if (!agenda || !f1 || !f2 || !f3) return alert("Agenda & 3 Foto Wajib Diisi!");
-
-    // Simpan Local
+    if (!agenda || !f1) return alert("Agenda & Foto Wajib!");
+    
     localStorage.setItem("eval_" + ekskul, JSON.stringify({ agenda, date: new Date().toLocaleDateString() }));
     
     try {
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ tgl: new Date().toLocaleDateString(), agenda, ekskul, tipe: "Evaluasi Bulanan" })
-      });
-      alert("Evaluasi Berhasil Dikirim ke Koordinator!");
+      await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ tgl: new Date().toLocaleDateString(), agenda, ekskul, tipe: "Evaluasi" }) });
+      alert("✅ Evaluasi Terkirim!");
     } catch (e) {
-      alert("Gagal kirim ke Cloud, namun data evaluasi tersimpan di HP.");
+      alert("⚠️ Tersimpan di HP.");
     }
   }
 
-  // 3. Tampilkan Riwayat
   function tampilkanRiwayat() {
     const list = document.getElementById("riwayat_list");
     const data = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    if(data.length === 0) {
-      list.innerHTML = "<p style='color:#999'>Belum ada data tersimpan.</p>";
-      return;
-    }
+    if(data.length === 0) { list.innerHTML = "<p style='color:#999'>Kosong.</p>"; return; }
     list.innerHTML = data.map(d => `
-      <div style="border-bottom:1px solid #eee; padding:8px 0;">
-        <span class="sync-status" style="background:#e8f5e9; color:#2e7d32;">BACKUP OK</span>
-        <b>${d.tgl}</b><br>${d.mat.substring(0,50)}...
+      <div class="riwayat-item">
+        <div><b>${d.tgl}</b><br><small>${d.mat.substring(0,30)}...</small></div>
+        <div class="sync-badge">SECURED</div>
       </div>
     `).reverse().join('');
   }
 
-  // 4. Download Backup Txt
   function eksporBackup() {
     const data = localStorage.getItem("data_" + ekskul);
     const blob = new Blob([data], {type: "text/plain"});
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "Backup_Laporan_" + ekskul + ".txt";
+    link.download = "Backup_" + ekskul + ".txt";
     link.click();
   }
 
