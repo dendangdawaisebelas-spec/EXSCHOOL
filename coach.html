@@ -72,19 +72,21 @@
 </div>
 
 <script>
-  // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
-  const SCRIPT_URL = "URL_WEB_APP_ANDA"; 
+  // URL WEB APP GOOGLE APPS SCRIPT BAPAK SUDAH DITANAM DI SINI
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmwU65KCwU5_glM-WaLHYlDTudXoWgdV_LSrQ1PpqAt2KNPjiKYOW8id6IPMY98vND/exec"; 
   
   const ekskul = localStorage.getItem("ekskul") || "Ekskul";
   document.getElementById("eks_title").innerText = ekskul;
 
-  // Set Placeholder Relevan sesuai Ekskul
+  // Placeholder Relevan sesuai Ekskul
   const placeholders = {
     "Taekwondo": "Contoh: Latihan tendangan Dolyo Chagi & Poomsae dasar...",
     "Futsal": "Contoh: Teknik control bola & koordinasi serangan balik...",
     "Musik": "Contoh: Praktik progresi akord & teknik petikan gitar dasar...",
     "Pramuka": "Contoh: Pendalaman sandi Morse & pionering membuat tiang jemuran...",
-    "English Club": "Contoh: Speaking drill & kosa kata harian bertema asrama..."
+    "English Club": "Contoh: Speaking drill & kosa kata harian bertema asrama...",
+    "Basket": "Contoh: Latihan lay-up shoot & koordinasi pertahanan zone defense...",
+    "Panahan": "Contoh: Teknik dasar fokus & latihan tarikan busur (stretching)..."
   };
   document.getElementById("mat").placeholder = placeholders[ekskul] || "Tuliskan rincian materi pekan ini...";
 
@@ -94,20 +96,21 @@
     const mat = document.getElementById("mat").value;
     if (!tgl || !mat) return alert("Mohon lengkapi data!");
 
-    // Simpan Local (Backup)
+    // Simpan Local (Backup di HP)
     let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    db.push({ tgl, mat, tipe: "Pekanan", status: "Local Only" });
+    db.push({ tgl, mat, tipe: "Pekanan" });
     localStorage.setItem("data_" + ekskul, JSON.stringify(db));
 
-    // Kirim Cloud
+    // Kirim Cloud (Google Sheets)
     try {
       const resp = await fetch(SCRIPT_URL, {
         method: "POST",
+        mode: "no-cors",
         body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" })
       });
-      if(resp.ok) alert("Sukses! Data tersimpan di HP & Cloud.");
+      alert("Sukses! Data tersimpan di HP & sedang dikirim ke Google Sheets.");
     } catch (e) {
-      alert("Tersimpan di HP (Backup), Gagal Sinkron Cloud (Cek Koneksi).");
+      alert("Tersimpan di HP (Backup), Gagal Sinkron Cloud (Cek Sinyal).");
     }
     tampilkanRiwayat();
   }
@@ -116,11 +119,53 @@
   async function simpanEvaluasi() {
     const agenda = document.getElementById("ev_agenda").value;
     const f1 = document.getElementById("f1").files[0];
-    if (!agenda || !f1) return alert("Agenda & Foto Wajib Diisi!");
+    const f2 = document.getElementById("f2").files[0];
+    const f3 = document.getElementById("f3").files[0];
 
-    // Logika Simpan Evaluasi
+    if (!agenda || !f1 || !f2 || !f3) return alert("Agenda & 3 Foto Wajib Diisi!");
+
+    // Simpan Local
     localStorage.setItem("eval_" + ekskul, JSON.stringify({ agenda, date: new Date().toLocaleDateString() }));
     
     try {
       await fetch(SCRIPT_URL, {
-        method
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify({ tgl: new Date().toLocaleDateString(), agenda, ekskul, tipe: "Evaluasi Bulanan" })
+      });
+      alert("Evaluasi Berhasil Dikirim ke Koordinator!");
+    } catch (e) {
+      alert("Gagal kirim ke Cloud, namun data evaluasi tersimpan di HP.");
+    }
+  }
+
+  // 3. Tampilkan Riwayat
+  function tampilkanRiwayat() {
+    const list = document.getElementById("riwayat_list");
+    const data = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
+    if(data.length === 0) {
+      list.innerHTML = "<p style='color:#999'>Belum ada data tersimpan.</p>";
+      return;
+    }
+    list.innerHTML = data.map(d => `
+      <div style="border-bottom:1px solid #eee; padding:8px 0;">
+        <span class="sync-status" style="background:#e8f5e9; color:#2e7d32;">BACKUP OK</span>
+        <b>${d.tgl}</b><br>${d.mat.substring(0,50)}...
+      </div>
+    `).reverse().join('');
+  }
+
+  // 4. Download Backup Txt
+  function eksporBackup() {
+    const data = localStorage.getItem("data_" + ekskul);
+    const blob = new Blob([data], {type: "text/plain"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Backup_Laporan_" + ekskul + ".txt";
+    link.click();
+  }
+
+  window.onload = tampilkanRiwayat;
+</script>
+</body>
+</html>
