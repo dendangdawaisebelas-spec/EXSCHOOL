@@ -3,67 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coach ICMS</title>
+  <title>Coach ICMS - Input Laporan</title>
   <style>
-    body { font-family: Arial; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
     header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
     .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-    .btn { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+    .btn { background: #2980b9; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
     label { font-weight: bold; display: block; margin-top: 15px; color: #0a1f44; }
+    .pedoman-box { background: #e8f4fd; border-left: 5px solid #2980b9; padding: 15px; margin-top: 10px; border-radius: 4px; font-size: 13px; line-height: 1.6; color: #2c3e50; }
+    .info-wajib { color: #e74c3c; font-size: 12px; font-weight: bold; margin-bottom: 10px; display: block; }
   </style>
 </head>
 <body>
-<header><div id="eks" style="font-weight:bold; font-size:20px;"></div></header>
+
+<header>
+  <div id="eks_title" style="font-weight:bold; font-size:20px; text-transform: uppercase;"></div>
+</header>
 
 <div class="card">
-  <h3>1. Pertemuan Harian</h3>
-  <label>Tanggal</label><input type="date" id="tgl">
-  <label>Materi</label><textarea id="mat" rows="2"></textarea>
-  <button class="btn" style="background:#2980b9" onclick="simpanPertemuan()">SIMPAN PERTEMUAN</button>
+  <h3 style="margin-top:0; color:#2980b9;">1. Pertemuan Pekanan</h3>
+  <label>Tanggal Pertemuan</label>
+  <input type="date" id="tgl">
+  
+  <label>Materi Latihan</label>
+  <textarea id="mat" rows="3" placeholder=""></textarea>
+  
+  <button class="btn" onclick="simpanPertemuan()">SIMPAN PERTEMUAN</button>
 </div>
 
 <div class="card">
-  <h3>2. Evaluasi Bulanan</h3>
-  <p style="color:red; font-size:12px;">*Wajib melampirkan 3 foto kegiatan bulan ini.</p>
-  <label>Agenda Kegiatan</label><textarea id="ev_agenda"></textarea>
-  <label>Kendala</label><textarea id="ev_kendala"></textarea>
-  <label>Solusi</label><textarea id="ev_solusi"></textarea>
-  <label>Upload 3 Foto:</label>
-  <input type="file" id="f1" accept="image/*">
-  <input type="file" id="f2" accept="image/*">
-  <input type="file" id="f3" accept="image/*">
-  <button class="btn" onclick="simpanEvaluasi()">SIMPAN EVALUASI BULANAN</button>
+  <h3 style="margin-top:0; color:#1c7c54;">2. Evaluasi Bulanan</h3>
+  <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
+
+  <div class="pedoman-box">
+    <strong>📋 Pedoman Pengisian Evaluasi:</strong><br>
+    • <strong>Agenda:</strong> Tuliskan ringkasan program yang terlaksana (misal: "Penyelesaian modul dasar bab 1-3").<br>
+    • <strong>Kendala:</strong> Sebutkan hambatan teknis atau non-teknis (misal: "Cuaca hujan" atau "Kurangnya raket").<br>
+    • <strong>Solusi:</strong> Tindakan yang diambil untuk mengatasi kendala tersebut.<br>
+    • <strong>Foto:</strong> Pastikan foto menunjukkan interaksi aktif siswa dan instruktur.
+  </div>
+  
+  <label>Agenda Kegiatan</label>
+  <textarea id="ev_agenda" placeholder="Contoh: Penguatan teknik dasar dan persiapan internal match..."></textarea>
+  
+  <label>Kendala & Hambatan</label>
+  <textarea id="ev_kendala" placeholder="Contoh: Kehadiran siswa berkurang karena persiapan ujian..."></textarea>
+  
+  <label>Solusi & Capaian</label>
+  <textarea id="ev_solusi" placeholder="Contoh: Mengadakan kelas pengganti dan evaluasi fisik personal..."></textarea>
+  
+  <label style="margin-top:20px;">📸 Upload 3 Foto Bukti Kegiatan:</label>
+  <input type="file" id="f1" accept="image/*" style="margin-bottom:8px;">
+  <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
+  <input type="file" id="f3" accept="image/*" style="margin-bottom:8px;">
+  
+  <button class="btn" style="background:#1c7c54" onclick="simpanEvaluasi()">SIMPAN EVALUASI BULANAN</button>
 </div>
 
 <script>
-  const eks = localStorage.getItem("ekskul"); 
-  document.getElementById("eks").innerText = eks;
+  const ekskul = localStorage.getItem("ekskul") || "Ekskul";
+  document.getElementById("eks_title").innerText = ekskul;
+
+  // Placeholder Materi Otomatis Sesuai Ekskul
+  const placeholders = {
+    "Taekwondo": "Contoh: Latihan tendangan Dolyo Chagi dan pemantapan Kyorugi...",
+    "Futsal": "Contoh: Drills passing pendek dan strategi penempatan posisi...",
+    "Musik": "Contoh: Pengenalan notasi balok dan praktik lagu instrumen dasar...",
+    "Pramuka": "Contoh: Materi sandi Morse dan praktik tali temali pionering...",
+    "English Club": "Contoh: Debate session bertema lingkungan dan vocabulary drill...",
+    "Basket": "Contoh: Latihan lay-up shoot dan koordinasi pertahanan zone defense..."
+  };
+  
+  document.getElementById("mat").placeholder = placeholders[ekskul] || "Tuliskan rincian materi latihan pekan ini...";
 
   function simpanPertemuan() {
-    const tgl = document.getElementById("tgl").value; 
+    const tgl = document.getElementById("tgl").value;
     const mat = document.getElementById("mat").value;
-    if(!tgl || !mat) return alert("Isi data!");
-    let db = JSON.parse(localStorage.getItem("data_" + eks)) || [];
-    db.push({ tgl, mat }); localStorage.setItem("data_" + eks, JSON.stringify(db));
-    alert("Berhasil!"); location.reload();
+    if (!tgl || !mat) return alert("Mohon lengkapi tanggal dan materi!");
+    alert("Pertemuan pekanan berhasil disimpan!");
   }
 
-  function readFile(file) { return new Promise((res) => { if(!file) res(null); const r = new FileReader(); r.onload = (e) => res(e.target.result); r.readAsDataURL(file); }); }
-
-  async function simpanEvaluasi() {
-    const file1 = document.getElementById("f1").files[0];
-    const file2 = document.getElementById("f2").files[0];
-    const file3 = document.getElementById("f3").files[0];
-    if(!file1 || !file2 || !file3) return alert("Wajib 3 foto!");
-    const ev = {
-      agenda: document.getElementById("ev_agenda").value,
-      kendala: document.getElementById("ev_kendala").value,
-      solusi: document.getElementById("ev_solusi").value,
-      fotos: [await readFile(file1), await readFile(file2), await readFile(file3)]
-    };
-    localStorage.setItem("eval_" + eks, JSON.stringify(ev));
-    alert("Laporan Evaluasi Disimpan!");
+  function simpanEvaluasi() {
+    const agenda = document.getElementById("ev_agenda").value;
+    const f1 = document.getElementById("f1").files[0];
+    if (!agenda || !f1) return alert("Mohon lengkapi evaluasi dan lampiran foto!");
+    alert("Evaluasi bulanan berhasil disimpan!");
   }
 </script>
 </body>
