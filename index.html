@@ -2,169 +2,34 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>ICMS EXSCHOOL - Royal Gateway</title>
+  <title>EXSCHOOL - Gateway</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    :root {
-      --navy: #0a1f44;
-      --gold: #FFD700;
-      --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
-    }
-
-    body, html { margin: 0; height: 100%; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; }
-
-    /* Background Mewah dengan Animasi Partikel */
-    .bg-video {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: linear-gradient(to bottom, #0a1f44, #000);
-      z-index: -1;
-    }
-
-    .overlay {
-      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle, rgba(10,31,68,0.4) 0%, rgba(0,0,0,0.8) 100%);
-    }
-
-    /* Animasi Masuk (Fade & Scale) */
-    .login-container {
-      height: 100%; display: flex; justify-content: center; align-items: center;
-      animation: fadeIn 1.5s ease-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .login-box {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(20px);
-      padding: 40px; border-radius: 35px; width: 340px;
-      text-align: center; border: 1px solid rgba(255, 215, 0, 0.2);
-      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    }
-
-    /* Logo ICMS dengan Animasi Berkilau */
-    .logo-glow {
-      width: 100px; margin-bottom: 20px;
-      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
-      animation: shine 3s infinite;
-    }
-
-    @keyframes shine {
-      0% { filter: drop-shadow(0 0 5px rgba(255,215,0,0.4)); }
-      50% { filter: drop-shadow(0 0 25px rgba(255,215,0,0.8)); }
-      100% { filter: drop-shadow(0 0 5px rgba(255,215,0,0.4)); }
-    }
-
-    h2 { 
-      font-family: 'Playfair Display', serif; color: white; 
-      margin: 0; font-size: 24px; letter-spacing: 2px;
-    }
-
-    .subtitle { color: var(--gold); font-size: 10px; text-transform: uppercase; letter-spacing: 4px; margin-bottom: 30px; }
-
-    .input-group { position: relative; margin-bottom: 20px; }
-
-    input {
-      width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1);
-      padding: 15px; border-radius: 12px; color: white; font-size: 14px;
-      transition: 0.3s; box-sizing: border-box;
-    }
-
-    input:focus { border-color: var(--gold); outline: none; background: rgba(255,255,255,0.15); }
-
-    .toggle-password { position: absolute; right: 15px; top: 15px; color: rgba(255,255,255,0.5); cursor: pointer; }
-
-    /* Tombol Megah dengan Efek Gradient Gold */
-    button {
-      width: 100%; padding: 16px; border: none; border-radius: 12px;
-      background: var(--gold-gradient); color: var(--navy);
-      font-weight: 800; font-size: 14px; text-transform: uppercase;
-      cursor: pointer; transition: 0.4s; letter-spacing: 1px;
-      box-shadow: 0 10px 20px rgba(170, 119, 28, 0.3);
-    }
-
-    button:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(170, 119, 28, 0.5); }
-
-    /* Footer Credits */
-    .footer { position: absolute; bottom: 20px; color: rgba(255,255,255,0.3); font-size: 10px; letter-spacing: 1px; }
+    :root { --navy: #0a1f44; --gold: #FFD700; --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c); }
+    body, html { margin: 0; height: 100%; overflow: hidden; font-family: 'Plus Jakarta Sans', sans-serif; background: #000; }
+    .bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, #0a1f44, #000); z-index: -1; }
+    .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(10,31,68,0.4) 0%, rgba(0,0,0,0.8) 100%); }
+    .login-container { height: 100%; display: flex; justify-content: center; align-items: center; }
+    .login-box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); padding: 40px; border-radius: 35px; width: 340px; text-align: center; border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
+    .logo-main { width: 100px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.4)); }
+    h2 { font-family: 'Playfair Display', serif; color: white; margin: 0; font-size: 32px; letter-spacing: 3px; }
+    .subtitle { color: var(--gold); font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin-top: 10px; margin-bottom: 30px; line-height: 1.5; }
+    input { width: 100%; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); padding: 15px; border-radius: 12px; color: white; margin-bottom: 20px; box-sizing: border-box; }
+    button { width: 100%; padding: 16px; border: none; border-radius: 12px; background: var(--gold-gradient); color: var(--navy); font-weight: 800; font-size: 16px; text-transform: uppercase; cursor: pointer; letter-spacing: 2px; }
   </style>
 </head>
 <body>
-
   <div class="bg-video"><div class="overlay"></div></div>
-
   <div class="login-container">
     <div class="login-box">
-      <img src="logo_icms.png" class="logo-glow" alt="ICMS">
-      <h2>ICMS BOGOR</h2>
-      <div class="subtitle">Extracurricular System</div>
-
-      <div class="input-group">
-        <input type="text" id="u" placeholder="Username / Coach ID">
-      </div>
-      
-      <div class="input-group">
-        <input type="password" id="p" placeholder="Security Password">
-        <i class="fa-solid fa-eye toggle-password" id="eyeIcon" onclick="toggleVisibility()"></i>
-      </div>
-      
-      <button onclick="login()">ENTER DASHBOARD</button>
-      
-      <div class="footer">MANAGED BY KOORDINATOR EKSKUL</div>
+      <img src="logo.png" class="logo-main" alt="Logo EXSCHOOL">
+      <h2>EXSCHOOL</h2>
+      <div class="subtitle">Terintegrasi dalam satu genggaman</div>
+      <input type="text" id="u" placeholder="Username / Coach ID">
+      <input type="password" id="p" placeholder="Security Password">
+      <button onclick="login()">MASUK</button>
     </div>
   </div>
-
-  <script>
-    // Audio Effect (Opsional: Tambahkan suara klik mewah jika perlu)
-    function toggleVisibility() {
-      const pInput = document.getElementById("p");
-      const eyeIcon = document.getElementById("eyeIcon");
-      if (pInput.type === "password") {
-        pInput.type = "text";
-        eyeIcon.classList.replace("fa-eye", "fa-eye-slash");
-      } else {
-        pInput.type = "password";
-        eyeIcon.classList.replace("fa-eye-slash", "fa-eye");
-      }
-    }
-
-    // Database User Tetap Sama
-    const users = [
-      {u:"pakdityapembinaekskulicms", p:"savepalestine", r:"koordinator"},
-      {u:"coachmusikicms", p:"icms2026", r:"coach", e:"Musik"},
-      {u:"coachfutsalicms", p:"icms2026", r:"coach", e:"Futsal"},
-      {u:"coachtaekwondoicms", p:"icms2026", r:"coach", e:"Taekwondo"},
-      {u:"coachbasketicms", p:"icms2026", r:"coach", e:"Basket"},
-      {u:"coachpanahanicms", p:"icms2026", r:"coach", e:"Panahan"}
-    ];
-
-    function login() {
-      const u = document.getElementById("u").value.trim();
-      const p = document.getElementById("p").value.trim();
-      const user = users.find(x => x.u === u && x.p === p);
-      
-      if (!user) {
-        alert("Akses Ditolak: Kredensial Tidak Valid");
-        return;
-      }
-
-      // Animasi sebelum pindah halaman
-      document.querySelector('.login-box').style.animation = "fadeOut 0.5s forwards";
-      
-      setTimeout(() => {
-        localStorage.setItem("role", user.r); 
-        localStorage.setItem("username", user.u);
-        if (user.r === "koordinator") location.replace("dashboard_koordinator.html");
-        else { 
-          localStorage.setItem("ekskul", user.e); 
-          location.replace("coach.html"); 
-        }
-      }, 500);
-    }
-  </script>
 </body>
 </html>
