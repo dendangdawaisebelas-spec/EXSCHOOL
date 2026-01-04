@@ -4,21 +4,59 @@
   <meta charset="UTF-8">
   <title>Login ICMS EXSCHOOL</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     body { margin: 0; height: 100vh; background: linear-gradient(135deg, #0a1f44, #0d2c66); display: flex; justify-content: center; align-items: center; font-family: Arial; }
     .box { background: #fff; padding: 30px; width: 320px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,.3); text-align: center; }
-    input { width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-    button { width: 100%; padding: 12px; background: #0a1f44; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    
+    .input-group { position: relative; width: 100%; margin-bottom: 12px; }
+    input { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
+    
+    /* Style untuk Icon Mata */
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+    }
+    
+    button { width: 100%; padding: 12px; background: #0a1f44; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
   <div class="box">
     <h2 style="color:#0a1f44">ICMS EXSCHOOL</h2>
-    <input type="text" id="u" placeholder="Username">
-    <input type="password" id="p" placeholder="Password">
+    <div class="input-group">
+      <input type="text" id="u" placeholder="Username">
+    </div>
+    
+    <div class="input-group">
+      <input type="password" id="p" placeholder="Password">
+      <i class="fa-solid fa-eye toggle-password" id="eyeIcon" onclick="toggleVisibility()"></i>
+    </div>
+    
     <button onclick="login()">MASUK</button>
   </div>
+
   <script>
+    // Fungsi Tampilkan/Sembunyikan Password
+    function toggleVisibility() {
+      const pInput = document.getElementById("p");
+      const eyeIcon = document.getElementById("eyeIcon");
+      
+      if (pInput.type === "password") {
+        pInput.type = "text";
+        eyeIcon.classList.remove("fa-eye");
+        eyeIcon.classList.add("fa-eye-slash");
+      } else {
+        pInput.type = "password";
+        eyeIcon.classList.remove("fa-eye-slash");
+        eyeIcon.classList.add("fa-eye");
+      }
+    }
+
     const users = [
       {u:"pakdityapembinaekskulicms", p:"savepalestine", r:"koordinator"},
       {u:"coachpramukaicms", p:"icms2026", r:"coach", e:"Pramuka"},
@@ -33,6 +71,7 @@
       {u:"coachrenangicms", p:"icms2026", r:"coach", e:"Renang"},
       {u:"coachmusikicms", p:"icms2026", r:"coach", e:"Musik"}
     ];
+
     function login() {
       const u = document.getElementById("u").value.trim();
       const p = document.getElementById("p").value.trim();
