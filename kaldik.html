@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaldik ICMS 2025/2026</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
+        .calendar-container { background: #fff; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; max-width: 400px; margin: auto; }
+        .calendar-header { background: #0a1f44; color: white; padding: 15px; text-align: center; display: flex; justify-content: space-between; align-items: center; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); padding: 10px; border-bottom: 1px solid #eee; }
+        .day-name { font-weight: bold; color: #888; text-align: center; font-size: 12px; padding-bottom: 5px; }
+        .day { aspect-ratio: 1/1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; position: relative; border-radius: 50%; transition: 0.2s; }
+        .day:hover { background: #e0e0e0; }
+        .day.has-event::after { content: ''; width: 4px; height: 4px; background: #db4437; border-radius: 50%; position: absolute; bottom: 5px; }
+        .day.selected { background: #0a1f44 !important; color: white; }
+        .day.other-month { color: #ccc; }
+        
+        /* Box Keterangan */
+        .event-detail-box { max-width: 400px; margin: 15px auto; background: white; border-radius: 12px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); min-height: 100px; }
+        .event-detail-box h3 { margin: 0 0 10px 0; color: #0a1f44; font-size: 16px; border-bottom: 2px solid #0a1f44; display: inline-block; }
+        .event-list { font-size: 13px; line-height: 1.5; color: #333; }
+        .event-item { margin-bottom: 8px; padding-left: 10px; border-left: 3px solid #ffc107; }
+        
+        button { background: none; border: none; color: white; font-size: 18px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="calendar-container">
+    <div class="calendar-header">
+        <button onclick="changeMonth(-1)">❮</button>
+        <h2 id="monthDisplay" style="margin:0; font-size:18px;">November 2025</h2>
+        <button onclick="changeMonth(1)">❯</button>
+    </div>
+    <div class="calendar-grid" id="calendarGrid">
+        <div class="day-name">S</div><div class="day-name">S</div><div class="day-name">R</div><div class="day-name">K</div><div class="day-name">J</div><div class="day-name">S</div><div class="day-name">M</div>
+        </div>
+</div>
+
+<div class="event-detail-box">
+    <h3>Detail Agenda</h3>
+    <div id="eventList" class="event-list">Klik pada tanggal bertanda titik untuk melihat agenda.</div>
+</div>
+
+<script>
+    // Database Agenda (Contoh November 2025 sesuai dokumen Bapak)
+    const agendaData = {
+        "2025-11-10": ["Upacara Hari Pahlawan"],
+        "2025-11-25": ["Peringatan Hari Guru"],
+        "2025-11-28": ["Perpulangan Reguler"],
+        "2025-11-29": ["Perpulangan Reguler"],
+        "2025-11-30": ["Perpulangan Reguler"],
+        "2025-12-01": ["Penilaian Sumatif Akhir Semester (PSAS)"],
+        "2025-12-20": ["Pembagian Rapor Semester Ganjil", "Libur Akhir Semester"],
+        // Bapak bisa tambah terus sampai Juli 2026 di sini...
+    };
+
+    let currentMonth = 10; // November (0-indexed: 10)
+    let currentYear = 2025;
+
+    function renderCalendar() {
+        const grid = document.getElementById("calendarGrid");
+        const monthDisplay = document.getElementById("monthDisplay");
+        const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        
+        monthDisplay.innerText = `${monthNames[currentMonth]} ${currentYear}`;
+        
+        // Bersihkan grid (sisakan nama hari)
+        const dayNames = grid.querySelectorAll('.day-name');
+        grid.innerHTML = '';
+        dayNames.forEach(d => grid.appendChild(d));
+
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        // Offset untuk hari Senin (karena getDay() 0=Minggu)
+        let offset = (firstDay === 0) ? 6 : firstDay - 1;
+
+        for (let i = 0; i < offset; i++) {
+            grid.innerHTML += `<div class="day other-month"></div>`;
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+            const isEvent = agendaData[dateStr] ? 'has-event' : '';
+            grid.innerHTML += `<div class="day ${isEvent}" onclick="showEvent('${dateStr}', this)">${d}</div>`;
+        }
+    }
+
+    function showEvent(dateStr, element) {
+        // Highlight tanggal terpilih
+        document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+        element.classList.add('selected');
+
+        const listDiv = document.getElementById("eventList");
+        const events = agendaData[dateStr];
+        
+        if (events) {
+            listDiv.innerHTML = events.map(e => `<div class="event-item"><strong>${dateStr.split('-')[2]}:</strong> ${e}</div>`).join('');
+        } else {
+            listDiv.innerHTML = `<div style="color:#ccc">Tidak ada agenda pada tanggal ini.</div>`;
+        }
+    }
+
+    function changeMonth(step) {
+        currentMonth += step;
+        if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+        if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+        renderCalendar();
+    }
+
+    renderCalendar();
+</script>
+
+</body>
+</html>
