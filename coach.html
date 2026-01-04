@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coach ICMS - Input Laporan</title>
+  <title>Coach ICMS - Laporan Hybrid</title>
   <style>
     body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
     header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
     .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-    .btn { background: #2980b9; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+    .btn { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
     label { font-weight: bold; display: block; margin-top: 15px; color: #0a1f44; }
     .pedoman-box { background: #e8f4fd; border-left: 5px solid #2980b9; padding: 15px; margin-top: 10px; border-radius: 4px; font-size: 13px; line-height: 1.6; color: #2c3e50; }
     .info-wajib { color: #e74c3c; font-size: 12px; font-weight: bold; margin-top: 5px; display: block; }
+    .riwayat-container { background: #fafafa; border: 1px solid #eee; border-radius: 6px; padding: 10px; margin-top: 10px; max-height: 200px; overflow-y: auto; font-size: 12px; }
+    .sync-status { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; float: right; }
   </style>
 </head>
 <body>
@@ -29,28 +31,28 @@
   <label>Materi Latihan</label>
   <textarea id="mat" rows="3" placeholder=""></textarea>
   
-  <button class="btn" onclick="simpanPertemuan()">SIMPAN PERTEMUAN</button>
+  <button class="btn" style="background:#2980b9" onclick="simpanPertemuan()">SIMPAN & SINKRONISASI</button>
 </div>
 
 <div class="card">
   <h3 style="margin-top:0; color:#1c7c54;">2. Evaluasi Bulanan</h3>
-
+  
   <div class="pedoman-box">
     <strong>📋 Pedoman Pengisian Evaluasi:</strong><br>
-    • <strong>Agenda:</strong> Tuliskan ringkasan program yang terlaksana bulan ini.<br>
-    • <strong>Kendala:</strong> Sebutkan hambatan teknis atau non-teknis yang dialami.<br>
-    • <strong>Solusi:</strong> Tindakan yang diambil untuk mengatasi kendala tersebut.<br>
-    • <strong>Foto:</strong> Dokumentasi interaksi aktif siswa dan instruktur.
+    • <strong>Agenda:</strong> Ringkasan program bulanan yang terlaksana.<br>
+    • <strong>Kendala:</strong> Hambatan teknis/non-teknis selama latihan.<br>
+    • <strong>Solusi:</strong> Tindakan konkret mengatasi kendala.<br>
+    • <strong>Foto:</strong> Bukti interaksi aktif (Wajib 3 Foto).
   </div>
   
   <label>Agenda Kegiatan</label>
-  <textarea id="ev_agenda" placeholder="Contoh: Penguatan teknik dasar..."></textarea>
+  <textarea id="ev_agenda" placeholder="Agenda bulan ini..."></textarea>
   
   <label>Kendala & Hambatan</label>
-  <textarea id="ev_kendala" placeholder="Contoh: Kehadiran siswa berkurang..."></textarea>
+  <textarea id="ev_kendala" placeholder="Kendala yang dialami..."></textarea>
   
   <label>Solusi & Capaian</label>
-  <textarea id="ev_solusi" placeholder="Contoh: Mengadakan kelas pengganti..."></textarea>
+  <textarea id="ev_solusi" placeholder="Solusi & progres siswa..."></textarea>
   
   <label style="margin-top:20px;">📸 Upload 3 Foto Bukti Kegiatan:</label>
   <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
@@ -59,25 +61,66 @@
   <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
   <input type="file" id="f3" accept="image/*" style="margin-bottom:8px;">
   
-  <button class="btn" style="background:#1c7c54" onclick="simpanEvaluasi()">SIMPAN EVALUASI BULANAN</button>
+  <button class="btn" style="background:#1c7c54" onclick="simpanEvaluasi()">KIRIM EVALUASI BULANAN</button>
+</div>
+
+<div class="card" style="border-top: 4px solid #666;">
+  <h3 style="margin-top:0; font-size: 16px; color:#333;">📂 Riwayat & Cadangan Mandiri</h3>
+  <div id="riwayat_list" class="riwayat-container">
+    </div>
+  <button class="btn" style="background:#666; font-size: 12px; padding: 10px;" onclick="eksporBackup()">📥 DOWNLOAD CADANGAN DATA (.TXT)</button>
 </div>
 
 <script>
+  // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+  const SCRIPT_URL = "URL_WEB_APP_ANDA"; 
+  
   const ekskul = localStorage.getItem("ekskul") || "Ekskul";
   document.getElementById("eks_title").innerText = ekskul;
 
+  // Set Placeholder Relevan sesuai Ekskul
   const placeholders = {
-    "Taekwondo": "Contoh: Latihan tendangan Dolyo Chagi...",
-    "Futsal": "Contoh: Drills passing pendek...",
-    "Musik": "Contoh: Pengenalan notasi balok...",
-    "Pramuka": "Contoh: Materi sandi Morse...",
-    "English Club": "Contoh: Debate session bertema lingkungan...",
-    "Basket": "Contoh: Latihan lay-up shoot..."
+    "Taekwondo": "Contoh: Latihan tendangan Dolyo Chagi & Poomsae dasar...",
+    "Futsal": "Contoh: Teknik control bola & koordinasi serangan balik...",
+    "Musik": "Contoh: Praktik progresi akord & teknik petikan gitar dasar...",
+    "Pramuka": "Contoh: Pendalaman sandi Morse & pionering membuat tiang jemuran...",
+    "English Club": "Contoh: Speaking drill & kosa kata harian bertema asrama..."
   };
-  
-  document.getElementById("mat").placeholder = placeholders[ekskul] || "Tuliskan rincian materi latihan pekan ini...";
+  document.getElementById("mat").placeholder = placeholders[ekskul] || "Tuliskan rincian materi pekan ini...";
 
-  function simpanPertemuan() {
+  // 1. Simpan ke HP & Cloud (Pekanan)
+  async function simpanPertemuan() {
     const tgl = document.getElementById("tgl").value;
     const mat = document.getElementById("mat").value;
-    if (!tgl || !mat) return alert("Mohon lengkapi tanggal dan materi!");
+    if (!tgl || !mat) return alert("Mohon lengkapi data!");
+
+    // Simpan Local (Backup)
+    let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
+    db.push({ tgl, mat, tipe: "Pekanan", status: "Local Only" });
+    localStorage.setItem("data_" + ekskul, JSON.stringify(db));
+
+    // Kirim Cloud
+    try {
+      const resp = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" })
+      });
+      if(resp.ok) alert("Sukses! Data tersimpan di HP & Cloud.");
+    } catch (e) {
+      alert("Tersimpan di HP (Backup), Gagal Sinkron Cloud (Cek Koneksi).");
+    }
+    tampilkanRiwayat();
+  }
+
+  // 2. Simpan Evaluasi Bulanan
+  async function simpanEvaluasi() {
+    const agenda = document.getElementById("ev_agenda").value;
+    const f1 = document.getElementById("f1").files[0];
+    if (!agenda || !f1) return alert("Agenda & Foto Wajib Diisi!");
+
+    // Logika Simpan Evaluasi
+    localStorage.setItem("eval_" + ekskul, JSON.stringify({ agenda, date: new Date().toLocaleDateString() }));
+    
+    try {
+      await fetch(SCRIPT_URL, {
+        method
