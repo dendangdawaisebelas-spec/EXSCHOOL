@@ -3,14 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coach ICMS - Input Laporan</title>
+  <title>Coach ICMS</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
+    body { font-family: Arial; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
     header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
     .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
     textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
     .btn { background: #1c7c54; color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
     label { font-weight: bold; display: block; margin-top: 15px; color: #0a1f44; }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
   </style>
 </head>
 <body>
@@ -19,77 +21,70 @@
 <button onclick="bukaJadwalKaldik()" style="width: 92%; margin: 15px 4%; padding: 15px; background: #8e44ad; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer;">📅 JADWAL EKSKUL & KALDIK</button>
 
 <div class="card">
-  <h3>1. Presensi & Materi Harian</h3>
-  <label>Tanggal Pertemuan</label><input type="date" id="tgl">
-  <label>Materi Latihan</label><textarea id="mat" rows="2" placeholder="Contoh: Teknik dasar tendangan..."></textarea>
+  <h3>1. Pertemuan Harian</h3>
+  <label>Tanggal</label><input type="date" id="tgl">
+  <label>Materi</label><textarea id="mat" rows="2"></textarea>
   <button class="btn" style="background:#2980b9" onclick="simpanPertemuan()">SIMPAN PERTEMUAN</button>
 </div>
 
 <div class="card">
   <h3>2. Evaluasi Bulanan</h3>
-  <p style="color:red; font-size:12px;">*Wajib melampirkan 3 foto kegiatan bulan ini sebagai bukti fisik.</p>
-  
-  <label>Agenda Kegiatan</label><textarea id="ev_agenda" placeholder="Agenda yang telah dilaksanakan..."></textarea>
-  <label>Hasil & Capaian</label><textarea id="ev_capaian" placeholder="Bagaimana progres siswa?"></textarea>
-  <label>Kendala & Solusi</label><textarea id="ev_kendala" placeholder="Hambatan dan solusi yang diambil..."></textarea>
-  
-  <label style="margin-top:20px;">📸 Upload 3 Foto Kegiatan (Wajib):</label>
-  <input type="file" id="f1" accept="image/*" style="margin-bottom:8px;">
-  <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
-  <input type="file" id="f3" accept="image/*" style="margin-bottom:8px;">
-  
-  <button class="btn" onclick="simpanEvaluasi()">SIMPAN EVALUASI & FOTO</button>
+  <p style="color:red; font-size:12px;">*Wajib melampirkan 3 foto kegiatan bulan ini.</p>
+  <label>Agenda Kegiatan</label><textarea id="ev_agenda"></textarea>
+  <label>Kendala</label><textarea id="ev_kendala"></textarea>
+  <label>Solusi</label><textarea id="ev_solusi"></textarea>
+  <label>Upload 3 Foto:</label>
+  <input type="file" id="f1" accept="image/*">
+  <input type="file" id="f2" accept="image/*">
+  <input type="file" id="f3" accept="image/*">
+  <button class="btn" onclick="simpanEvaluasi()">SIMPAN EVALUASI BULANAN</button>
 </div>
 
 <script>
   const eks = localStorage.getItem("ekskul"); 
   document.getElementById("eks").innerText = eks;
-  
+
   function simpanPertemuan() {
     const tgl = document.getElementById("tgl").value; 
     const mat = document.getElementById("mat").value;
-    if(!tgl || !mat) return alert("Isi tanggal dan materi!");
+    if(!tgl || !mat) return alert("Isi data!");
     let db = JSON.parse(localStorage.getItem("data_" + eks)) || [];
-    db.push({ tgl, mat }); 
-    localStorage.setItem("data_" + eks, JSON.stringify(db));
-    alert("Absensi harian disimpan!"); 
-    location.reload();
+    db.push({ tgl, mat }); localStorage.setItem("data_" + eks, JSON.stringify(db));
+    alert("Berhasil!"); location.reload();
   }
 
-  function readFile(file) { 
-    return new Promise((res) => { 
-      if(!file) res(null); 
-      const r = new FileReader(); 
-      r.onload = (e) => res(e.target.result); 
-      r.readAsDataURL(file); 
-    }); 
-  }
+  function readFile(file) { return new Promise((res) => { if(!file) res(null); const r = new FileReader(); r.onload = (e) => res(e.target.result); r.readAsDataURL(file); }); }
 
   async function simpanEvaluasi() {
     const file1 = document.getElementById("f1").files[0];
     const file2 = document.getElementById("f2").files[0];
     const file3 = document.getElementById("f3").files[0];
-    
-    if(!file1 || !file2 || !file3) return alert("Wajib melampirkan 3 foto kegiatan!");
-
+    if(!file1 || !file2 || !file3) return alert("Wajib 3 foto!");
     const ev = {
       agenda: document.getElementById("ev_agenda").value,
-      capaian: document.getElementById("ev_capaian").value,
       kendala: document.getElementById("ev_kendala").value,
+      solusi: document.getElementById("ev_solusi").value,
       fotos: [await readFile(file1), await readFile(file2), await readFile(file3)]
     };
-    
     localStorage.setItem("eval_" + eks, JSON.stringify(ev));
-    alert("Evaluasi Bulanan dan Foto berhasil disimpan!");
+    alert("Laporan Evaluasi Disimpan!");
   }
 
   function bukaJadwalKaldik() {
     const m = document.createElement("div");
-    m.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:flex; justify-content:center; align-items:center; overflow-y:auto; padding:20px;";
-    m.innerHTML = `<div style="background:white; padding:15px; border-radius:12px; max-width:700px; width:100%; position:relative;">
-      <button onclick="this.parentElement.parentElement.remove()" style="position:absolute; right:10px; top:5px; border:none; background:none; font-size:35px; cursor:pointer;">&times;</button>
-      <img src="jadwal_ekskul.jpeg" style="width:100%; border-radius:8px;">
-    </div>`;
+    m.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:flex; justify-content:center; align-items:center; overflow-y:auto; padding:10px;";
+    m.innerHTML = `
+      <div style="background:white; padding:15px; border-radius:12px; max-width:800px; width:100%; position:relative; max-height:90vh; overflow-y:auto;">
+        <button onclick="this.parentElement.parentElement.remove()" style="position:absolute; right:10px; top:5px; border:none; background:none; font-size:35px; cursor:pointer; color:red;">&times;</button>
+        <h3 style="text-align:center;">JADWAL & KALDIK ICMS</h3>
+        <table>
+          <tr style="background:#0a1f44; color:white;"><th>JAM</th><th>SENIN</th><th>SELASA</th><th>RABU</th><th>KAMIS</th><th>JUMAT</th></tr>
+          <tr><td>16.00</td><td>Taekwondo</td><td>Pramuka/Renang</td><td>Futsal</td><td>Dokcil</td><td>Badminton</td></tr>
+        </table>
+        <div style="background:#f1f2f6; padding:10px; border-radius:8px; margin-top:10px; font-size:12px;">
+          <b>AGENDA NOV 2025:</b><br>• 10 Nov: Hari Pahlawan<br>• 25 Nov: Hari Guru<br>• 28-30 Nov: Perpulangan Reguler
+        </div>
+      </div>`;
     document.body.appendChild(m);
   }
 </script>
