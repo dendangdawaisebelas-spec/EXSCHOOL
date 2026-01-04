@@ -1,171 +1,186 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coach ICMS - Laporan Hybrid</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
-    header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
-    .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-    .btn { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
-    label { font-weight: bold; display: block; margin-top: 15px; color: #0a1f44; }
-    .pedoman-box { background: #e8f4fd; border-left: 5px solid #2980b9; padding: 15px; margin-top: 10px; border-radius: 4px; font-size: 13px; line-height: 1.6; color: #2c3e50; }
-    .info-wajib { color: #e74c3c; font-size: 12px; font-weight: bold; margin-top: 5px; display: block; }
-    .riwayat-container { background: #fafafa; border: 1px solid #eee; border-radius: 6px; padding: 10px; margin-top: 10px; max-height: 200px; overflow-y: auto; font-size: 12px; }
-    .sync-status { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; float: right; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach Dashboard - EXSCHOOL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root { 
+            --navy: #0a1f44; 
+            --gold: #FFD700; 
+            --accent: #2980b9; /* Default Biru */
+        }
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; background: #f4f7fa; padding-bottom: 50px; 
+            color: #2d3436;
+        }
+
+        /* Header Megah dengan Dual Logo */
+        header { 
+            background: var(--navy); color: white; padding: 15px 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-radius: 0 0 30px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: sticky; top: 0; z-index: 100;
+        }
+        
+        .logo-header { height: 45px; width: auto; filter: drop-shadow(0 0 5px rgba(255,255,255,0.2)); }
+        
+        .header-center { text-align: center; flex: 1; }
+        .header-center h1 { margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+        
+        .eks-badge { 
+            background: var(--gold); color: var(--navy); padding: 4px 15px; 
+            border-radius: 50px; font-size: 10px; font-weight: 800; 
+            margin-top: 5px; display: inline-block; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* Tombol Diskusi & Notifikasi */
+        .btn-diskusi {
+            position: relative;
+            background: var(--gold) !important;
+            color: var(--navy) !important;
+            margin-top: 0 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .notif-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 12px;
+            height: 12px;
+            background-color: #ff4757;
+            border: 2px solid white;
+            border-radius: 50%;
+            display: none; /* Muncul via JS */
+        }
+
+        .pulse {
+            animation: pulse-red 2s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        }
+
+        /* Animasi Card */
+        .card { 
+            background: white; padding: 25px; border-radius: 25px; 
+            margin: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); 
+            border: 1px solid #eee; animation: fadeInUp 0.6s ease-out both;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card-title { 
+            display: flex; align-items: center; gap: 10px; font-size: 18px; 
+            font-weight: 800; color: var(--navy); margin-bottom: 15px; 
+            border-left: 5px solid var(--accent); padding-left: 12px;
+        }
+
+        label { font-weight: 700; display: block; margin-top: 15px; color: #636e72; font-size: 12px; text-transform: uppercase; }
+        
+        textarea, input { 
+            width: 100%; padding: 14px; margin-top: 8px; border-radius: 12px; 
+            border: 1.5px solid #eef2f7; box-sizing: border-box; font-family: inherit; font-size: 14px;
+            transition: 0.3s;
+        }
+        
+        textarea:focus, input:focus { border-color: var(--accent); outline: none; background: #fff; }
+
+        .btn { 
+            color: white; border: none; padding: 16px; width: 100%; border-radius: 15px; 
+            font-weight: 800; cursor: pointer; margin-top: 20px; 
+            background: var(--accent); transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+        .pedoman-box { 
+            background: #f0f7ff; padding: 15px; border-radius: 15px; 
+            font-size: 12px; line-height: 1.6; border: 1px dashed var(--accent); 
+            margin: 10px 0; color: #455a64;
+        }
+
+        .info-wajib { color: #e74c3c; font-size: 11px; font-weight: 800; display: block; margin: 10px 0; }
+
+        .riwayat-container { background: #fafafa; border-radius: 15px; padding: 15px; margin-top: 10px; max-height: 250px; overflow-y: auto; }
+        .riwayat-item { border-bottom: 1px solid #eee; padding: 10px 0; font-size: 13px; }
+        .sync-status { font-size: 9px; font-weight: 900; padding: 3px 8px; border-radius: 20px; float: right; background: #e8f5e9; color: #2e7d32; }
+    </style>
 </head>
 <body>
 
 <header>
-  <div id="eks_title" style="font-weight:bold; font-size:20px; text-transform: uppercase;"></div>
+    <img src="logo2.png" class="logo-header" alt="Logo">
+    <div class="header-center">
+        <h1>Dashboard Coach</h1>
+        <div class="eks-badge" id="eks_title">Memuat...</div>
+    </div>
+    <img src="logo2.png" class="logo-header" alt="Logo">
 </header>
 
-<div class="card">
-  <h3 style="margin-top:0; color:#2980b9;">1. Pertemuan Pekanan</h3>
-  <label>Tanggal Pertemuan</label>
-  <input type="date" id="tgl">
-  
-  <label>Materi Latihan</label>
-  <textarea id="mat" rows="3" placeholder=""></textarea>
-  
-  <button class="btn" style="background:#2980b9" onclick="simpanPertemuan()">SIMPAN & SINKRONISASI</button>
+<div style="padding: 0 20px; margin-top: 20px;">
+    <button class="btn btn-diskusi" onclick="bukaDiskusi()">
+        <i class="fa-solid fa-comments"></i> 
+        BUKA RUANG DISKUSI (GRUP)
+        <span id="dot" class="notif-dot pulse"></span>
+    </button>
 </div>
 
-<div class="card">
-  <h3 style="margin-top:0; color:#1c7c54;">2. Evaluasi Bulanan</h3>
-  
-  <div class="pedoman-box">
-    <strong>📋 Pedoman Pengisian Evaluasi:</strong><br>
-    • <strong>Agenda:</strong> Ringkasan program bulanan yang terlaksana.<br>
-    • <strong>Kendala:</strong> Hambatan teknis/non-teknis selama latihan.<br>
-    • <strong>Solusi:</strong> Tindakan konkret mengatasi kendala.<br>
-    • <strong>Foto:</strong> Bukti interaksi aktif (Wajib 3 Foto).
-  </div>
-  
-  <label>Agenda Kegiatan</label>
-  <textarea id="ev_agenda" placeholder="Agenda bulan ini..."></textarea>
-  
-  <label>Kendala & Hambatan</label>
-  <textarea id="ev_kendala" placeholder="Kendala yang dialami..."></textarea>
-  
-  <label>Solusi & Capaian</label>
-  <textarea id="ev_solusi" placeholder="Solusi & progres siswa..."></textarea>
-  
-  <label style="margin-top:20px;">📸 Upload 3 Foto Bukti Kegiatan:</label>
-  <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
-  
-  <input type="file" id="f1" accept="image/*" style="margin-bottom:8px; margin-top:10px;">
-  <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
-  <input type="file" id="f3" accept="image/*" style="margin-bottom:8px;">
-  
-  <button class="btn" style="background:#1c7c54" onclick="simpanEvaluasi()">KIRIM EVALUASI BULANAN</button>
-</div>
-
-<div class="card" style="border-top: 4px solid #666;">
-  <h3 style="margin-top:0; font-size: 16px; color:#333;">📂 Riwayat & Cadangan Mandiri</h3>
-  <div id="riwayat_list" class="riwayat-container">
-    </div>
-  <button class="btn" style="background:#666; font-size: 12px; padding: 10px;" onclick="eksporBackup()">📥 DOWNLOAD CADANGAN DATA (.TXT)</button>
-</div>
-
-<script>
-  // URL WEB APP GOOGLE APPS SCRIPT BAPAK SUDAH DITANAM DI SINI
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmwU65KCwU5_glM-WaLHYlDTudXoWgdV_LSrQ1PpqAt2KNPjiKYOW8id6IPMY98vND/exec"; 
-  
-  const ekskul = localStorage.getItem("ekskul") || "Ekskul";
-  document.getElementById("eks_title").innerText = ekskul;
-
-  // Placeholder Relevan sesuai Ekskul
-  const placeholders = {
-    "Taekwondo": "Contoh: Latihan tendangan Dolyo Chagi & Poomsae dasar...",
-    "Futsal": "Contoh: Teknik control bola & koordinasi serangan balik...",
-    "Musik": "Contoh: Praktik progresi akord & teknik petikan gitar dasar...",
-    "Pramuka": "Contoh: Pendalaman sandi Morse & pionering membuat tiang jemuran...",
-    "English Club": "Contoh: Speaking drill & kosa kata harian bertema asrama...",
-    "Basket": "Contoh: Latihan lay-up shoot & koordinasi pertahanan zone defense...",
-    "Panahan": "Contoh: Teknik dasar fokus & latihan tarikan busur (stretching)..."
-  };
-  document.getElementById("mat").placeholder = placeholders[ekskul] || "Tuliskan rincian materi pekan ini...";
-
-  // 1. Simpan ke HP & Cloud (Pekanan)
-  async function simpanPertemuan() {
-    const tgl = document.getElementById("tgl").value;
-    const mat = document.getElementById("mat").value;
-    if (!tgl || !mat) return alert("Mohon lengkapi data!");
-
-    // Simpan Local (Backup di HP)
-    let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    db.push({ tgl, mat, tipe: "Pekanan" });
-    localStorage.setItem("data_" + ekskul, JSON.stringify(db));
-
-    // Kirim Cloud (Google Sheets)
-    try {
-      const resp = await fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" })
-      });
-      alert("Sukses! Data tersimpan di HP & sedang dikirim ke Google Sheets.");
-    } catch (e) {
-      alert("Tersimpan di HP (Backup), Gagal Sinkron Cloud (Cek Sinyal).");
-    }
-    tampilkanRiwayat();
-  }
-
-  // 2. Simpan Evaluasi Bulanan
-  async function simpanEvaluasi() {
-    const agenda = document.getElementById("ev_agenda").value;
-    const f1 = document.getElementById("f1").files[0];
-    const f2 = document.getElementById("f2").files[0];
-    const f3 = document.getElementById("f3").files[0];
-
-    if (!agenda || !f1 || !f2 || !f3) return alert("Agenda & 3 Foto Wajib Diisi!");
-
-    // Simpan Local
-    localStorage.setItem("eval_" + ekskul, JSON.stringify({ agenda, date: new Date().toLocaleDateString() }));
+<div class="card" style="animation-delay: 0.1s;">
+    <div class="card-title"><i id="icon_main" class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</div>
+    <label>Tanggal Pertemuan</label>
+    <input type="date" id="tgl">
     
-    try {
-      await fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({ tgl: new Date().toLocaleDateString(), agenda, ekskul, tipe: "Evaluasi Bulanan" })
-      });
-      alert("Evaluasi Berhasil Dikirim ke Koordinator!");
-    } catch (e) {
-      alert("Gagal kirim ke Cloud, namun data evaluasi tersimpan di HP.");
-    }
-  }
+    <label>Materi Latihan</label>
+    <textarea id="mat" rows="3" placeholder="Tuliskan rincian materi pekan ini..."></textarea>
+    
+    <button class="btn" onclick="simpanPertemuan()">SIMPAN & SINKRONISASI</button>
+</div>
 
-  // 3. Tampilkan Riwayat
-  function tampilkanRiwayat() {
-    const list = document.getElementById("riwayat_list");
-    const data = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    if(data.length === 0) {
-      list.innerHTML = "<p style='color:#999'>Belum ada data tersimpan.</p>";
-      return;
-    }
-    list.innerHTML = data.map(d => `
-      <div style="border-bottom:1px solid #eee; padding:8px 0;">
-        <span class="sync-status" style="background:#e8f5e9; color:#2e7d32;">BACKUP OK</span>
-        <b>${d.tgl}</b><br>${d.mat.substring(0,50)}...
-      </div>
-    `).reverse().join('');
-  }
+<div class="card" style="animation-delay: 0.3s;">
+    <div class="card-title" style="border-color: #1c7c54;"><i class="fa-solid fa-chart-line" style="color: #1c7c54;"></i> 2. Evaluasi Bulanan</div>
+    
+    <div class="pedoman-box">
+        <strong>📋 Pedoman Pengisian Evaluasi:</strong><br>
+        • <strong>Agenda:</strong> Ringkasan program bulanan yang terlaksana.<br>
+        • <strong>Kendala:</strong> Hambatan teknis/non-teknis selama latihan.<br>
+        • <strong>Solusi:</strong> Tindakan konkret mengatasi kendala.<br>
+        • <strong>Foto:</strong> Bukti interaksi aktif (Wajib 3 Foto).
+    </div>
+    
+    <label>Agenda Kegiatan</label>
+    <textarea id="ev_agenda" rows="2" placeholder="Agenda bulan ini..."></textarea>
+    
+    <label>Kendala & Hambatan</label>
+    <textarea id="ev_kendala" rows="2" placeholder="Kendala yang dialami..."></textarea>
+    
+    <label>Solusi & Capaian</label>
+    <textarea id="ev_solusi" rows="2" placeholder="Solusi & progres siswa..."></textarea>
+    
+    <label style="margin-top:20px;">📸 Upload 3 Foto Bukti Kegiatan:</label>
+    <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
+    
+    <input type="file" id="f1" accept="image/*" style="margin-bottom:8px;">
+    <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
+    <input type="file" id="f3" accept="image/*" style="margin-bottom:8px;">
+    
+    <button class="btn" style="background:#1c7c54" onclick="simpanEvaluasi()">KIRIM EVALUASI BULANAN</button>
+</div>
 
-  // 4. Download Backup Txt
-  function eksporBackup() {
-    const data = localStorage.getItem("data_" + ekskul);
-    const blob = new Blob([data], {type: "text/plain"});
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "Backup_Laporan_" + ekskul + ".txt";
-    link.click();
-  }
-
-  window.onload = tampilkanRiwayat;
-</script>
-</body>
-</html>
+<div class="card" style="animation-delay: 0.5s; border-top: 4px solid #666;">
+    <div class="card-title" style="border-left:none;"><i class="fa-solid fa-database"></i> Riwayat & Cadangan</div>
+    <div id="riwayat_list" class="riwayat-container"></div>
+    <button class="btn" style="background:#666; font-size: 12px;" onclick="eksporBackup
