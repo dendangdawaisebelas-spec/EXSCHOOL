@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Diskusi - EXSCHOOL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { 
+            --navy: #0a1f44; 
+            --gold: #FFD700; 
+        }
+        
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #f4f7fa; overflow: hidden;
+        }
+
+        /* Header */
+        header { 
+            background: var(--navy); color: white; padding: 15px; 
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: relative; z-index: 10;
+        }
+
+        .btn-back {
+            color: white; font-size: 20px; text-decoration: none; cursor: pointer;
+        }
+
+        .header-info h1 { margin: 0; font-size: 16px; letter-spacing: 1px; }
+        .header-info p { margin: 0; font-size: 10px; color: var(--gold); text-transform: uppercase; }
+
+        /* Container Chat */
+        .chat-wrapper {
+            height: calc(100vh - 70px); /* Potong tinggi header */
+            width: 100%;
+            background: white;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Floating Badge Nama User */
+        .user-badge {
+            position: fixed; bottom: 80px; right: 20px;
+            background: var(--gold); color: var(--navy);
+            padding: 5px 15px; border-radius: 20px;
+            font-size: 11px; font-weight: 800;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 100; pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="javascript:history.back()" class="btn-back"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="header-info">
+        <h1>FORUM DISKUSI EXSCHOOL</h1>
+        <p>Pusat Koordinasi Pembina & Coach</p>
+    </div>
+</header>
+
+<div class="user-badge" id="display_user">User</div>
+
+<div class="chat-wrapper">
+    <iframe src="https://www5.smartgb.com/g/g.php?a=s&i=g5-56234-8c"></iframe>
+</div>
+
+<script>
+    // Ambil nama user untuk identitas
+    const user = localStorage.getItem("username") || "Guest";
+    const ekskul = localStorage.getItem("ekskul") || "";
+    document.getElementById("display_user").innerText = user.split('coach')[1] || user;
+</script>
+
+</body>
+</html>
