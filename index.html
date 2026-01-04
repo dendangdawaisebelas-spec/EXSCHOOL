@@ -10,19 +10,19 @@
         :root { --navy: #0a1f44; --gold: #FFD700; }
         body, html { margin: 0; height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--navy); display: flex; justify-content: center; align-items: center; }
         .login-box { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; width: 320px; text-align: center; border: 1px solid rgba(255, 215, 0, 0.2); }
-        .logo-img { width: 160px; margin-bottom: 10px; }
+        .logo-img { width: 150px; margin-bottom: 10px; }
         h2 { color: white; margin: 0; font-size: 26px; letter-spacing: 2px; }
         .sub { color: var(--gold); font-size: 10px; margin-bottom: 30px; text-transform: uppercase; }
         .input-group { position: relative; margin-bottom: 20px; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: none; background: white; box-sizing: border-box; font-weight: 600; }
+        input { width: 100%; padding: 15px; border-radius: 12px; border: none; background: white; box-sizing: border-box; font-weight: 600; font-size: 14px; }
         .eye-icon { position: absolute; right: 15px; top: 15px; color: #333; cursor: pointer; font-size: 18px; }
-        button { width: 100%; padding: 16px; border: none; border-radius: 12px; background: linear-gradient(135deg, #bf953f, #fcf6ba, #aa771c); color: var(--navy); font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        button { width: 100%; padding: 16px; border: none; border-radius: 12px; background: linear-gradient(135deg, #bf953f, #fcf6ba, #aa771c); color: var(--navy); font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
     <div class="login-box">
-        <img src="logo2.png" class="logo-img" alt="LOGO">
+        <img src="logo2.png" class="logo-img" alt="LOGO EXSCHOOL">
         <h2>EXSCHOOL</h2>
         <div class="sub">Terintegrasi dalam satu genggaman</div>
 
@@ -53,7 +53,6 @@
         const u = document.getElementById("user").value.toLowerCase().trim();
         const p = document.getElementById("pass").value.trim();
 
-        // DATABASE USERNAME SIMPEL
         const users = [
             {u:"pakditya", p:"savepalestine", r:"koordinator"},
             {u:"musik", p:"icms2026", r:"coach", e:"Musik"},
@@ -71,10 +70,10 @@
         if (acc) {
             localStorage.setItem("role", acc.r);
             localStorage.setItem("username", acc.u);
+            localStorage.setItem("ekskul", acc.e);
             if (acc.r === "koordinator") {
                 window.location.href = "dashboard_koordinator.html";
             } else {
-                localStorage.setItem("ekskul", acc.e);
                 window.location.href = "coach.html";
             }
         } else {
