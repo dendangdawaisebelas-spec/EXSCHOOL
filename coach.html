@@ -3,91 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coach ICMS - Smart System</title>
+  <title>Coach Dashboard - EXSCHOOL</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
     :root { --navy: #0a1f44; --gold: #FFD700; --accent: #3498db; --glass: rgba(255, 255, 255, 0.96); }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: #f4f7fa; padding-bottom: 50px; overflow-x: hidden; }
-    header { background: var(--navy); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 35px 35px; box-shadow: 0 12px 35px rgba(0,0,0,0.25); }
-    .logo-side { height: 50px; width: auto; }
-    .header-center { text-align: center; }
-    .header-center h1 { margin: 0; font-size: 14px; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; }
-    .eks-badge { background: var(--gold); color: var(--navy); padding: 4px 15px; border-radius: 50px; font-size: 10px; font-weight: 800; margin-top: 6px; display: inline-block; }
-    .card { background: var(--glass); padding: 25px; border-radius: 28px; margin: 25px 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.04); border: 1px solid rgba(255,255,255,0.7); backdrop-filter: blur(10px); }
-    .card-title { display: flex; align-items: center; gap: 12px; font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 22px; border-left: 5px solid var(--accent); padding-left: 12px; }
-    label { font-weight: 600; display: block; margin-top: 18px; color: #636e72; font-size: 12px; text-transform: uppercase; }
-    textarea, input { width: 100%; padding: 15px; margin-top: 8px; border-radius: 14px; border: 1.5px solid #eef2f7; box-sizing: border-box; font-family: inherit; }
-    .btn { color: white; border: none; padding: 18px; width: 100%; border-radius: 18px; font-weight: 700; cursor: pointer; margin-top: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; background: var(--accent); transition: 0.3s; }
-    .pedoman-box { background: #f0f7ff; border-radius: 18px; padding: 18px; font-size: 12px; line-height: 1.7; color: #555; border: 1px dashed var(--accent); margin-top: 15px; }
-    .info-wajib { color: #d63031; font-size: 11px; font-weight: 700; margin-bottom: 10px; display: block; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: #f4f7fa; padding-bottom: 50px; }
+    header { background: var(--navy); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 25px 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+    .logo-header { height: 50px; width: auto; }
+    .header-center h1 { margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
+    .card { background: var(--glass); padding: 25px; border-radius: 20px; margin: 20px; border: 1px solid #eee; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+    label { font-weight: 700; display: block; margin-top: 15px; color: var(--navy); font-size: 14px; }
+    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ccc; box-sizing: border-box; font-family: inherit; }
+    .btn { color: white; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 20px; background: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
+    .info-wajib { color: #d63031; font-size: 12px; font-weight: 600; margin-bottom: 10px; display: block; }
   </style>
 </head>
 <body>
 <header>
-    <img src="logo.png" class="logo-side" alt="Logo">
-    <div class="header-center">
-        <h1>Dashboard Coach</h1>
-        <div class="eks-badge" id="eks_badge">Loading...</div>
-    </div>
-    <img src="logo.png" class="logo-side" alt="Logo">
+    <img src="logo.png" class="logo-header" alt="Logo Kiri">
+    <div class="header-center"><h1>DASHBOARD COACH</h1></div>
+    <img src="logo.png" class="logo-header" alt="Logo Kanan">
 </header>
 
 <div class="card">
-    <div class="card-title"><i class="fa-solid fa-calendar-day"></i> 1. Pertemuan Pekanan</div>
+    <h3 style="margin:0;">1. Pertemuan Pekanan</h3>
     <label>Tanggal</label>
     <input type="date" id="tgl">
     <label>Materi</label>
-    <textarea id="mat" rows="3" placeholder="Tuliskan materi latihan..."></textarea>
+    <textarea id="mat" rows="3" placeholder="Isi materi latihan pekan ini..."></textarea>
     <button class="btn" onclick="simpanPertemuan()">SIMPAN PERTEMUAN</button>
 </div>
 
 <div class="card">
-    <div class="card-title" style="border-color: #27ae60;"><i class="fa-solid fa-file-pen" style="color:#27ae60;"></i> 2. Evaluasi Bulanan</div>
-    <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
-    
+    <h3 style="margin:0;">2. Evaluasi Bulanan</h3>
+    <span class="info-wajib" style="margin-top:10px;">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
     <label>Agenda Kegiatan</label>
-    <textarea id="ev_agenda" rows="4" placeholder="Tuliskan agenda kegiatan..."></textarea>
+    <textarea id="ev_agenda" rows="4" placeholder="Isi agenda evaluasi bulanan..."></textarea>
     
-    <div class="pedoman-box">
-        <strong>📋 Pedoman Pengisian Evaluasi:</strong><br>
-        • <strong>Agenda:</strong> Tuliskan ringkasan program yang terlaksana.<br>
-        • <strong>Kendala:</strong> Sebutkan hambatan teknis atau non-teknis.<br>
-        • <strong>Solusi:</strong> Tindakan yang diambil untuk mengatasi kendala.<br>
-        • <strong>Foto:</strong> Pastikan foto menunjukkan interaksi aktif siswa.
-    </div>
-
-    <label style="margin-top:20px;">Upload 3 Foto Bukti Kegiatan:</label>
+    <label style="margin-top:20px; font-weight:800;">Upload 3 Foto Bukti Kegiatan:</label>
     <input type="file" id="f1" accept="image/*" style="margin-bottom:8px;">
     <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
     <input type="file" id="f3" accept="image/*">
     
     <button class="btn" style="background:#1c7c54;" onclick="simpanEvaluasi()">SIMPAN EVALUASI BULANAN</button>
 </div>
-
-<script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmwU65KCwU5_glM-WaLHYlDTudXoWgdV_LSrQ1PpqAt2KNPjiKYOW8id6IPMY98vND/exec";
-    const ekskul = localStorage.getItem("ekskul") || "Ekskul";
-    document.getElementById("eks_badge").innerText = ekskul;
-
-    async function simpanPertemuan() {
-        const tgl = document.getElementById("tgl").value;
-        const mat = document.getElementById("mat").value;
-        if (!tgl || !mat) return alert("Lengkapi Tanggal dan Materi!");
-        try {
-            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" }) });
-            alert("Laporan Pekanan Berhasil Disimpan!");
-        } catch (e) { alert("Gagal Sinkron!"); }
-    }
-
-    async function simpanEvaluasi() {
-        const agenda = document.getElementById("ev_agenda").value;
-        if (!agenda) return alert("Agenda Kegiatan Wajib Diisi!");
-        try {
-            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ agenda, ekskul, tipe: "Evaluasi" }) });
-            alert("Evaluasi Bulanan Berhasil Disimpan!");
-        } catch (e) { alert("Gagal Sinkron!"); }
-    }
-</script>
 </body>
 </html>
