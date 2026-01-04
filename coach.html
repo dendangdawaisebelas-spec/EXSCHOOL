@@ -1,23 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach Dashboard - EXSCHOOL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { 
+            --navy: #0a1f44; 
+            --gold: #FFD700; 
+            --accent: #3498db; 
+        }
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; background: #f4f7fa; padding-bottom: 50px; 
+        }
+
+        /* Header Megah dengan Dual Logo */
+        header { 
+            background: var(--navy); color: white; padding: 15px 20px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-radius: 0 0 30px 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .logo-header { height: 50px; width: auto; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+        
+        .header-center { text-align: center; flex: 1; }
+        .header-center h1 { margin: 0; font-size: 14px; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .eks-badge { 
+            background: var(--gold); color: var(--navy); padding: 4px 15px; 
+            border-radius: 50px; font-size: 11px; font-weight: 800; 
+            margin-top: 5px; display: inline-block; 
+        }
+
+        /* Card Style */
+        .card { 
+            background: white; padding: 25px; border-radius: 25px; 
+            margin: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); 
+            border: 1px solid #eee; animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card-title { 
+            display: flex; align-items: center; gap: 10px; font-size: 18px; 
+            font-weight: 800; color: var(--navy); margin-bottom: 20px; 
+            border-left: 5px solid var(--accent); padding-left: 12px;
+        }
+
+        label { font-weight: 700; display: block; margin-top: 15px; color: #555; font-size: 13px; text-transform: uppercase; }
+        
+        textarea, input { 
+            width: 100%; padding: 14px; margin-top: 8px; border-radius: 12px; 
+            border: 1.5px solid #eef2f7; box-sizing: border-box; font-family: inherit; 
+        }
+
+        /* Tombol Sesuai Warna Ekskul */
+        .btn { 
+            color: white; border: none; padding: 18px; width: 100%; border-radius: 15px; 
+            font-weight: 800; cursor: pointer; margin-top: 25px; 
+            background: var(--accent); transition: 0.3s; text-transform: uppercase;
+        }
+
+        .btn:hover { transform: translateY(-3px); filter: brightness(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        .info-wajib { color: #d63031; font-size: 12px; font-weight: 700; display: block; margin: 10px 0; }
+
+        .pedoman { background: #f0f7ff; padding: 15px; border-radius: 15px; font-size: 12px; line-height: 1.6; border: 1px dashed var(--accent); margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="logo2.png" class="logo-header" alt="Logo">
+    <div class="header-center">
+        <h1>Dashboard Coach</h1>
+        <div class="eks-badge" id="eks_name">Memuat...</div>
+    </div>
+    <img src="logo2.png" class="logo-header" alt="Logo">
+</header>
+
 <div class="card">
-    <h3 style="margin:0; color: var(--navy);">2. Evaluasi Bulanan</h3>
+    <div class="card-title"><i id="icon_1" class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</div>
+    <label>Tanggal</label>
+    <input type="date" id="tgl">
+    <label>Materi</label>
+    <textarea id="mat" rows="3" placeholder="Tuliskan materi latihan hari ini..."></textarea>
+    <button class="btn" onclick="savePekanan()">SIMPAN PERTEMUAN</button>
+</div>
+
+<div class="card">
+    <div class="card-title" style="border-color: #27ae60;"><i class="fa-solid fa-camera" style="color:#27ae60;"></i> 2. Evaluasi Bulanan</div>
     
     <label>Agenda Kegiatan</label>
-    <textarea id="ev_agenda" rows="4" placeholder="Tuliskan agenda kegiatan..."></textarea>
+    <textarea id="agenda" rows="4" placeholder="Tuliskan ringkasan agenda..."></textarea>
     
-    <div class="pedoman-box">
-        <strong>📋 Pedoman Pengisian Evaluasi:</strong><br>
-        • <strong>Agenda:</strong> Tuliskan ringkasan program yang terlaksana.<br>
-        • <strong>Kendala:</strong> Sebutkan hambatan teknis atau non-teknis.<br>
-        • <strong>Solusi:</strong> Tindakan yang diambil untuk mengatasi kendala.<br>
-        • <strong>Foto:</strong> Pastikan foto menunjukkan interaksi aktif siswa.
+    <div class="pedoman">
+        <strong>📋 Pedoman Pengisian:</strong><br>
+        • Agenda: Ringkasan program terlaksana.<br>
+        • Kendala & Solusi: Hambatan dan cara mengatasinya.
     </div>
 
-    <label style="margin-top:20px; font-weight:800;">Upload 3 Foto Bukti Kegiatan:</label>
-    <span class="info-wajib" style="margin-top:5px; margin-bottom:15px;">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
+    <label style="margin-top:20px;">Upload 3 Foto Bukti Kegiatan:</label>
+    <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
     
-    <input type="file" id="f1" accept="image/*" style="margin-bottom:10px;">
-    <input type="file" id="f2" accept="image/*" style="margin-bottom:10px;">
+    <input type="file" id="f1" accept="image/*" style="margin-bottom:8px;">
+    <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
     <input type="file" id="f3" accept="image/*">
     
-    <button class="btn" style="background:#1c7c54;" onclick="simpanEvaluasi()">SIMPAN EVALUASI BULANAN</button>
+    <button class="btn" style="background:#1c7c54;" onclick="saveEvaluasi()">SIMPAN EVALUASI BULANAN</button>
 </div>
+
+<script>
+    const ekskul = localStorage.getItem("ekskul") || "Ekskul";
+    document.getElementById("eks_name").innerText = ekskul;
+
+    // Konfigurasi Gaya Spesifik Ekskul
+    const styleMap = {
+        "Futsal": { color: "#e67e22", icon: "fa-futbol" },
+        "Basket": { color: "#d35400", icon: "fa-basketball" },
+        "Musik": { color: "#8e44ad", icon: "fa-music" },
+        "Taekwondo": { color: "#c0392b", icon: "fa-hand-fist" },
+        "Panahan": { color: "#27ae60", icon: "fa-bullseye" }
+    };
+
+    const theme = styleMap[ekskul] || { color: "#3498db", icon: "fa-star" };
+    document.documentElement.style.setProperty('--accent', theme.color);
+    document.getElementById("icon_1").className = "fa-solid " + theme.icon;
+
+    function savePekanan() {
+        const tgl = document.getElementById("tgl").value;
+        const mat = document.getElementById("mat").value;
+        if(!tgl || !mat) return alert("Mohon lengkapi Tanggal dan Materi!");
+        alert("Laporan Pekanan " + ekskul + " Berhasil Disimpan.");
+    }
+
+    function saveEvaluasi() {
+        const agd = document.getElementById("agenda").value;
+        const f = document.getElementById("f1").value;
+        if(!agd || !f) return alert("Agenda dan Foto Wajib Diisi!");
+        alert("Evaluasi Bulanan Berhasil Terkirim.");
+    }
+</script>
+</body>
+</html>
