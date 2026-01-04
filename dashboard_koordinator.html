@@ -15,10 +15,10 @@
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
         .btn-main { border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; color: white; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
         
-        .btn-rab { background: #1c7c54; } /* Hijau */
-        .btn-lap { background: #0a1f44; } /* Biru Tua */
-        .btn-mail { background: #db4437; grid-column: span 2; } /* Merah */
-        .btn-kaldik { background: #f39c12; grid-column: span 2; } /* Oranye - Link Kaldik */
+        .btn-rab { background: #1c7c54; } 
+        .btn-lap { background: #0a1f44; } 
+        .btn-mail { background: #db4437; grid-column: span 2; } 
+        .btn-kaldik { background: #f39c12; grid-column: span 2; } 
 
         .btn-main:hover { opacity: 0.9; transform: scale(1.02); }
 
@@ -62,9 +62,9 @@
 <script>
     const { jsPDF } = window.jspdf;
 
-    // Database Tarif (Sesuai kesepakatan ICMS)
+    // Database Tarif (Sesuai kesepakatan ICMS & Revisi Taekwondo)
     const dbTarif = { 
-        "Taekwondo": 0, "Renang": 150000, "Pramuka": 160000, 
+        "Taekwondo": 50000, "Renang": 150000, "Pramuka": 160000, 
         "Futsal": 250000, "Dokter Kecil": 100000, "Badminton": 150000, 
         "Basket": 250000, "English Club": 0, "Nihonggo Club": 0,
         "Musik": 500000, "Panahan": 300000 
@@ -80,8 +80,8 @@
             const harian = JSON.parse(localStorage.getItem("data_" + nama)) || [];
             const eval = JSON.parse(localStorage.getItem("eval_" + nama)) || null;
             
-            // Hitung Honor
-            let totalHonor = (nama === "Musik") ? 500000 : (nama === "Taekwondo" ? (parseInt(localStorage.getItem("t_Taek")) || 0) : harian.length * dbTarif[nama]);
+            // Hitung Honor (Musik flat 500rb, Taekwondo x 50rb)
+            let totalHonor = (nama === "Musik") ? 500000 : harian.length * dbTarif[nama];
 
             grid.innerHTML += `
                 <div class="card">
@@ -96,17 +96,58 @@
         });
     }
 
-    // 1. Fungsi Cetak RAB
     function cetakRAB() {
         const doc = new jsPDF();
         doc.text("RAB HONOR PELATIH ICMS - NOVEMBER 2025", 105, 15, {align:"center"});
         let rows = []; let grandTotal = 0;
         listEkskul.forEach((n, i) => {
             let d = JSON.parse(localStorage.getItem("data_"+n)) || [];
-            let sub = (n === "Musik") ? 500000 : (n === "Taekwondo" ? parseInt(localStorage.getItem("t_Taek")) || 0 : d.length * dbTarif[n]);
+            let sub = (n === "Musik") ? 500000 : d.length * dbTarif[n];
             grandTotal += sub;
             rows.push([i+1, n, dbTarif[n].toLocaleString(), d.length, sub.toLocaleString()]);
         });
         doc.autoTable({ startY: 25, head: [['No', 'Ekskul', 'Tarif', 'Vol', 'Total']], body: rows });
         doc.text("Total: Rp " + grandTotal.toLocaleString(), 140, doc.lastAutoTable.finalY + 10);
-        doc.save("
+        doc.save("RAB_Honor_ICMS.pdf");
+    }
+
+    function cetakLaporanBulanan() {
+        const doc = new jsPDF();
+        doc.setFont("times", "bold");
+        doc.text("LAPORAN BULANAN EKSTRAKURIKULER", 105, 50, {align:"center"});
+        doc.text("Ditya Manggala, S.Sn", 105, 70, {align:"center"});
+
+        listEkskul.forEach(n => {
+            const ev = JSON.parse(localStorage.getItem("eval_" + n));
+            if(ev) {
+                doc.addPage();
+                doc.setFontSize(14); doc.text("EVALUASI: " + n, 20, 20);
+                doc.setFont("times", "normal"); doc.setFontSize(11);
+                doc.text("Agenda: " + ev.agenda, 20, 35, {maxWidth: 170});
+                
+                if(ev.fotos && ev.fotos.length >= 3) {
+                    doc.addPage();
+                    doc.text("LAMPIRAN FOTO " + n, 105, 15, {align:"center"});
+                    doc.addImage(ev.fotos[0], 'JPEG', 20, 25, 80, 60);
+                    doc.addImage(ev.fotos[1], 'JPEG', 110, 25, 80, 60);
+                    doc.addImage(ev.fotos[2], 'JPEG', 20, 95, 170, 100);
+                }
+            }
+        });
+        doc.save("Laporan_Bulanan_Final.pdf");
+    }
+
+    function kirimNotifEmail() {
+        const tujuan = "pembinaekstrakurikulerkeren@gmail.com";
+        let pesan = "Rekap Laporan ICMS:\n\n";
+        listEkskul.forEach(n => {
+            const d = JSON.parse(localStorage.getItem("data_" + n)) || [];
+            pesan += `- ${n}: ${d.length} Pertemuan\n`;
+        });
+        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${tujuan}&su=REKAP_LAPORAN_ICMS&body=${encodeURIComponent(pesan)}`);
+    }
+
+    muatData();
+</script>
+</body>
+</html>
