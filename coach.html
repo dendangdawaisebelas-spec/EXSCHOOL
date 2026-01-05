@@ -56,7 +56,6 @@
 
     .btn-save { background: #2f3542; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; text-transform: uppercase; font-size: 12px; }
     
-    /* Tombol Aksi Bawah */
     .btn-action { width: calc(100% - 40px); margin: 10px 20px; padding: 16px; border: none; border-radius: 15px; font-weight: 800; text-transform: uppercase; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
     .btn-kaldik { background: #8e44ad; color: white; margin-bottom: 5px; }
     .btn-print { background: #1c7c54; color: white; margin-top: 30px; }
@@ -71,7 +70,7 @@
   <div id="cName" style="font-size:11px; color:#888; margin-top:8px; font-weight:600;"></div>
 </header>
 
-<button class="btn-action btn-kaldik" onclick="alert('Membuka Jadwal...')">
+<button class="btn-action btn-kaldik" onclick="alert('Membuka Jadwal & Kaldik...')">
   <i class="fa-solid fa-calendar-alt"></i> JADWAL EKSKUL & KALDIK
 </button>
 
@@ -79,16 +78,27 @@
   <h3>1. Input Pertemuan Harian</h3>
   <label>Materi Latihan</label>
   <textarea id="mat" rows="3" placeholder="Memuat contoh materi..."></textarea>
-  <button class="btn-save" style="background:#2980b9" onclick="alert('Pertemuan Disimpan!')">SIMPAN PERTEMUAN</button>
+  <button class="btn-save" style="background:#2980b9" onclick="alert('Data Pertemuan Disimpan!')">SIMPAN PERTEMUAN</button>
 </div>
 
 <div class="card">
-  <h3>2. Laporan Evaluasi Bulanan</h3>
+  <h3>2. Laporan Evaluasi Bulanan (Wajib)</h3>
   <label>Agenda Terlaksana</label>
-  <textarea id="eval_agenda" rows="2" placeholder="Contoh agenda bulanan..."></textarea>
+  <textarea id="eval_agenda" rows="2" placeholder="Agenda yang telah dilakukan..."></textarea>
+  
   <label>Capaian Siswa</label>
-  <textarea id="eval_capaian" rows="2" placeholder="Contoh capaian siswa..."></textarea>
-  <button class="btn-save" style="background:#1c7c54" onclick="alert('Evaluasi Diperbarui!')">UPDATE EVALUASI</button>
+  <textarea id="eval_capaian" rows="2" placeholder="Hasil atau kemajuan siswa..."></textarea>
+  
+  <label>Kendala</label>
+  <textarea id="eval_kendala" rows="2" placeholder="Hambatan saat latihan..."></textarea>
+  
+  <label>Solusi</label>
+  <textarea id="eval_solusi" rows="2" placeholder="Tindakan yang sudah dilakukan..."></textarea>
+  
+  <label>Saran ke Depan</label>
+  <textarea id="eval_saran" rows="2" placeholder="Rencana atau masukan selanjutnya..."></textarea>
+  
+  <button class="btn-save" style="background:#1c7c54" onclick="alert('Laporan Bulanan Diperbarui!')">UPDATE EVALUASI</button>
 </div>
 
 <button class="btn-action btn-print" onclick="window.print()">
@@ -114,8 +124,8 @@
     let config = {
         title: "COACH " + eks.toUpperCase(),
         matHint: "Tuliskan materi latihan hari ini.",
-        agendaHint: "Rekap kegiatan bulan ini.",
-        capaianHint: "Progress kemampuan siswa."
+        agendaHint: "Cth: Latihan rutin 4x/bulan...",
+        capaianHint: "Cth: Siswa hafal teknik dasar..."
     };
 
     if (eks === "Nihongo Club") {
@@ -151,19 +161,26 @@
   function kirimWA() {
     const mat = document.getElementById("mat").value;
     const agenda = document.getElementById("eval_agenda").value;
-    const capaian = document.getElementById("eval_capaian").value;
+    const cap = document.getElementById("eval_capaian").value;
+    const kendala = document.getElementById("eval_kendala").value;
+    const solusi = document.getElementById("eval_solusi").value;
+    const saran = document.getElementById("eval_saran").value;
 
-    if(!mat || !agenda) return alert("Mohon isi laporan terlebih dahulu!");
+    if(!mat || !agenda) return alert("Mohon lengkapi laporan terlebih dahulu!");
 
+    // Format Laporan Komplit untuk WhatsApp
     const pesan = `*LAPORAN EKSKUL ICMS*%0A` +
                   `------------------------------%0A` +
                   `*Ekskul:* ${eks}%0A` +
                   `*Pelatih:* ${user}%0A%0A` +
-                  `*Materi Hari Ini:*%0A${mat}%0A%0A` +
-                  `*Agenda Bulanan:*%0A${agenda}%0A%0A` +
-                  `*Capaian Siswa:*%0A${capaian}`;
+                  `*1. MATERI LATIHAN:*%0A${mat}%0A%0A` +
+                  `*2. AGENDA TERLAKSANA:*%0A${agenda}%0A%0A` +
+                  `*3. CAPAIAN SISWA:*%0A${cap}%0A%0A` +
+                  `*4. KENDALA:*%0A${kendala || '-'}%0A%0A` +
+                  `*5. SOLUSI:*%0A${solusi || '-'}%0A%0A` +
+                  `*6. SARAN KE DEPAN:*%0A${saran || '-'}`;
 
-    // Kirim ke nomor Pak Ditya
+    // Nomor WhatsApp Pak Ditya
     window.open(`https://wa.me/6288269097225?text=${pesan}`);
   }
 
