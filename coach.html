@@ -8,46 +8,93 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --navy: #0a1f44; --gold: #FFD700; --accent: #2980b9; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: #f4f7fa; padding-bottom: 50px; color: #2d3436; }
+        :root { 
+            --navy: #0a1f44; 
+            --gold: #bf953f; 
+            --light-bg: #fcfcfc;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
 
-        /* HEADER SESUAI SCREENSHOT */
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            margin: 0; background-color: var(--light-bg); 
+            padding-bottom: 50px; color: #333;
+        }
+
+        /* Header Elegant Putih-Navy */
         header { 
-            background: var(--navy); color: white; padding: 25px 20px; text-align: center;
-            border-radius: 0 0 35px 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            position: sticky; top: 0; z-index: 100;
+            background: #ffffff; padding: 30px 20px; text-align: center;
+            border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100;
+            animation: fadeInDown 0.8s ease-out;
         }
-        
-        /* Judul (Lingkar Merah) */
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         #dynamic_title { 
-            margin: 0; font-size: 20px; text-transform: uppercase; 
-            letter-spacing: 1px; font-weight: 800; 
+            margin: 0; font-size: 22px; text-transform: uppercase; 
+            letter-spacing: 2px; font-weight: 800; color: var(--navy);
         }
 
-        /* Badge Kuning (Lingkar Putih) */
         .icms-badge { 
-            background: var(--gold); color: var(--navy); padding: 5px 25px; 
-            border-radius: 50px; font-size: 11px; font-weight: 800; 
-            margin-top: 10px; display: inline-block; text-transform: uppercase;
+            background: #f1f2f6; color: #555; padding: 6px 20px; 
+            border-radius: 50px; font-size: 11px; font-weight: 700; 
+            margin-top: 12px; display: inline-block; text-transform: uppercase;
         }
 
-        /* Card & Tombol Diskusi */
-        .card { background: white; padding: 25px; border-radius: 25px; margin: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .card-title { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 15px; border-left: 5px solid var(--accent); padding-left: 12px; }
-        
+        /* Tombol Diskusi Corporate */
         .btn-diskusi { 
-            position: relative; background: var(--gold) !important; color: var(--navy) !important; 
-            width: calc(100% - 40px); margin: 20px; padding: 16px; border: none; border-radius: 15px;
-            display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 800; text-transform: uppercase;
+            position: relative; background: var(--navy); color: white; 
+            width: calc(100% - 40px); margin: 25px 20px 10px 20px; 
+            padding: 18px; border: none; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center; 
+            gap: 12px; font-weight: 700; text-transform: uppercase;
+            font-size: 13px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(10,31,68,0.15);
         }
 
-        .notif-dot { position: absolute; top: -2px; right: -2px; width: 12px; height: 12px; background-color: #ff4757; border: 2px solid white; border-radius: 50%; display: none; }
+        .btn-diskusi:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(10,31,68,0.2); }
+
+        .notif-dot { position: absolute; top: -4px; right: -4px; width: 14px; height: 14px; background-color: #ff4757; border: 3px solid white; border-radius: 50%; display: none; }
         .pulse { animation: pulse-red 2s infinite; }
         @keyframes pulse-red { 0% { transform: scale(0.95); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); } 100% { transform: scale(0.95); } }
 
-        label { font-weight: 700; display: block; margin-top: 15px; color: #636e72; font-size: 12px; text-transform: uppercase; }
-        textarea, input { width: 100%; padding: 14px; margin-top: 8px; border-radius: 12px; border: 1.5px solid #eef2f7; box-sizing: border-box; font-family: inherit; }
-        .btn-submit { color: white; border: none; padding: 16px; width: 100%; border-radius: 15px; font-weight: 800; cursor: pointer; margin-top: 20px; background: var(--accent); text-transform: uppercase; }
+        /* Card Section */
+        .card { 
+            background: #ffffff; padding: 30px; border-radius: 24px; 
+            margin: 20px; box-shadow: var(--card-shadow); 
+            border: 1px solid #f0f0f0; animation: fadeInUp 0.8s ease-out both;
+        }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card-title { 
+            display: flex; align-items: center; gap: 12px; font-size: 16px; 
+            font-weight: 800; color: var(--navy); margin-bottom: 20px; 
+        }
+
+        label { font-weight: 700; display: block; margin-top: 20px; color: #888; font-size: 11px; text-transform: uppercase; }
+        
+        textarea, input { 
+            width: 100%; padding: 16px; margin-top: 10px; border-radius: 14px; 
+            border: 1.5px solid #f0f0f0; background: #fafafa; box-sizing: border-box; 
+            font-family: inherit; font-size: 14px; transition: 0.3s;
+        }
+
+        textarea:focus, input:focus { border-color: var(--navy); background: #fff; outline: none; }
+
+        .btn-submit { 
+            color: white; border: none; padding: 18px; width: 100%; border-radius: 14px; 
+            font-weight: 800; cursor: pointer; margin-top: 25px; 
+            background: #2f3542; text-transform: uppercase; transition: 0.3s;
+        }
+
+        .btn-submit:hover { background: var(--navy); }
+
+        .info-wajib { color: #eb4d4b; font-size: 11px; font-weight: 700; display: block; margin: 12px 0; }
+        .riwayat-container { background: #fafafa; border-radius: 16px; padding: 20px; max-height: 200px; overflow-y: auto; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -62,13 +109,30 @@
     <span id="dot" class="notif-dot pulse"></span>
 </button>
 
-<div class="card">
-    <div class="card-title"><i id="icon_main" class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</div>
+<div class="card" style="animation-delay: 0.2s;">
+    <div class="card-title"><i class="fa-solid fa-calendar-day"></i> 1. Pertemuan Pekanan</div>
     <label>Tanggal Pertemuan</label>
     <input type="date" id="tgl">
     <label>Materi Latihan</label>
-    <textarea id="mat" rows="3" placeholder="Tuliskan rincian materi pekan ini..."></textarea>
-    <button class="btn-submit" onclick="alert('Data Disimpan')">SIMPAN & SINKRONISASI</button>
+    <textarea id="mat" rows="3" placeholder="Masukkan ringkasan materi..."></textarea>
+    <button class="btn-submit" onclick="alert('Laporan Tersimpan')">SIMPAN LAPORAN</button>
+</div>
+
+<div class="card" style="animation-delay: 0.4s;">
+    <div class="card-title"><i class="fa-solid fa-file-invoice" style="color: #27ae60;"></i> 2. Evaluasi Bulanan</div>
+    <label>Agenda Kegiatan</label>
+    <textarea id="ev_agenda" rows="2" placeholder="Tuliskan agenda bulan ini..."></textarea>
+    <label>Lampiran Dokumentasi</label>
+    <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan.</span>
+    <input type="file" id="f1" accept="image/*" style="margin-bottom:10px;">
+    <input type="file" id="f2" accept="image/*" style="margin-bottom:10px;">
+    <input type="file" id="f3" accept="image/*">
+    <button class="btn-submit" style="background:#27ae60" onclick="alert('Evaluasi Terkirim')">KIRIM EVALUASI</button>
+</div>
+
+<div class="card" style="animation-delay: 0.6s;">
+    <div class="card-title"><i class="fa-solid fa-history"></i> Riwayat</div>
+    <div id="riwayat_list" class="riwayat-container">Belum ada riwayat laporan hari ini.</div>
 </div>
 
 <script>
@@ -77,25 +141,19 @@
     function setHeader() {
         const titleEl = document.getElementById("dynamic_title");
         
-        // Logika Judul Sesuai Permintaan
-        if (ekskul === "Nihongo Club") {
-            titleEl.innerText = "日本語教師";
-        } else if (ekskul === "Musik") {
-            titleEl.innerText = "Instruktur Musik";
-        } else if (ekskul === "Dokter Kecil") {
-            titleEl.innerText = "Instruktur Dokter Kecil";
-        } else if (ekskul === "English Club") {
-            titleEl.innerText = "English Club Teacher";
-        } else if (ekskul === "Taekwondo") {
-            titleEl.innerText = "Sabeum Taekwondo";
-        } else {
-            titleEl.innerText = ekskul;
-        }
+        // Gelar Dinamis Spesifik
+        if (ekskul === "Nihongo Club") titleEl.innerText = "日本語教師";
+        else if (ekskul === "Musik") titleEl.innerText = "Instruktur Musik";
+        else if (ekskul === "Dokter Kecil") titleEl.innerText = "Instruktur Dokter Kecil";
+        else if (ekskul === "English Club") titleEl.innerText = "English Club Teacher";
+        else if (ekskul === "Taekwondo") titleEl.innerText = "Sabeum Taekwondo";
+        else if (ekskul === "Pramuka") titleEl.innerText = "Pembina Pramuka";
+        else titleEl.innerText = "Coach " + ekskul;
     }
 
     window.onload = () => {
         setHeader();
-        // Cek notif diskusi
+        // Cek notifikasi baru
         if(!sessionStorage.getItem("diskusi_dibaca")) {
             document.getElementById("dot").style.display = "block";
         }
