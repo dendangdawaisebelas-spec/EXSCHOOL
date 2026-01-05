@@ -21,12 +21,14 @@
             overflow: hidden;
         }
 
+        /* Motion Graphics Background */
         .bg-gradient {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             z-index: -1;
         }
 
+        /* Container Motion: Slide Up + Fade In */
         .login-box { 
             background: #ffffff; 
             padding: 60px 40px; 
@@ -35,20 +37,23 @@
             text-align: center; 
             box-shadow: 0 20px 60px rgba(0,0,0,0.05);
             border: 1px solid rgba(0,0,0,0.02);
-            animation: containerAppear 1s ease-out;
+            animation: motionAppear 1.2s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        @keyframes containerAppear {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes motionAppear {
+            0% { opacity: 0; transform: translateY(50px) scale(0.9); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        /* Staggered Text Animation */
         h2 { 
             color: var(--navy); 
             margin: 0; 
             font-size: 32px; 
             letter-spacing: 4px; 
             font-weight: 800;
+            animation: textReveal 1s ease-out forwards;
+            opacity: 0;
         }
 
         .sub { 
@@ -58,12 +63,22 @@
             text-transform: uppercase; 
             letter-spacing: 2px;
             font-weight: 600;
+            animation: textReveal 1s ease-out 0.3s forwards;
+            opacity: 0;
+        }
+
+        @keyframes textReveal {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .input-group { 
             position: relative; 
             margin-bottom: 25px; 
+            animation: fadeIn 1.5s ease-out 0.5s both;
         }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         input { 
             width: 100%; 
@@ -74,14 +89,15 @@
             box-sizing: border-box; 
             font-weight: 600; 
             font-size: 14px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             color: var(--navy);
         }
 
         input:focus {
             border-color: var(--navy);
             background: #fff;
-            box-shadow: 0 10px 20px rgba(10,31,68,0.05);
+            box-shadow: 0 10px 20px rgba(10,31,68,0.08);
+            transform: scale(1.02);
             outline: none;
         }
 
@@ -90,6 +106,7 @@
             color: #ccc; cursor: pointer; font-size: 18px;
         }
 
+        /* Button Motion Graphic Effect */
         button { 
             width: 100%; 
             padding: 18px; 
@@ -101,17 +118,25 @@
             cursor: pointer; 
             text-transform: uppercase; 
             letter-spacing: 2px;
-            transition: all 0.4s;
+            transition: all 0.4s ease;
             box-shadow: 0 10px 30px rgba(10,31,68,0.2);
             margin-top: 10px;
+            animation: fadeIn 1.5s ease-out 0.7s both;
         }
 
         button:hover { 
-            transform: translateY(-3px);
-            filter: brightness(1.2);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(10,31,68,0.3);
+            letter-spacing: 4px; /* Efek motion pada teks saat hover */
         }
 
-        .footer-text { margin-top: 30px; font-size: 10px; color: #bbb; letter-spacing: 1px; }
+        .footer-text { 
+            margin-top: 30px; 
+            font-size: 10px; 
+            color: #bbb; 
+            letter-spacing: 1px;
+            animation: fadeIn 2s ease-out 1s both;
+        }
     </style>
 </head>
 <body>
@@ -151,9 +176,8 @@
         const u = document.getElementById("user").value.toLowerCase().trim();
         const p = document.getElementById("pass").value.trim();
 
-        // Database Terupdate
         const users = [
-            {u:"manggalaraditya", p:"savepalestine", r:"koordinator"}, // Username Baru Pembina
+            {u:"manggalaraditya", p:"savepalestine", r:"koordinator"},
             {u:"musik", p:"icms2026", r:"coach", e:"Musik"},
             {u:"nihongo", p:"icms2026", r:"coach", e:"Nihongo Club"},
             {u:"dokcil", p:"icms2026", r:"coach", e:"Dokter Kecil"},
