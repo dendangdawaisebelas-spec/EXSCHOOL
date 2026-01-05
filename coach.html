@@ -27,7 +27,7 @@
     }
 
     #dynamic_title { 
-      margin: 0; font-size: 22px; text-transform: uppercase; 
+      margin: 0; font-size: 20px; text-transform: uppercase; 
       letter-spacing: 2px; font-weight: 800; color: var(--navy);
     }
 
@@ -44,7 +44,7 @@
     }
 
     h3 { font-size: 16px; font-weight: 800; color: var(--navy); margin-top: 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 10px; }
-    label { font-weight: 700; display: block; margin-top: 15px; color: #888; font-size: 11px; text-transform: uppercase; }
+    label { font-weight: 700; display: block; margin-top: 15px; color: #888; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
     
     textarea, input { 
       width: 100%; padding: 14px; margin-top: 8px; border-radius: 12px; 
@@ -58,8 +58,7 @@
     
     .btn-action { width: calc(100% - 40px); margin: 10px 20px; padding: 16px; border: none; border-radius: 15px; font-weight: 800; text-transform: uppercase; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
     .btn-kaldik { background: #8e44ad; color: white; margin-bottom: 5px; }
-    .btn-print { background: #1c7c54; color: white; margin-top: 30px; }
-    .btn-wa { background: #25D366; color: white; }
+    .btn-wa { background: #25D366; color: white; margin-top: 20px; }
   </style>
 </head>
 <body>
@@ -70,43 +69,40 @@
   <div id="cName" style="font-size:11px; color:#888; margin-top:8px; font-weight:600;"></div>
 </header>
 
-<button class="btn-action btn-kaldik" onclick="alert('Membuka Jadwal & Kaldik...')">
-  <i class="fa-solid fa-calendar-alt"></i> JADWAL EKSKUL & KALDIK
+<button class="btn-action btn-kaldik" onclick="alert('Membuka Jadwal Pekanan...')">
+  <i class="fa-solid fa-calendar-week"></i> JADWAL EKSKUL & KALDIK
 </button>
 
 <div class="card">
-  <h3>1. Input Pertemuan Harian</h3>
-  <label>Materi Latihan</label>
-  <textarea id="mat" rows="3" placeholder="Memuat contoh materi..."></textarea>
-  <button class="btn-save" style="background:#2980b9" onclick="alert('Data Pertemuan Disimpan!')">SIMPAN PERTEMUAN</button>
+  <h3>1. Input Pertemuan Pekanan</h3>
+  <label>Materi Latihan Pekan Ini</label>
+  <textarea id="mat" rows="3" placeholder="Contoh: Teknik dasar, pengenalan alat, atau materi spesifik lainnya..."></textarea>
+  <button class="btn-save" style="background:#2980b9" onclick="alert('Data Pekanan Tersimpan!')">SIMPAN DATA</button>
 </div>
 
 <div class="card">
-  <h3>2. Laporan Evaluasi Bulanan (Wajib)</h3>
-  <label>Agenda Terlaksana</label>
-  <textarea id="eval_agenda" rows="2" placeholder="Agenda yang telah dilakukan..."></textarea>
+  <h3>2. Monitoring & Evaluasi (Template Pembina)</h3>
   
-  <label>Capaian Siswa</label>
-  <textarea id="eval_capaian" rows="2" placeholder="Hasil atau kemajuan siswa..."></textarea>
+  <label>Agenda Terlaksana (Tujuan & Hasil)</label>
+  <textarea id="eval_agenda" rows="2" placeholder="Apa saja program yang berjalan bulan ini?"></textarea>
   
-  <label>Kendala</label>
-  <textarea id="eval_kendala" rows="2" placeholder="Hambatan saat latihan..."></textarea>
+  <label>Indikator Keberhasilan (Capaian %)</label>
+  <textarea id="eval_capaian" rows="2" placeholder="Berapa % siswa yang berhasil menguasai materi?"></textarea>
   
-  <label>Solusi</label>
-  <textarea id="eval_solusi" rows="2" placeholder="Tindakan yang sudah dilakukan..."></textarea>
+  <label>Kendala yang Dihadapi</label>
+  <textarea id="eval_kendala" rows="2" placeholder="Hambatan teknis atau non-teknis..."></textarea>
   
-  <label>Saran ke Depan</label>
-  <textarea id="eval_saran" rows="2" placeholder="Rencana atau masukan selanjutnya..."></textarea>
+  <label>Solusi yang Dilakukan</label>
+  <textarea id="eval_solusi" rows="2" placeholder="Langkah penyelesaian masalah..."></textarea>
   
-  <button class="btn-save" style="background:#1c7c54" onclick="alert('Laporan Bulanan Diperbarui!')">UPDATE EVALUASI</button>
+  <label>Rekomendasi Bulan Selanjutnya</label>
+  <textarea id="eval_saran" rows="2" placeholder="Saran untuk perbaikan kualitas ekskul..."></textarea>
+  
+  <button class="btn-save" style="background:#1c7c54" onclick="alert('Laporan Evaluasi Siap Dikirim!')">UPDATE EVALUASI</button>
 </div>
-
-<button class="btn-action btn-print" onclick="window.print()">
-  <i class="fa-solid fa-print"></i> CETAK LAPORAN (PDF)
-</button>
 
 <button class="btn-action btn-wa" onclick="kirimWA()">
-  <i class="fa-brands fa-whatsapp"></i> KIRIM LAPORAN KE KOORDINATOR
+  <i class="fa-brands fa-whatsapp"></i> KIRIM DATA KE PEMBINA (PAK DITYA)
 </button>
 
 <script>
@@ -114,48 +110,18 @@
   const user = localStorage.getItem("username") || "User";
 
   function setContent() {
-    const titleEl = document.getElementById("dynamic_title");
-    const matPlaceholder = document.getElementById("mat");
-    const agendaPlaceholder = document.getElementById("eval_agenda");
-    const capaianPlaceholder = document.getElementById("eval_capaian");
-    
+    document.getElementById("dynamic_title").innerText = "COACH " + eks.toUpperCase();
     document.getElementById("cName").innerText = "PELATIH: " + user.toUpperCase();
     
-    let config = {
-        title: "COACH " + eks.toUpperCase(),
-        matHint: "Tuliskan materi latihan hari ini.",
-        agendaHint: "Cth: Latihan rutin 4x/bulan...",
-        capaianHint: "Cth: Siswa hafal teknik dasar..."
+    const placeholders = {
+        "Nihongo Club": { mat: "Cth: Pengenalan Hiragana (あ-そ).", agenda: "Cth: Latihan rutin Hiragana & budaya." },
+        "Musik": { mat: "Cth: Teknik fingering gitar dasar.", agenda: "Cth: Pelatihan aransemen lagu." },
+        "Badminton": { mat: "Cth: Servis pendek & Footwork.", agenda: "Cth: Turnamen internal ICMS." }
     };
-
-    if (eks === "Nihongo Club") {
-        config = { title: "日本語教師", matHint: "Cth: Pengenalan Hiragana (あ-そ) dan Aisatsu.", agendaHint: "Cth: Latihan rutin Hiragana & budaya Jepang.", capaianHint: "Cth: 80% siswa hafal huruf Hiragana dasar." };
-    } else if (eks === "Musik") {
-        config = { title: "Instruktur Musik", matHint: "Cth: Teknik fingering gitar dan chord dasar.", agendaHint: "Cth: Pelatihan aransemen lagu perpisahan.", capaianHint: "Cth: Siswa lancar transisi chord A ke D." };
-    } else if (eks === "Dokter Kecil") {
-        config = { title: "Instruktur Dokter Kecil", matHint: "Cth: Simulasi P3K luka ringan dan pembalutan.", agendaHint: "Cth: Kampanye kebersihan kuku dan tangan.", capaianHint: "Cth: Siswa paham cara bersihkan luka luar." };
-    } else if (eks === "English Club") {
-        config = { title: "English Club Teacher", matHint: "Cth: Public Speaking practice & Storytelling.", agendaHint: "Cth: Monthly debate session.", capaianHint: "Cth: Students confident to speak English." };
-    } else if (eks === "Taekwondo") {
-        config = { title: "Sabeum Taekwondo", matHint: "Cth: Pemantapan kuda-kuda dan tendangan Ap Chagi.", agendaHint: "Cth: Persiapan ujian kenaikan tingkat.", capaianHint: "Cth: Power tendangan meningkat." };
-    } else if (eks === "Badminton") {
-        config = { title: "Coach Badminton", matHint: "Cth: Teknik servis pendek dan footwork.", agendaHint: "Cth: Turnamen internal ICMS.", capaianHint: "Cth: Akurasi smash mulai terarah." };
-    } else if (eks === "Futsal") {
-        config = { title: "Coach Futsal", matHint: "Cth: Akurasi passing pendek dan shooting.", agendaHint: "Cth: Pertandingan antar jenjang.", capaianHint: "Cth: Kerjasama tim membaik." };
-    } else if (eks === "Basket") {
-        config = { title: "Coach Basket", matHint: "Cth: Dribbling dasar dan Lay up shooting.", agendaHint: "Cth: Strategi defense zona.", capaianHint: "Cth: Persentase shooting meningkat." };
-    } else if (eks === "Panahan") {
-        config = { title: "Coach Panahan", matHint: "Cth: Teknik Draw dan fokus bidikan.", agendaHint: "Cth: Pengenalan jarak 15 meter.", capaianHint: "Cth: Fokus mental membaik." };
-    } else if (eks === "Renang") {
-        config = { title: "Coach Renang", matHint: "Cth: Pernapasan gaya bebas dan kaki.", agendaHint: "Cth: Pengenalan gaya dada dasar.", capaianHint: "Cth: Keberanian di air meningkat." };
-    } else if (eks === "Pramuka") {
-        config = { title: "Pembina Pramuka", matHint: "Cth: Sandi Morse dan Pioneering.", agendaHint: "Cth: Persiapan Persami.", capaianHint: "Cth: Mahir simpul mati & hafal Dasa Darma." };
-    }
-
-    titleEl.innerText = config.title;
-    matPlaceholder.placeholder = config.matHint;
-    agendaPlaceholder.placeholder = config.agendaHint;
-    capaianPlaceholder.placeholder = config.capaianHint;
+    
+    const p = placeholders[eks] || { mat: "Isi materi pekanan...", agenda: "Isi agenda utama..." };
+    document.getElementById("mat").placeholder = p.mat;
+    document.getElementById("eval_agenda").placeholder = p.agenda;
   }
 
   function kirimWA() {
@@ -166,21 +132,20 @@
     const solusi = document.getElementById("eval_solusi").value;
     const saran = document.getElementById("eval_saran").value;
 
-    if(!mat || !agenda) return alert("Mohon lengkapi laporan terlebih dahulu!");
+    if(!mat || !agenda) return alert("Mohon lengkapi Materi dan Agenda!");
 
-    // Format Laporan Komplit untuk WhatsApp
-    const pesan = `*LAPORAN EKSKUL ICMS*%0A` +
+    // Format Pesan Sesuai Struktur Laporan Bapak
+    const pesan = `*DATA LAPORAN EKSKUL ICMS*%0A` +
                   `------------------------------%0A` +
                   `*Ekskul:* ${eks}%0A` +
                   `*Pelatih:* ${user}%0A%0A` +
-                  `*1. MATERI LATIHAN:*%0A${mat}%0A%0A` +
-                  `*2. AGENDA TERLAKSANA:*%0A${agenda}%0A%0A` +
-                  `*3. CAPAIAN SISWA:*%0A${cap}%0A%0A` +
-                  `*4. KENDALA:*%0A${kendala || '-'}%0A%0A` +
-                  `*5. SOLUSI:*%0A${solusi || '-'}%0A%0A` +
-                  `*6. SARAN KE DEPAN:*%0A${saran || '-'}`;
+                  `*A. MATERI PEKANAN:*%0A${mat}%0A%0A` +
+                  `*B. AGENDA TERLAKSANA (BAB II):*%0A${agenda}%0A%0A` +
+                  `*C. CAPAIAN SISWA (%):*%0A${cap}%0A%0A` +
+                  `*D. KENDALA:*%0A${kendala || '-'}%0A%0A` +
+                  `*E. SOLUSI:*%0A${solusi || '-'}%0A%0A` +
+                  `*F. REKOMENDASI (BAB III):*%0A${saran || '-'}`;
 
-    // Nomor WhatsApp Pak Ditya
     window.open(`https://wa.me/6288269097225?text=${pesan}`);
   }
 
