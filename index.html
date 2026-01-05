@@ -9,8 +9,7 @@
     <style>
         :root { 
             --navy: #0a1f44; 
-            --gold: #FFD700; /* Kuning warna logo */
-            --silver: #C0C0C0; /* Sentuhan silver sedikit */
+            --gold: #bf953f; 
             --light-gray: #f8f9fa;
         }
 
@@ -28,7 +27,6 @@
             z-index: -1;
         }
 
-        /* Box Login dengan outline silver tipis */
         .login-box { 
             background: #ffffff; 
             padding: 60px 40px; 
@@ -36,7 +34,7 @@
             width: 340px; 
             text-align: center; 
             box-shadow: 0 20px 60px rgba(0,0,0,0.05);
-            border: 1px solid var(--silver); /* Sentuhan silver sedikit saja */
+            border: 1px solid rgba(0,0,0,0.02);
             animation: containerAppear 1s ease-out;
         }
 
@@ -53,15 +51,13 @@
             font-weight: 800;
         }
 
-        /* Slogan dengan warna kuning logo */
         .sub { 
-            color: var(--gold); 
+            color: #888; 
             font-size: 11px; 
             margin-bottom: 40px; 
             text-transform: uppercase; 
             letter-spacing: 2px;
-            font-weight: 800;
-            text-shadow: 0.5px 0.5px 0px rgba(0,0,0,0.1);
+            font-weight: 600;
         }
 
         .input-group { 
@@ -83,9 +79,9 @@
         }
 
         input:focus {
-            border-color: var(--gold); /* Fokus warna kuning */
+            border-color: var(--navy);
             background: #fff;
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(10,31,68,0.05);
             outline: none;
         }
 
@@ -94,27 +90,25 @@
             color: #ccc; cursor: pointer; font-size: 18px;
         }
 
-        /* Tombol warna Kuning Logo */
         button { 
             width: 100%; 
             padding: 18px; 
             border: none; 
             border-radius: 15px; 
-            background: var(--gold); 
-            color: var(--navy); 
+            background: var(--navy); 
+            color: white; 
             font-weight: 800; 
             cursor: pointer; 
             text-transform: uppercase; 
             letter-spacing: 2px;
             transition: all 0.4s;
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(10,31,68,0.2);
             margin-top: 10px;
         }
 
         button:hover { 
             transform: translateY(-3px);
-            filter: brightness(1.1);
-            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+            filter: brightness(1.2);
         }
 
         .footer-text { margin-top: 30px; font-size: 10px; color: #bbb; letter-spacing: 1px; }
@@ -157,8 +151,9 @@
         const u = document.getElementById("user").value.toLowerCase().trim();
         const p = document.getElementById("pass").value.trim();
 
+        // Database Terupdate
         const users = [
-            {u:"manggalaraditya", p:"savepalestine", r:"koordinator"}, // Username baru pembina
+            {u:"manggalaraditya", p:"savepalestine", r:"koordinator"}, // Username Baru Pembina
             {u:"musik", p:"icms2026", r:"coach", e:"Musik"},
             {u:"nihongo", p:"icms2026", r:"coach", e:"Nihongo Club"},
             {u:"dokcil", p:"icms2026", r:"coach", e:"Dokter Kecil"},
