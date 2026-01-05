@@ -27,7 +27,7 @@
       display: flex; flex-direction: column; align-items: center;
     }
 
-    /* Simbol Dinamis Relate */
+    /* Simbol Dinamis - Menggunakan Simbol Universal agar Stabil */
     #ekskul-symbol {
         font-size: 45px;
         margin-bottom: 10px;
@@ -35,7 +35,7 @@
     }
 
     #dynamic_title { 
-      margin: 0; font-size: 22px; text-transform: uppercase; 
+      margin: 0; font-size: 20px; text-transform: uppercase; 
       letter-spacing: 2px; font-weight: 800; color: var(--navy);
     }
 
@@ -97,60 +97,4 @@
 </div>
 
 <script>
-  const eks = localStorage.getItem("ekskul") || "Ekskul";
-  const user = localStorage.getItem("username") || "User";
-
-  function setContent() {
-    const titleEl = document.getElementById("dynamic_title");
-    const symbolEl = document.getElementById("ekskul-symbol");
-    const matPlaceholder = document.getElementById("mat");
-    const agendaPlaceholder = document.getElementById("eval_agenda");
-    const capaianPlaceholder = document.getElementById("eval_capaian");
-    
-    document.getElementById("cName").innerText = "PELATIH: " + user.toUpperCase();
-    
-    // Konfigurasi Ikon & Contoh Isian Relate per Ekskul
-    let config = {
-        title: "COACH " + eks.toUpperCase(),
-        symbol: "📋",
-        matHint: "Tuliskan materi yang diajarkan hari ini.",
-        agendaHint: "Rekap kegiatan besar bulan ini.",
-        capaianHint: "Progress kemampuan siswa secara umum."
-    };
-
-    if (eks === "Nihongo Club") {
-        config = { title: "日本語教師", symbol: "🇯🇵", matHint: "Cth: Pengenalan Hiragana (あ-そ) dan salam harian (Aisatsu).", agendaHint: "Cth: Latihan rutin Hiragana & budaya Jepang.", capaianHint: "Cth: 80% siswa hafal huruf Hiragana dasar." };
-    } else if (eks === "Musik") {
-        config = { title: "Instruktur Musik", symbol: "🎸", matHint: "Cth: Teknik fingering gitar dan pengenalan chord dasar.", agendaHint: "Cth: Pelatihan aransemen lagu perpisahan.", capaianHint: "Cth: Siswa mulai lancar transisi chord A ke D." };
-    } else if (eks === "Dokter Kecil") {
-        config = { title: "Instruktur Dokter Kecil", symbol: "🩺", matHint: "Cth: Simulasi P3K luka ringan dan pembalutan perban.", agendaHint: "Cth: Kampanye kebersihan kuku dan cuci tangan.", capaianHint: "Cth: Siswa paham cara membersihkan luka luar." };
-    } else if (eks === "English Club") {
-        config = { title: "English Club Teacher", symbol: "🇬🇧", matHint: "Cth: Introduction & Public Speaking practice (Speech).", agendaHint: "Cth: Monthly debate session & storytelling.", capaianHint: "Cth: Students are more confident to speak in English." };
-    } else if (eks === "Taekwondo") {
-        config = { title: "Sabeum Taekwondo", symbol: "🥋", matHint: "Cth: Pemantapan Kuda-kuda (Ap Sogi) dan tendangan Ap Chagi.", agendaHint: "Cth: Persiapan ujian kenaikan tingkat sabuk.", capaianHint: "Cth: Ketahanan fisik & power tendangan meningkat." };
-    } else if (eks === "Badminton") {
-        config = { title: "Coach Badminton", symbol: "🏸", matHint: "Cth: Teknik servis pendek dan latihan footwork lapangan.", agendaHint: "Cth: Turnamen internal ICMS Badminton Cup.", capaianHint: "Cth: Akurasi smash siswa mulai terarah." };
-    } else if (eks === "Futsal") {
-        config = { title: "Coach Futsal", symbol: "⚽", matHint: "Cth: Latihan akurasi passing pendek dan shooting keras.", agendaHint: "Cth: Pertandingan persahabatan antar jenjang.", capaianHint: "Cth: Kerjasama tim dan transisi bola membaik." };
-    } else if (eks === "Basket") {
-        config = { title: "Coach Basket", symbol: "🏀", matHint: "Cth: Latihan Dribbling dasar dan teknik Shooting (Lay up).", agendaHint: "Cth: Drill fisik dan strategi defense zona.", capaianHint: "Cth: Persentase masuk bola (shooting) meningkat." };
-    } else if (eks === "Panahan") {
-        config = { title: "Coach Panahan", symbol: "🏹", matHint: "Cth: Teknik menarik busur (Draw) dan fokus bidikan.", agendaHint: "Cth: Pengenalan jarak tembak 15 meter.", capaianHint: "Cth: Fokus mental dan stabilitas tangan membaik." };
-    } else if (eks === "Renang") {
-        config = { title: "Coach Renang", symbol: "🏊", matHint: "Cth: Teknik pernapasan gaya bebas dan gerakan kaki.", agendaHint: "Cth: Pengenalan gaya dada (katak) dasar.", capaianHint: "Cth: Keberanian siswa di air dalam meningkat." };
-    } else if (eks === "Pramuka") {
-        config = { title: "Pembina Pramuka", symbol: "⚜️", matHint: "Cth: Materi sandi Morse dan pembuatan tandu (Pioneering).", agendaHint: "Cth: Persiapan Perkemahan Sabtu Minggu (Persami).", capaianHint: "Cth: Siswa hafal Dasa Darma & mahir simpul mati." };
-    }
-
-    // Terapkan Konfigurasi
-    titleEl.innerText = config.title;
-    symbolEl.innerText = config.symbol;
-    matPlaceholder.placeholder = config.matHint;
-    agendaPlaceholder.placeholder = config.agendaHint;
-    capaianPlaceholder.placeholder = config.capaianHint;
-  }
-
-  window.onload = setContent;
-</script>
-</body>
-</html>
+  const eks = localStorage.getItem("ek
