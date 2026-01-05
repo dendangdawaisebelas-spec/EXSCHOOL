@@ -20,16 +20,26 @@
       padding-bottom: 50px; color: #333;
     }
 
-    /* Header Elegant Corporate - No Logo */
     header { 
       background: #ffffff; padding: 30px 20px; text-align: center;
       border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100;
       animation: fadeInDown 0.8s ease-out;
+      display: flex; flex-direction: column; align-items: center;
     }
 
     @keyframes fadeInDown {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    #ekskul-icon {
+        width: 40px; height: 40px; object-fit: contain; margin-bottom: 10px;
+        animation: iconBounce 1s ease-out;
+    }
+
+    @keyframes iconBounce {
+        from { opacity: 0; transform: translateY(-20px) scale(0.5); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     #dynamic_title { 
@@ -43,7 +53,6 @@
       margin-top: 12px; display: inline-block; text-transform: uppercase;
     }
 
-    /* Button Utama */
     .btn-action { 
       width: calc(100% - 40px); margin: 15px 20px 5px 20px; padding: 16px; 
       border: none; border-radius: 15px; font-weight: 800; text-transform: uppercase;
@@ -58,7 +67,6 @@
     .pulse { animation: pulse-red 2s infinite; }
     @keyframes pulse-red { 0% { transform: scale(0.95); } 70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); } 100% { transform: scale(0.95); } }
 
-    /* Card Layout */
     .card { 
       background: #ffffff; padding: 25px; border-radius: 24px; 
       margin: 20px; box-shadow: var(--card-shadow); 
@@ -76,12 +84,16 @@
       font-family: inherit; font-size: 14px; transition: 0.3s;
     }
 
+    textarea::placeholder, input::placeholder {
+        color: #b0b0b0; /* Warna placeholder */
+        font-style: italic; /* Gaya italic */
+    }
+
     textarea:focus, input:focus { border-color: var(--navy); background: #fff; outline: none; }
 
     .btn-save { background: #2f3542; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; text-transform: uppercase; font-size: 12px; }
     .btn-save:hover { background: var(--navy); }
 
-    /* Presensi List */
     #sList { margin-top: 15px; }
     .siswa-item { display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid #f8f9fa; font-size: 14px; }
     .siswa-item input[type="checkbox"] { width: auto; margin: 0; }
@@ -90,7 +102,7 @@
 <body>
 
 <header>
-  <h1 id="dynamic_title">MEMUAT...</h1>
+  <img id="ekskul-icon" src="" alt="Icon Ekskul" style="display:none;"> <h1 id="dynamic_title">MEMUAT...</h1>
   <div class="icms-badge">SMP-SMA ICMS</div>
   <div id="cName" style="font-size:11px; color:#888; margin-top:8px; font-weight:600;"></div>
 </header>
@@ -109,9 +121,9 @@
   <label>Tanggal Pertemuan</label>
   <input type="date" id="tgl">
   <label>Materi Latihan</label>
-  <textarea id="mat" rows="2" placeholder="Apa yang diajarkan hari ini?"></textarea>
+  <textarea id="mat" rows="2" placeholder="Contoh: Pengenalan dasar Taekwondo & PBB. Fokus pada kuda-kuda dasar dan hormat."></textarea>
   <label>Keterangan Khusus</label>
-  <input type="text" id="als_harian" placeholder="Misal: Siswa perpulangan / kendala teknis">
+  <input type="text" id="als_harian" placeholder="Contoh: 2 siswa izin karena sakit. Siswa perpulangan: [Nama Siswa]">
   <button class="btn-save" style="background:#2980b9" onclick="simpanPertemuan()">SIMPAN PERTEMUAN</button>
 </div>
 
@@ -119,11 +131,11 @@
   <h3>2. Laporan Evaluasi Bulanan</h3>
   <p style="font-size: 11px; color: #eb4d4b; font-weight:bold; margin-bottom:15px;">*Wajib diisi setiap akhir bulan sebagai bahan laporan.</p>
   
-  <label>Agenda Terlaksana</label><textarea id="eval_agenda" rows="2"></textarea>
-  <label>Capaian Siswa</label><textarea id="eval_capaian" rows="2"></textarea>
-  <label>Kendala</label><textarea id="eval_kendala" rows="2"></textarea>
-  <label>Solusi</label><textarea id="eval_solusi" rows="2"></textarea>
-  <label>Saran ke Depan</label><textarea id="eval_saran" rows="2"></textarea>
+  <label>Agenda Terlaksana</label><textarea id="eval_agenda" rows="2" placeholder="Contoh: Latihan rutin 4x/bulan, Ujian Kenaikan Tingkat, Persiapan lomba 'ICMS Cup'."></textarea>
+  <label>Capaian Siswa</label><textarea id="eval_capaian" rows="2" placeholder="Contoh: 80% siswa sudah menguasai gerakan dasar. 5 siswa berhasil naik tingkat."></textarea>
+  <label>Kendala</label><textarea id="eval_kendala" rows="2" placeholder="Contoh: Keterlambatan beberapa siswa, ketersediaan alat musik terbatas."></textarea>
+  <label>Solusi</label><textarea id="eval_solusi" rows="2" placeholder="Contoh: Sosialisasi ulang jadwal, pengajuan penambahan alat."></textarea>
+  <label>Saran ke Depan</label><textarea id="eval_saran" rows="2" placeholder="Contoh: Perlu jadwal latihan tambahan untuk siswa yang akan lomba."></textarea>
   
   <button class="btn-save" style="background:#1c7c54" onclick="simpanEvaluasi()">UPDATE EVALUASI BULANAN</button>
 </div>
@@ -137,21 +149,58 @@
   const eks = localStorage.getItem("ekskul") || "Ekskul";
   const user = localStorage.getItem("username") || "User";
 
-  // Gelar Dinamis
   function setHeader() {
     const titleEl = document.getElementById("dynamic_title");
+    const iconEl = document.getElementById("ekskul-icon");
     document.getElementById("cName").innerText = "PELATIH: " + user.toUpperCase();
     
-    if (eks === "Nihongo Club") titleEl.innerText = "日本語教師";
-    else if (eks === "Musik") titleEl.innerText = "Instruktur Musik";
-    else if (eks === "Dokter Kecil") titleEl.innerText = "Instruktur Dokter Kecil";
-    else if (eks === "English Club") titleEl.innerText = "English Club Teacher";
-    else if (eks === "Taekwondo") titleEl.innerText = "Sabeum Taekwondo";
-    else if (eks === "Pramuka") titleEl.innerText = "Pembina Pramuka";
-    else titleEl.innerText = "COACH " + eks.toUpperCase();
+    let iconSrc = "";
+    if (eks === "Nihongo Club") {
+        titleEl.innerText = "日本語教師";
+        iconSrc = "japan_flag.png"; // Nama file ikon
+    } else if (eks === "Musik") {
+        titleEl.innerText = "Instruktur Musik";
+        iconSrc = "music_note.png"; // Nama file ikon
+    } else if (eks === "Dokter Kecil") {
+        titleEl.innerText = "Instruktur Dokter Kecil";
+        iconSrc = "stetoskop.png"; // Nama file ikon
+    } else if (eks === "English Club") {
+        titleEl.innerText = "English Club Teacher";
+        iconSrc = "uk_flag.png"; // Nama file ikon
+    } else if (eks === "Taekwondo") {
+        titleEl.innerText = "Sabeum Taekwondo";
+        iconSrc = "taekwondo_icon.png"; // Nama file ikon
+    } else if (eks === "Pramuka") {
+        titleEl.innerText = "Pembina Pramuka";
+        iconSrc = "pramuka_badge.png"; // Nama file ikon
+    } else if (eks === "Futsal") {
+        titleEl.innerText = "Coach Futsal";
+        iconSrc = "futsal_ball.png"; // Nama file ikon
+    } else if (eks === "Basket") {
+        titleEl.innerText = "Coach Basket";
+        iconSrc = "basketball_icon.png"; // Nama file ikon
+    } else if (eks === "Panahan") {
+        titleEl.innerText = "Coach Panahan";
+        iconSrc = "archery_icon.png"; // Nama file ikon
+    } else if (eks === "Renang") {
+        titleEl.innerText = "Coach Renang";
+        iconSrc = "swimming_icon.png"; // Nama file ikon
+    } else if (eks === "Badminton") {
+        titleEl.innerText = "Coach Badminton";
+        iconSrc = "badminton_icon.png"; // Nama file ikon
+    }
+    else {
+        titleEl.innerText = "COACH " + eks.toUpperCase();
+    }
+
+    if (iconSrc) {
+        iconEl.src = iconSrc;
+        iconEl.style.display = "block"; // Tampilkan ikon jika ada sumber
+    } else {
+        iconEl.style.display = "none";
+    }
   }
 
-  // Render Siswa dari Database Lokal
   const sListEl = document.getElementById("sList");
   const siswa = JSON.parse(localStorage.getItem("siswa_" + eks)) || [];
   if(siswa.length === 0) {
@@ -187,20 +236,4 @@
 
   function bukaJadwalKaldik() {
     const modal = document.createElement("div");
-    modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; display:flex; justify-content:center; align-items:center; overflow-y:auto; padding:20px;";
-    modal.innerHTML = `<div style="background:white; padding:15px; border-radius:15px; max-width:500px; width:100%; position:relative;">
-      <button onclick="this.parentElement.parentElement.remove()" style="position:absolute; right:10px; top:10px; border:none; background:none; font-size:24px; cursor:pointer;">&times;</button>
-      <img src="jadwal_ekskul.jpeg" style="width:100%; border-radius:10px; margin-top:20px;">
-    </div>`;
-    document.body.appendChild(modal);
-  }
-
-  window.onload = () => {
-    setHeader();
-    if(!sessionStorage.getItem("diskusi_dibaca")) {
-      document.getElementById("dot").style.display = "block";
-    }
-  };
-</script>
-</body>
-</html>
+    modal.style.cssText = "position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999;
