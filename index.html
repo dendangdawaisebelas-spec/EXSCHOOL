@@ -129,9 +129,9 @@
             <input type="password" id="pass" placeholder="Password">
             <i class="fa-solid fa-eye eye-icon" id="toggleIcon" onclick="toggleView()"></i>
         </div>
-        <button onclick="prosesLogin()">Masuk Ke Sistem</button>
+        <button onclick="prosesLogin()">MASUK</button>
         
-        <div class="footer-text">© 2026 ICMS Digital Ecosystem</div>
+        <div class="footer-text">powered by dendangdawaisebelas</div>
     </div>
 
 <script>
@@ -151,6 +151,7 @@
         const u = document.getElementById("user").value.toLowerCase().trim();
         const p = document.getElementById("pass").value.trim();
 
+        // Database Pendaftaran Ulang Lengkap
         const users = [
             {u:"pakditya", p:"savepalestine", r:"koordinator"},
             {u:"musik", p:"icms2026", r:"coach", e:"Musik"},
@@ -174,7 +175,7 @@
             localStorage.setItem("ekskul", acc.e);
             window.location.href = (acc.r === "koordinator") ? "dashboard_koordinator.html" : "coach.html";
         } else {
-            alert("Akses Ditolak: Kredensial tidak valid.");
+            alert("Username atau Password Salah!");
         }
     }
 </script>
