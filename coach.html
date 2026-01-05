@@ -52,10 +52,11 @@
       font-family: inherit; font-size: 14px;
     }
 
+    textarea::placeholder { color: #b0b0b0; font-style: italic; font-size: 12px; }
+
     .btn-save { background: #2f3542; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; text-transform: uppercase; font-size: 12px; }
     
-    /* Tombol Aksi Bawah */
-    .btn-action { width: calc(100% - 40px); margin: 10px 20px; padding: 16px; border: none; border-radius: 15px; font-weight: 800; text-transform: uppercase; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-action { width: calc(100% - 40px); margin: 10px 20px; padding: 16px; border: none; border-radius: 15px; font-weight: 800; text-transform: uppercase; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; }
     .btn-print { background: #1c7c54; color: white; margin-top: 30px; }
     .btn-wa { background: #25D366; color: white; }
   </style>
@@ -71,10 +72,15 @@
 <div class="card">
   <h3>Input Pertemuan & Evaluasi</h3>
   <label>Materi Latihan</label>
-  <textarea id="mat" rows="3" placeholder="Memuat contoh..."></textarea>
-  <label>Agenda Bulanan</label>
-  <textarea id="eval_agenda" rows="2" placeholder="Memuat contoh..."></textarea>
-  <button class="btn-save" onclick="alert('Data Tersimpan!')">SIMPAN KE DATABASE</button>
+  <textarea id="mat" rows="3" placeholder="Tulis materi latihan..."></textarea>
+  
+  <label>Agenda Terlaksana</label>
+  <textarea id="eval_agenda" rows="2" placeholder="Tulis agenda bulan ini..."></textarea>
+  
+  <label>Capaian Siswa</label>
+  <textarea id="eval_capaian" rows="2" placeholder="Tulis progress siswa..."></textarea>
+  
+  <button class="btn-save" onclick="alert('Data Berhasil Disimpan!')">SIMPAN DATA</button>
 </div>
 
 <button class="btn-action btn-print" onclick="window.print()">
@@ -93,23 +99,35 @@
     document.getElementById("dynamic_title").innerText = "COACH " + eks.toUpperCase();
     document.getElementById("cName").innerText = "PELATIH: " + user.toUpperCase();
     
-    // Placeholder relate
     const placeholders = {
-        "Nihongo Club": { mat: "Cth: Hiragana dasar.", agenda: "Cth: Latihan rutin harian." },
-        "Musik": { mat: "Cth: Chord dasar gitar.", agenda: "Cth: Aransemen lagu." },
-        "Badminton": { mat: "Cth: Servis & Footwork.", agenda: "Cth: Turnamen internal." }
+        "Nihongo Club": { mat: "Cth: Pengenalan Hiragana.", agenda: "Cth: Latihan rutin harian.", cap: "Cth: Siswa hafal huruf dasar." },
+        "Musik": { mat: "Cth: Teknik fingering gitar.", agenda: "Cth: Latihan lagu baru.", cap: "Cth: Siswa lancar transisi chord." },
+        "Badminton": { mat: "Cth: Servis & Footwork.", agenda: "Cth: Latihan teknik smash.", cap: "Cth: Akurasi pukulan meningkat." }
     };
     
-    const p = placeholders[eks] || { mat: "Tulis materi...", agenda: "Tulis agenda..." };
+    const p = placeholders[eks] || { mat: "Tulis materi...", agenda: "Tulis agenda...", cap: "Tulis capaian..." };
     document.getElementById("mat").placeholder = p.mat;
     document.getElementById("eval_agenda").placeholder = p.agenda;
+    document.getElementById("eval_capaian").placeholder = p.cap;
   }
 
   function kirimWA() {
     const mat = document.getElementById("mat").value;
     const agenda = document.getElementById("eval_agenda").value;
-    const teks = `*LAPORAN EKSKUL ICMS*%0A*Ekskul:* ${eks}%0A*Pelatih:* ${user}%0A%0A*Materi:* ${mat}%0A*Agenda:* ${agenda}`;
-    window.open(`https://wa.me/628123456789?text=${teks}`); // Ganti nomor Bapak di sini
+    const cap = document.getElementById("eval_capaian").value;
+    
+    if(!mat || !agenda) return alert("Mohon isi data terlebih dahulu sebelum mengirim!");
+
+    const pesan = `*LAPORAN EKSKUL ICMS*%0A` +
+                  `------------------------------%0A` +
+                  `*Ekskul:* ${eks}%0A` +
+                  `*Pelatih:* ${user}%0A%0A` +
+                  `*Materi Hari Ini:*%0A${mat}%0A%0A` +
+                  `*Agenda Bulanan:*%0A${agenda}%0A%0A` +
+                  `*Capaian Siswa:*%0A${cap}`;
+
+    // Nomor WhatsApp Pak Ditya yang baru
+    window.open(`https://wa.me/6288269097225?text=${pesan}`);
   }
 
   window.onload = setContent;
