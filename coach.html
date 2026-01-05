@@ -137,20 +137,8 @@
     agendaPlaceholder.placeholder = config.agendaHint;
     capaianPlaceholder.placeholder = config.capaianHint;
   }
-function kirimWA() {
-    const pesan = encodeURIComponent(formatLaporan());
-    window.open(`https://wa.me/6288269097225?text=${pesan}`);
-  }
-
-  function copyToTxt() {
-    const teks = formatLaporan();
-    navigator.clipboard.writeText(teks).then(() => {
-        alert("Format teks berhasil disalin! Bapak bisa langsung tempel (Paste) ke Microsoft Word.");
-    });
-  }
 
   window.onload = setContent;
 </script>
 </body>
 </html>
-
