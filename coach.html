@@ -3,142 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coach Dashboard - EXSCHOOL</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  
+  <title>Coach ICMS - Laporan Hybrid</title>
   <style>
-    :root { 
-      --navy: #0a1f44; 
-      --gold: #bf953f; 
-      --light-bg: #fcfcfc;
-      --card-shadow: 0 10px 30px rgba(0,0,0,0.04);
-    }
-
-    body { 
-      font-family: 'Plus Jakarta Sans', sans-serif; 
-      margin: 0; background-color: var(--light-bg); 
-      padding-bottom: 50px; color: #333;
-    }
-
-    header { 
-      background: #ffffff; padding: 30px 20px; text-align: center;
-      border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100;
-    }
-
-    #dynamic_title { 
-      margin: 0; font-size: 22px; text-transform: uppercase; 
-      letter-spacing: 2px; font-weight: 800; color: var(--navy);
-    }
-
-    .icms-badge { 
-      background: var(--gold); color: white; padding: 6px 20px; 
-      border-radius: 50px; font-size: 11px; font-weight: 700; 
-      margin-top: 12px; display: inline-block; text-transform: uppercase;
-    }
-
-    .card { 
-      background: #ffffff; padding: 25px; border-radius: 24px; 
-      margin: 20px; box-shadow: var(--card-shadow); 
-      border: 1px solid #f0f0f0;
-    }
-
-    h3 { font-size: 16px; font-weight: 800; color: var(--navy); margin-top: 0; border-bottom: 2px solid #f8f9fa; padding-bottom: 10px; }
-    label { font-weight: 700; display: block; margin-top: 15px; color: #888; font-size: 11px; text-transform: uppercase; }
-    
-    textarea, input { 
-      width: 100%; padding: 14px; margin-top: 8px; border-radius: 12px; 
-      border: 1.5px solid #f0f0f0; background: #fafafa; box-sizing: border-box; 
-      font-family: inherit; font-size: 14px;
-    }
-
-    textarea::placeholder { color: #b0b0b0; font-style: italic; font-size: 12px; }
-
-    .btn-save { background: #2f3542; color: white; border: none; padding: 16px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 15px; text-transform: uppercase; font-size: 12px; }
-    
-    .btn-action { width: calc(100% - 40px); margin: 15px 20px 5px 20px; padding: 16px; border: none; border-radius: 15px; font-weight: 800; text-transform: uppercase; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-kaldik { background: #8e44ad; color: white; }
+    body { font-family: Arial, sans-serif; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
+    header { background: #0a1f44; color: white; padding: 15px; text-align: center; }
+    .card { background: white; padding: 20px; border-radius: 10px; margin: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
+    .btn { color: white; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+    label { font-weight: bold; display: block; margin-top: 15px; color: #0a1f44; }
+    .pedoman-box { background: #e8f4fd; border-left: 5px solid #2980b9; padding: 15px; margin-top: 10px; border-radius: 4px; font-size: 13px; line-height: 1.6; color: #2c3e50; }
+    .info-wajib { color: #e74c3c; font-size: 12px; font-weight: bold; margin-top: 5px; display: block; }
+    .riwayat-container { background: #fafafa; border: 1px solid #eee; border-radius: 6px; padding: 10px; margin-top: 10px; max-height: 200px; overflow-y: auto; font-size: 12px; }
+    .sync-status { font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 10px; float: right; }
   </style>
 </head>
 <body>
 
 <header>
-  <h1 id="dynamic_title">MEMUAT...</h1>
-  <div class="icms-badge">SMP-SMA ICMS</div>
-  <div id="cName" style="font-size:11px; color:#888; margin-top:8px; font-weight:600;"></div>
+  <div id="eks_title" style="font-weight:bold; font-size:20px; text-transform: uppercase;"></div>
 </header>
 
-<button class="btn-action btn-kaldik" onclick="alert('Membuka Jadwal...')">
-  <i class="fa-solid fa-calendar-alt"></i> JADWAL EKSKUL & KALDIK
-</button>
-
 <div class="card">
-  <h3>1. Input Pertemuan Harian</h3>
+  <h3 style="margin-top:0; color:#2980b9;">1. Pertemuan Pekanan</h3>
+  <label>Tanggal Pertemuan</label>
+  <input type="date" id="tgl">
+  
   <label>Materi Latihan</label>
-  <textarea id="mat" rows="3" placeholder="Memuat contoh materi..."></textarea>
-  <button class="btn-save" style="background:#2980b9">SIMPAN PERTEMUAN</button>
+  <textarea id="mat" rows="3" placeholder=""></textarea>
+  
+  <button class="btn" style="background:#2980b9" onclick="simpanPertemuan()">SIMPAN & SINKRONISASI</button>
 </div>
 
 <div class="card">
-  <h3>2. Laporan Evaluasi Bulanan</h3>
-  <label>Agenda Terlaksana</label>
-  <textarea id="eval_agenda" rows="2" placeholder="Contoh agenda bulanan..."></textarea>
-  <label>Capaian Siswa</label>
-  <textarea id="eval_capaian" rows="2" placeholder="Contoh capaian siswa..."></textarea>
-  <button class="btn-save" style="background:#1c7c54">UPDATE EVALUASI</button>
+  <h3 style="margin-top:0; color:#1c7c54;">2. Evaluasi Bulanan</h3>
+  
+  <div class="pedoman-box">
+    <strong>📋 Pedoman Pengisian Evaluasi:</strong><br>
+    • <strong>Agenda:</strong> Ringkasan program bulanan yang terlaksana.<br>
+    • <strong>Kendala:</strong> Hambatan teknis/non-teknis selama latihan.<br>
+    • <strong>Solusi:</strong> Tindakan konkret mengatasi kendala.<br>
+    • <strong>Foto:</strong> Bukti interaksi aktif (Wajib 3 Foto).
+  </div>
+  
+  <label>Agenda Kegiatan</label>
+  <textarea id="ev_agenda" placeholder="Agenda bulan ini..."></textarea>
+  
+  <label>Kendala & Hambatan</label>
+  <textarea id="ev_kendala" placeholder="Kendala yang dialami..."></textarea>
+  
+  <label>Solusi & Capaian</label>
+  <textarea id="ev_solusi" placeholder="Solusi & progres siswa..."></textarea>
+  
+  <label style="margin-top:20px;">📸 Upload 3 Foto Bukti Kegiatan:</label>
+  <span class="info-wajib">*Wajib melampirkan 3 foto kegiatan bulan ini.</span>
+  
+  <input type="file" id="f1" accept="image/*" style="margin-bottom:8px; margin-top:10px;">
+  <input type="file" id="f2" accept="image/*" style="margin-bottom:8px;">
+  <input type="file" id="f3" accept="image/*" style="margin-bottom:8px;">
+  
+  <button class="btn" style="background:#1c7c54" onclick="simpanEvaluasi()">KIRIM EVALUASI BULANAN</button>
+</div>
+
+<div class="card" style="border-top: 4px solid #666;">
+  <h3 style="margin-top:0; font-size: 16px; color:#333;">📂 Riwayat & Cadangan Mandiri</h3>
+  <div id="riwayat_list" class="riwayat-container">
+    </div>
+  <button class="btn" style="background:#666; font-size: 12px; padding: 10px;" onclick="eksporBackup()">📥 DOWNLOAD CADANGAN DATA (.TXT)</button>
 </div>
 
 <script>
-  const eks = localStorage.getItem("ekskul") || "Ekskul";
-  const user = localStorage.getItem("username") || "User";
+  // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+  const SCRIPT_URL = "URL_WEB_APP_ANDA"; 
+  
+  const ekskul = localStorage.getItem("ekskul") || "Ekskul";
+  document.getElementById("eks_title").innerText = ekskul;
 
-  function setContent() {
-    const titleEl = document.getElementById("dynamic_title");
-    const matPlaceholder = document.getElementById("mat");
-    const agendaPlaceholder = document.getElementById("eval_agenda");
-    const capaianPlaceholder = document.getElementById("eval_capaian");
-    
-    document.getElementById("cName").innerText = "PELATIH: " + user.toUpperCase();
-    
-    // Konfigurasi Placeholder Tetap Relate meskipun Tanpa Logo
-    let config = {
-        title: "COACH " + eks.toUpperCase(),
-        matHint: "Tuliskan materi latihan hari ini.",
-        agendaHint: "Rekap kegiatan bulan ini.",
-        capaianHint: "Progress kemampuan siswa."
-    };
+  // Set Placeholder Relevan sesuai Ekskul
+  const placeholders = {
+    "Taekwondo": "Contoh: Latihan tendangan Dolyo Chagi & Poomsae dasar...",
+    "Futsal": "Contoh: Teknik control bola & koordinasi serangan balik...",
+    "Musik": "Contoh: Praktik progresi akord & teknik petikan gitar dasar...",
+    "Pramuka": "Contoh: Pendalaman sandi Morse & pionering membuat tiang jemuran...",
+    "English Club": "Contoh: Speaking drill & kosa kata harian bertema asrama..."
+  };
+  document.getElementById("mat").placeholder = placeholders[ekskul] || "Tuliskan rincian materi pekan ini...";
 
-    if (eks === "Nihongo Club") {
-        config = { title: "日本語教師", matHint: "Cth: Pengenalan Hiragana (あ-そ) dan Aisatsu.", agendaHint: "Cth: Latihan rutin Hiragana & budaya Jepang.", capaianHint: "Cth: 80% siswa hafal huruf Hiragana dasar." };
-    } else if (eks === "Musik") {
-        config = { title: "Instruktur Musik", matHint: "Cth: Teknik fingering gitar dan chord dasar.", agendaHint: "Cth: Pelatihan aransemen lagu perpisahan.", capaianHint: "Cth: Siswa lancar transisi chord A ke D." };
-    } else if (eks === "Dokter Kecil") {
-        config = { title: "Instruktur Dokter Kecil", matHint: "Cth: Simulasi P3K luka ringan dan pembalutan.", agendaHint: "Cth: Kampanye kebersihan kuku dan tangan.", capaianHint: "Cth: Siswa paham cara bersihkan luka luar." };
-    } else if (eks === "English Club") {
-        config = { title: "English Club Teacher", matHint: "Cth: Public Speaking practice & Storytelling.", agendaHint: "Cth: Monthly debate session.", capaianHint: "Cth: Students confident to speak English." };
-    } else if (eks === "Taekwondo") {
-        config = { title: "Sabeum Taekwondo", matHint: "Cth: Pemantapan kuda-kuda dan tendangan Ap Chagi.", agendaHint: "Cth: Persiapan ujian kenaikan tingkat.", capaianHint: "Cth: Power tendangan meningkat." };
-    } else if (eks === "Badminton") {
-        config = { title: "Coach Badminton", matHint: "Cth: Teknik servis pendek dan footwork.", agendaHint: "Cth: Turnamen internal ICMS.", capaianHint: "Cth: Akurasi smash mulai terarah." };
-    } else if (eks === "Futsal") {
-        config = { title: "Coach Futsal", matHint: "Cth: Akurasi passing pendek dan shooting.", agendaHint: "Cth: Pertandingan antar jenjang.", capaianHint: "Cth: Kerjasama tim membaik." };
-    } else if (eks === "Basket") {
-        config = { title: "Coach Basket", matHint: "Cth: Dribbling dasar dan Lay up shooting.", agendaHint: "Cth: Strategi defense zona.", capaianHint: "Cth: Persentase shooting meningkat." };
-    } else if (eks === "Panahan") {
-        config = { title: "Coach Panahan", matHint: "Cth: Teknik Draw dan fokus bidikan.", agendaHint: "Cth: Pengenalan jarak 15 meter.", capaianHint: "Cth: Fokus mental membaik." };
-    } else if (eks === "Renang") {
-        config = { title: "Coach Renang", matHint: "Cth: Pernapasan gaya bebas dan kaki.", agendaHint: "Cth: Pengenalan gaya dada dasar.", capaianHint: "Cth: Keberanian di air meningkat." };
-    } else if (eks === "Pramuka") {
-        config = { title: "Pembina Pramuka", matHint: "Cth: Sandi Morse dan Pioneering.", agendaHint: "Cth: Persiapan Persami.", capaianHint: "Cth: Mahir simpul mati & hafal Dasa Darma." };
+  // 1. Simpan ke HP & Cloud (Pekanan)
+  async function simpanPertemuan() {
+    const tgl = document.getElementById("tgl").value;
+    const mat = document.getElementById("mat").value;
+    if (!tgl || !mat) return alert("Mohon lengkapi data!");
+
+    // Simpan Local (Backup)
+    let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
+    db.push({ tgl, mat, tipe: "Pekanan", status: "Local Only" });
+    localStorage.setItem("data_" + ekskul, JSON.stringify(db));
+
+    // Kirim Cloud
+    try {
+      const resp = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ tgl, mat, ekskul, tipe: "Pekanan" })
+      });
+      if(resp.ok) alert("Sukses! Data tersimpan di HP & Cloud.");
+    } catch (e) {
+      alert("Tersimpan di HP (Backup), Gagal Sinkron Cloud (Cek Koneksi).");
     }
-
-    titleEl.innerText = config.title;
-    matPlaceholder.placeholder = config.matHint;
-    agendaPlaceholder.placeholder = config.agendaHint;
-    capaianPlaceholder.placeholder = config.capaianHint;
+    tampilkanRiwayat();
   }
 
-  window.onload = setContent;
+  // 2. Simpan Evaluasi Bulanan
+  async function simpanEvaluasi() {
+    const agenda = document.getElementById("ev_agenda").value;
+    const f1 = document.getElementById("f1").files[0];
+    if (!agenda || !f1) return alert("Agenda & Foto Wajib Diisi!");
+
+    // Logika Simpan Evaluasi
+    localStorage.setItem("eval_" + ekskul, JSON.stringify({ agenda, date: new Date().toLocaleDateString() }));
+    
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ tgl: new Date().toLocaleDateString(), agenda, ekskul, tipe: "Evaluasi Bulanan" })
+      });
+      alert("Evaluasi Berhasil Terkirim ke Koordinator!");
+    } catch (e) {
+      alert("Gagal kirim ke Cloud, data tersimpan di HP.");
+    }
+  }
+
+  // 3. Tampilkan Riwayat
+  function tampilkanRiwayat() {
+    const list = document.getElementById("riwayat_list");
+    const data = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
+    if(data.length === 0) {
+      list.innerHTML = "<p style='color:#999'>Belum ada data tersimpan.</p>";
+      return;
+    }
+    list.innerHTML = data.map(d => `
+      <div style="border-bottom:1px solid #eee; padding:8px 0;">
+        <span class="sync-status" style="background:#e8f5e9; color:#2e7d32;">BACKUP OK</span>
+        <b>${d.tgl}</b><br>${d.mat.substring(0,50)}...
+      </div>
+    `).reverse().join('');
+  }
+
+  // 4. Download Backup Txt
+  function eksporBackup() {
+    const data = localStorage.getItem("data_" + ekskul);
+    const blob = new Blob([data], {type: "text/plain"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Backup_Laporan_" + ekskul + ".txt";
+    link.click();
+  }
+
+  window.onload = tampilkanRiwayat;
 </script>
 </body>
 </html>
