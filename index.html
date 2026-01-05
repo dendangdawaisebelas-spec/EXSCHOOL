@@ -3,28 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EXSCHOOL - Gateway</title>
+    <title>EXSCHOOL - Premium Gateway</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --navy: #0a1f44; --gold: #FFD700; }
-        body, html { margin: 0; height: 100%; font-family: 'Plus Jakarta Sans', sans-serif; background: var(--navy); display: flex; justify-content: center; align-items: center; }
-        .login-box { background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(15px); padding: 40px; border-radius: 30px; width: 320px; text-align: center; border: 1px solid rgba(255, 215, 0, 0.2); }
-        .logo-img { width: 150px; margin-bottom: 10px; }
-        h2 { color: white; margin: 0; font-size: 26px; letter-spacing: 2px; }
-        .sub { color: var(--gold); font-size: 10px; margin-bottom: 30px; text-transform: uppercase; }
-        .input-group { position: relative; margin-bottom: 20px; }
-        input { width: 100%; padding: 15px; border-radius: 12px; border: none; background: white; box-sizing: border-box; font-weight: 600; font-size: 14px; }
-        .eye-icon { position: absolute; right: 15px; top: 15px; color: #333; cursor: pointer; font-size: 18px; }
-        button { width: 100%; padding: 16px; border: none; border-radius: 12px; background: linear-gradient(135deg, #bf953f, #fcf6ba, #aa771c); color: var(--navy); font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        :root { 
+            --navy: #0a1f44; 
+            --gold: #bf953f; 
+            --light-gray: #f8f9fa;
+        }
+
+        body, html { 
+            margin: 0; height: 100%; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: var(--light-gray); 
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        .bg-gradient {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            z-index: -1;
+        }
+
+        /* Box Login Bersih Tanpa Tag IMG */
+        .login-box { 
+            background: #ffffff; 
+            padding: 60px 40px; 
+            border-radius: 40px; 
+            width: 340px; 
+            text-align: center; 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.02);
+            animation: containerAppear 1s ease-out;
+        }
+
+        @keyframes containerAppear {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h2 { 
+            color: var(--navy); 
+            margin: 0; 
+            font-size: 32px; 
+            letter-spacing: 4px; 
+            font-weight: 800;
+        }
+
+        .sub { 
+            color: #888; 
+            font-size: 11px; 
+            margin-bottom: 40px; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .input-group { 
+            position: relative; 
+            margin-bottom: 25px; 
+        }
+
+        input { 
+            width: 100%; 
+            padding: 18px 20px; 
+            border-radius: 15px; 
+            border: 1.5px solid #eee; 
+            background: #fdfdfd; 
+            box-sizing: border-box; 
+            font-weight: 600; 
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: var(--navy);
+        }
+
+        input:focus {
+            border-color: var(--navy);
+            background: #fff;
+            box-shadow: 0 10px 20px rgba(10,31,68,0.05);
+            outline: none;
+        }
+
+        .eye-icon { 
+            position: absolute; right: 20px; top: 18px; 
+            color: #ccc; cursor: pointer; font-size: 18px;
+        }
+
+        button { 
+            width: 100%; 
+            padding: 18px; 
+            border: none; 
+            border-radius: 15px; 
+            background: var(--navy); 
+            color: white; 
+            font-weight: 800; 
+            cursor: pointer; 
+            text-transform: uppercase; 
+            letter-spacing: 2px;
+            transition: all 0.4s;
+            box-shadow: 0 10px 30px rgba(10,31,68,0.2);
+            margin-top: 10px;
+        }
+
+        button:hover { 
+            transform: translateY(-3px);
+            filter: brightness(1.2);
+        }
+
+        .footer-text { margin-top: 30px; font-size: 10px; color: #bbb; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
+    <div class="bg-gradient"></div>
+
     <div class="login-box">
-        <img src="logo2.png" class="logo-img" alt="LOGO EXSCHOOL">
         <h2>EXSCHOOL</h2>
-        <div class="sub">Terintegrasi dalam satu genggaman</div>
+        <div class="sub">Executive School Gateway</div>
 
         <div class="input-group">
             <input type="text" id="user" placeholder="Username">
@@ -33,7 +130,9 @@
             <input type="password" id="pass" placeholder="Password">
             <i class="fa-solid fa-eye eye-icon" id="toggleIcon" onclick="toggleView()"></i>
         </div>
-        <button onclick="prosesLogin()">MASUK</button>
+        <button onclick="prosesLogin()">Masuk Ke Sistem</button>
+        
+        <div class="footer-text">© 2026 ICMS Digital Ecosystem</div>
     </div>
 
 <script>
@@ -53,6 +152,7 @@
         const u = document.getElementById("user").value.toLowerCase().trim();
         const p = document.getElementById("pass").value.trim();
 
+        // Database Pendaftaran Ulang Lengkap
         const users = [
             {u:"pakditya", p:"savepalestine", r:"koordinator"},
             {u:"musik", p:"icms2026", r:"coach", e:"Musik"},
@@ -62,7 +162,10 @@
             {u:"taekwondo", p:"icms2026", r:"coach", e:"Taekwondo"},
             {u:"futsal", p:"icms2026", r:"coach", e:"Futsal"},
             {u:"basket", p:"icms2026", r:"coach", e:"Basket"},
-            {u:"panahan", p:"icms2026", r:"coach", e:"Panahan"}
+            {u:"panahan", p:"icms2026", r:"coach", e:"Panahan"},
+            {u:"renang", p:"icms2026", r:"coach", e:"Renang"},
+            {u:"badminton", p:"icms2026", r:"coach", e:"Badminton"},
+            {u:"pramuka", p:"icms2026", r:"coach", e:"Pramuka"}
         ];
 
         const acc = users.find(x => x.u === u && x.p === p);
@@ -71,13 +174,9 @@
             localStorage.setItem("role", acc.r);
             localStorage.setItem("username", acc.u);
             localStorage.setItem("ekskul", acc.e);
-            if (acc.r === "koordinator") {
-                window.location.href = "dashboard_koordinator.html";
-            } else {
-                window.location.href = "coach.html";
-            }
+            window.location.href = (acc.r === "koordinator") ? "dashboard_koordinator.html" : "coach.html";
         } else {
-            alert("Username atau Password Salah!");
+            alert("Akses Ditolak: Kredensial tidak valid.");
         }
     }
 </script>
