@@ -11,17 +11,17 @@
   <style>
     :root { --navy: #0a1f44; --gold: #bf953f; --light-bg: #f4f7f6; }
     body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: var(--light-bg); padding-bottom: 50px; }
-    header { background: white; padding: 25px; text-align: center; border-bottom: 4px solid var(--gold); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    header { background: white; padding: 25px; text-align: center; border-bottom: 4px solid var(--gold); }
     .sinergi-text { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 2px; display: block; text-transform: uppercase; }
     .coach-title { font-size: 16px; color: var(--navy); font-weight: 800; margin-top: 10px; }
-    .card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 14px; }
+    .card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
     label { font-weight: 800; display: block; margin-top: 15px; color: var(--navy); font-size: 11px; text-transform: uppercase; }
-    .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 12px; text-transform: uppercase; font-size: 12px; }
+    .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 12px; font-size: 12px; }
     
-    /* Style Tanda Tangan */
+    /* Box Tanda Tangan */
     .sig-container { border: 2px dashed #ccc; background: #fff; margin-top: 10px; border-radius: 8px; position: relative; }
-    canvas { width: 100%; height: 180px; cursor: crosshair; display: block; }
+    canvas { width: 100%; height: 180px; display: block; cursor: crosshair; }
     .btn-clear { background:#e74c3c; color:white; border:none; padding:5px 12px; border-radius:4px; font-size:10px; margin: 10px; cursor:pointer; }
   </style>
 </head>
@@ -34,12 +34,12 @@
 </header>
 
 <div class="card">
-  <h3 style="margin-top:0; color:#2980b9; font-size: 16px;"><i class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</h3>
+  <h3 style="margin-top:0; color:#2980b9; font-size: 16px;">1. Pertemuan Pekanan</h3>
   <label>Tanggal Pertemuan</label>
   <input type="date" id="tgl">
   
   <label>Materi Latihan Pekan Ini</label>
-  <textarea id="mat" rows="3" placeholder="Tuliskan materi latihan..."></textarea>
+  <textarea id="mat" rows="3" placeholder="Tuliskan rincian materi pekan ini..."></textarea>
   
   <label>Tanda Tangan Digital Pelatih</label>
   <div class="sig-container">
@@ -48,30 +48,30 @@
   </div>
   
   <button class="btn" style="background:#2980b9" onclick="simpanKeDaftarHadir()">
-    <i class="fa-solid fa-cloud-arrow-up"></i> SIMPAN & SINKRONISASI ABSENSI
+    <i class="fa-solid fa-cloud-arrow-up"></i> SIMPAN & SINKRONISASI
   </button>
 </div>
 
 <div class="card">
-  <h3 style="margin-top:0; color:#1c7c54; font-size: 16px;"><i class="fa-solid fa-file-invoice"></i> 2. Evaluasi Bulanan (BAB II & III)</h3>
+  <h3 style="margin-top:0; color:#1c7c54; font-size: 16px;">2. Evaluasi Bulanan (Otomatis ke Doc)</h3>
   <label>Agenda Kegiatan</label>
-  <textarea id="ev_agenda" rows="2" placeholder="Isi untuk Tabel BAB II"></textarea>
+  <textarea id="ev_agenda" rows="2"></textarea>
   <label>Indikator Capaian (%)</label>
-  <input type="number" id="ev_capaian" placeholder="Contoh: 90">
+  <input type="number" id="ev_capaian">
   <label>Kendala & Solusi</label>
   <textarea id="ev_kendala" rows="2" placeholder="Kendala..."></textarea>
   <textarea id="ev_solusi" rows="2" placeholder="Solusi..."></textarea>
-  <label>Rekomendasi Bulan Selanjutnya (BAB III)</label>
-  <textarea id="ev_saran" rows="2" placeholder="Saran untuk bulan depan..."></textarea>
+  <label>Rekomendasi Bulan Selanjutnya</label>
+  <textarea id="ev_saran" rows="2"></textarea>
   
   <button class="btn" style="background:#1c7c54" onclick="kirimLaporanBulanan()">
-    <i class="fa-solid fa-paper-plane"></i> KIRIM LAPORAN BULANAN KE DOCS
+    <i class="fa-solid fa-paper-plane"></i> KIRIM LAPORAN KE PUSAT
   </button>
 </div>
 
 <script>
-  // PENTING: Masukkan URL Script Bapak di sini!
-  const SCRIPT_URL = "URL_WEB_APP_ANDA"; 
+  // MASUKKAN URL HASIL DEPLOYMENT BARU ANDA DI SINI
+  const SCRIPT_URL = "PASTE_URL_WEB_APP_ANDA_DI_SINI"; 
 
   const ekskul = localStorage.getItem("ekskul") || "Ekskul";
   const user = localStorage.getItem("username") || "User";
@@ -81,17 +81,7 @@
     const canvas = document.getElementById('signature-pad');
     signaturePad = new SignaturePad(canvas);
     
-    function resizeCanvas() {
-        const ratio = Math.max(window.devicePixelRatio || 1, 1);
-        canvas.width = canvas.offsetWidth * ratio;
-        canvas.height = canvas.offsetHeight * ratio;
-        canvas.getContext("2d").scale(ratio, ratio);
-        signaturePad.clear();
-    }
-    window.onresize = resizeCanvas;
-    resizeCanvas();
-    
-    // Set Gelar Khusus Header
+    // Header Gelar Khusus (Sesuai Instruksi Sebelumnya)
     let displayTitle = "";
     if (ekskul === "Taekwondo") { displayTitle = "Sabeum (사범) Taekwondo ICMS"; }
     else if (ekskul === "Nihongo Club") { displayTitle = "ICMS 日本語クラブの先生"; }
@@ -103,30 +93,27 @@
     document.getElementById("eks_full_title").innerText = displayTitle;
   };
 
-  // FUNGSI 1: SIMPAN KE DAFTAR HADIR (DENGAN TTD)
+  // Jalur 1: Simpan Daftar Hadir & TTD
   async function simpanKeDaftarHadir() {
     if (signaturePad.isEmpty()) return alert("Silakan tanda tangan dahulu!");
     const tgl = document.getElementById("tgl").value;
     const mat = document.getElementById("mat").value;
-    if (!tgl || !mat) return alert("Lengkapi Tanggal & Materi!");
+    if (!tgl || !mat) return alert("Lengkapi data!");
 
     const data = {
       tipe: "DAFTAR_HADIR",
-      ekskul: ekskul,
-      user: user,
-      tgl: tgl,
-      mat: mat,
+      ekskul: ekskul, user: user, tgl: tgl, mat: mat,
       ttd: signaturePad.toDataURL() 
     };
 
     try {
       await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
-      alert("Berhasil! Absensi & TTD telah masuk ke Daftar Hadir.");
+      alert("Absensi Berhasil Disimpan!");
       signaturePad.clear();
-    } catch (e) { alert("Gagal Sinkronisasi Absensi!"); }
+    } catch (e) { alert("Gagal Simpan!"); }
   }
 
-  // FUNGSI 2: KIRIM LAPORAN BULANAN (KE TABEL BAB II & III)
+  // Jalur 2: Kirim Laporan Bulanan (BAB II & III)
   async function kirimLaporanBulanan() {
     const data = {
       tipe: "LAPORAN_BULANAN",
@@ -138,13 +125,10 @@
       solusi: document.getElementById("ev_solusi").value,
       saran: document.getElementById("ev_saran").value
     };
-
-    if (!data.agenda) return alert("Agenda wajib diisi!");
-
     try {
       await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
-      alert("Berhasil! Data Laporan masuk ke Tabel BAB II & III di Google Docs Bapak.");
-    } catch (e) { alert("Gagal mengirim laporan bulanan!"); }
+      alert("Laporan Terkirim!");
+    } catch (e) { alert("Gagal Kirim Laporan!"); }
   }
 </script>
 </body>
