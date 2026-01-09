@@ -3,26 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EXSCHOOL ICMS - Pelatih</title>
+  <title>EXSCHOOL ICMS - Coach Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+  
   <style>
     :root { --navy: #0a1f44; --gold: #bf953f; --light: #f4f7f6; }
     body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: var(--light); padding-bottom: 40px; }
-    header { background: white; padding: 30px 20px; text-align: center; border-bottom: 4px solid var(--gold); }
+    
     /* LOGIKA VISUAL BRANDING */
-    .branding-ex { font-weight: 800; font-size: 26px; letter-spacing: 4px; color: var(--navy); }
+    header { background: white; padding: 30px 20px; text-align: center; border-bottom: 4px solid var(--gold); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .branding-ex { font-weight: 800; font-size: 26px; letter-spacing: 4px; color: var(--navy); text-transform: uppercase; }
     .branding-sinergi { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: block; }
+    
     /* LOGIKA HEADER DINAMIS */
     .coach-title { font-size: 15px; color: var(--navy); font-weight: 800; margin-top: 15px; }
     
-    .card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
     label { font-weight: 800; display: block; margin-top: 15px; color: var(--navy); font-size: 11px; text-transform: uppercase; }
-    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-    .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; text-transform: uppercase; font-size: 12px; }
-    .sig-container { border: 2px dashed #ccc; background: #fff; margin-top: 10px; border-radius: 8px; position: relative; }
+    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+    .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; text-transform: uppercase; font-size: 12px; transition: 0.3s; }
+    
+    /* LOGIKA TANDA TANGAN DIGITAL */
+    .sig-container { border: 2px dashed #ccc; background: #fff; margin-top: 10px; border-radius: 8px; position: relative; overflow: hidden; }
     canvas { width: 100%; height: 180px; display: block; cursor: crosshair; }
+    .btn-clear { position: absolute; bottom: 10px; right: 10px; padding: 6px 12px; font-size: 10px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -30,20 +36,21 @@
 <header>
     <div class="branding-ex">EXSCHOOL</div>
     <span class="branding-sinergi">SINERGI TERINTEGRASI</span>
-    <div id="eks_full_title" class="coach-title">Memuat...</div>
+    <div id="eks_full_title" class="coach-title">Memuat Gelar...</div>
 </header>
 
 <div class="card">
-  <h3 style="margin:0; color:#2980b9; font-size: 16px;">1. Pertemuan Pekanan (Daftar Hadir)</h3>
+  <h3 style="margin:0; color:#2980b9; font-size: 16px;"><i class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</h3>
   <label>Tanggal Pertemuan</label>
   <input type="date" id="tgl">
-  <label>Materi Latihan</label>
-  <textarea id="mat" rows="3" placeholder="Tuliskan materi..."></textarea>
   
-  <label>Tanda Tangan Digital</label>
+  <label>Materi Latihan Pekan Ini</label>
+  <textarea id="mat" rows="3" placeholder="Tuliskan rincian materi pekan ini..."></textarea>
+  
+  <label>Tanda Tangan Digital Pelatih</label>
   <div class="sig-container">
     <canvas id="signature-pad"></canvas>
-    <button type="button" style="position:absolute; bottom:5px; right:5px; padding:4px 8px; font-size:9px; background:#e74c3c; color:white; border:none; border-radius:4px;" onclick="signaturePad.clear()">HAPUS TTD</button>
+    <button type="button" class="btn-clear" onclick="signaturePad.clear()">HAPUS TTD</button>
   </div>
   
   <button class="btn" style="background:#2980b9" onclick="simpanAbsen()">
@@ -52,16 +59,21 @@
 </div>
 
 <div class="card">
-  <h3 style="margin:0; color:#1c7c54; font-size: 16px;">2. Evaluasi Bulanan (Laporan)</h3>
-  <label>Agenda Kegiatan</label>
-  <textarea id="ev_agenda" rows="2"></textarea>
-  <label>Capaian (%)</label>
-  <input type="number" id="ev_capaian">
-  <label>Kendala & Solusi</label>
-  <textarea id="ev_kendala" rows="2" placeholder="Kendala"></textarea>
-  <textarea id="ev_solusi" rows="2" placeholder="Solusi"></textarea>
-  <label>Rekomendasi</label>
-  <textarea id="ev_saran" rows="2"></textarea>
+  <h3 style="margin:0; color:#1c7c54; font-size: 16px;"><i class="fa-solid fa-file-lines"></i> 2. Evaluasi Bulanan</h3>
+  <label>Agenda Kegiatan (BAB II)</label>
+  <textarea id="ev_agenda" rows="2" placeholder="Input untuk tabel agenda..."></textarea>
+  
+  <label>Indikator Capaian (%)</label>
+  <input type="number" id="ev_capaian" placeholder="Cth: 90">
+  
+  <label>Kendala yang Dihadapi</label>
+  <textarea id="ev_kendala" rows="2"></textarea>
+  
+  <label>Solusi yang Dilakukan</label>
+  <textarea id="ev_solusi" rows="2"></textarea>
+  
+  <label>Rekomendasi (BAB III)</label>
+  <textarea id="ev_saran" rows="2" placeholder="Rekomendasi untuk bulan depan..."></textarea>
   
   <button class="btn" style="background:#1c7c54" onclick="kirimLaporan()">
     <i class="fa-solid fa-paper-plane"></i> KIRIM LAPORAN KE PUSAT
@@ -69,58 +81,5 @@
 </div>
 
 <script>
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxog-pNFssAr5TkoRvVSKxoN97RNru4xXp0Jk8ovu5hDKwISp1df3bGZMRKzF3G2kWQGA/exec";
-  const ekskul = localStorage.getItem("ekskul") || "Ekskul";
-  const user = localStorage.getItem("username") || "User";
-  let signaturePad;
-
-  window.onload = () => {
-    const canvas = document.getElementById('signature-pad');
-    signaturePad = new SignaturePad(canvas);
-    
-    // LOGIKA HEADER DINAMIS
-    let title = "Coach " + ekskul + " ICMS";
-    if (ekskul === "Taekwondo") title = "Sabeum (사범) Taekwondo ICMS";
-    else if (ekskul === "Nihongo Club") title = "ICMS 日本語クラブの先生";
-    else if (ekskul === "English Club") title = "ICMS English Club Teacher";
-    else if (ekskul === "Pramuka") title = "Kakak Pembina Pramuka ICMS";
-    else if (ekskul === "Musik") title = "Instruktur Musik ICMS";
-    else if (ekskul === "Dokter Kecil") title = "Instruktur Dokter Kecil ICMS";
-    document.getElementById("eks_full_title").innerText = title;
-  };
-
-  // LOGIKA "LOGIC GATE" - JALUR ABSENSI
-  async function simpanAbsen() {
-    if (signaturePad.isEmpty()) return alert("TTD Wajib diisi!");
-    const data = {
-      tipe: "DAFTAR_HADIR",
-      ekskul: ekskul, tgl: document.getElementById("tgl").value,
-      mat: document.getElementById("mat").value,
-      ttd: signaturePad.toDataURL() // LOGIKA TTD BASE64
-    };
-    try {
-      await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
-      alert("Absensi Berhasil Tersinkronisasi!");
-      signaturePad.clear();
-    } catch (e) { alert("Gagal Simpan"); }
-  }
-
-  // LOGIKA "LOGIC GATE" - JALUR LAPORAN
-  async function kirimLaporan() {
-    const data = {
-      tipe: "LAPORAN_BULANAN",
-      ekskul: ekskul, user: user, tgl: document.getElementById("tgl").value,
-      agenda: document.getElementById("ev_agenda").value,
-      capaian: document.getElementById("ev_capaian").value,
-      kendala: document.getElementById("ev_kendala").value,
-      solusi: document.getElementById("ev_solusi").value,
-      saran: document.getElementById("ev_saran").value
-    };
-    try {
-      await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
-      alert("Laporan Bulanan Berhasil Terkirim!");
-    } catch (e) { alert("Gagal Kirim"); }
-  }
-</script>
-</body>
-</html>
+  // URL WEB APP BAPAK
+  const SCRIPT_URL = "
