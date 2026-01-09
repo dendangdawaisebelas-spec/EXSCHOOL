@@ -1,153 +1,22 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pusat Komando Koordinator ICMS</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <style>
-        body { font-family: 'Times New Roman', serif; margin: 0; background: #f0f2f5; padding-bottom: 50px; color: #333; }
-        header { background: #0a1f44; color: white; padding: 25px; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-        .container { padding: 20px; max-width: 1100px; margin: auto; }
-        
-        /* Grup Tombol Navigasi & Aksi */
-        .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 25px; }
-        .btn-main { border: none; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 14px; color: white; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
-        .btn-rab { background: #1c7c54; } 
-        .btn-lap { background: #0a1f44; } 
-        .btn-mail { background: #db4437; grid-column: span 2; } 
-        .btn-kaldik { background: #f39c12; grid-column: span 2; } 
-
-        .btn-main:hover { opacity: 0.9; transform: scale(1.02); }
-
-        /* Grid Monitoring */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
-        .card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); border-left: 8px solid #0a1f44; }
-        .card h3 { margin: 0 0 10px 0; color: #0a1f44; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .status-ok { color: #27ae60; font-weight: bold; }
-        .status-no { color: #e74c3c; font-weight: bold; }
-        
-        .footer-info { text-align: center; margin-top: 30px; font-size: 12px; color: #666; }
-    </style>
-</head>
-<body>
-
-<header>
-    <h1 style="margin:0; font-size: 22px;">DASHBOARD KOORDINATOR EKSKUL</h1>
-    <div style="font-size: 14px; margin-top: 5px;">ICMS BOGOR | Ta. 2025/2026</div>
-</header>
-
-<div class="container">
-    
-    <div class="btn-group">
-        <button class="btn-main btn-rab" onclick="cetakRAB()">📥 DOWNLOAD RAB HONOR</button>
-        <button class="btn-main btn-lap" onclick="cetakLaporanBulanan()">📘 DOWNLOAD LAPORAN PDF</button>
-        <button class="btn-main btn-kaldik" onclick="location.href='kaldik.html'">📅 KALENDER PENDIDIKAN (KALDIK)</button>
-        <button class="btn-main btn-mail" onclick="kirimNotifEmail()">📧 KIRIM REKAP KE GMAIL PEMBINA</button>
-    </div>
-
-    <h2 style="font-size: 18px; border-bottom: 2px solid #0a1f44; padding-bottom: 5px;">Monitoring Realisasi Laporan</h2>
-    
-    <div class="grid" id="gridEkskul">
-        </div>
-
-    <div class="footer-info">
-        Pembina: Ditya Manggala, S.Sn<br>
-        Email: pembinaekstrakurikulerkeren@gmail.com
-    </div>
+<div class="card" style="border-top: 5px solid #bf953f; background:white; padding:20px; border-radius:15px;">
+  <h3 style="color:#0a1f44;">MONITORING PELATIH REAL-TIME</h3>
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+    <button class="btn" style="background:#f4f7f6; color:#0a1f44; border:1px solid #ddd;" onclick="bukaAbsensi('Badminton')">Cek Absensi Badminton</button>
+    <button class="btn" style="background:#f4f7f6; color:#0a1f44; border:1px solid #ddd;" onclick="bukaAbsensi('Taekwondo')">Cek Absensi Taekwondo</button>
+  </div>
+  <hr>
+  <button class="btn" style="background:#e74c3c" onclick="downloadPDF()">
+    <i class="fa-solid fa-file-pdf"></i> DOWNLOAD REKAP PDF
+  </button>
 </div>
 
 <script>
-    const { jsPDF } = window.jspdf;
-
-    // Database Tarif (Sesuai kesepakatan ICMS & Revisi Taekwondo)
-    const dbTarif = { 
-        "Taekwondo": 50000, "Renang": 150000, "Pramuka": 160000, 
-        "Futsal": 250000, "Dokter Kecil": 100000, "Badminton": 150000, 
-        "Basket": 250000, "English Club": 0, "Nihonggo Club": 0,
-        "Musik": 500000, "Panahan": 300000 
-    };
-
-    const listEkskul = Object.keys(dbTarif);
-
-    function muatData() {
-        const grid = document.getElementById("gridEkskul");
-        grid.innerHTML = "";
-
-        listEkskul.forEach(nama => {
-            const harian = JSON.parse(localStorage.getItem("data_" + nama)) || [];
-            const eval = JSON.parse(localStorage.getItem("eval_" + nama)) || null;
-            
-            // Hitung Honor (Musik flat 500rb, Taekwondo x 50rb)
-            let totalHonor = (nama === "Musik") ? 500000 : harian.length * dbTarif[nama];
-
-            grid.innerHTML += `
-                <div class="card">
-                    <h3>${nama}</h3>
-                    <p>Pertemuan: <b>${harian.length}</b></p>
-                    <p>Total Honor: <b>Rp ${totalHonor.toLocaleString('id-ID')}</b></p>
-                    <p>Evaluasi & 3 Foto: 
-                        ${eval ? '<span class="status-ok">LENGKAP</span>' : '<span class="status-no">BELUM ISI</span>'}
-                    </p>
-                </div>
-            `;
-        });
-    }
-
-    function cetakRAB() {
-        const doc = new jsPDF();
-        doc.text("RAB HONOR PELATIH ICMS - NOVEMBER 2025", 105, 15, {align:"center"});
-        let rows = []; let grandTotal = 0;
-        listEkskul.forEach((n, i) => {
-            let d = JSON.parse(localStorage.getItem("data_"+n)) || [];
-            let sub = (n === "Musik") ? 500000 : d.length * dbTarif[n];
-            grandTotal += sub;
-            rows.push([i+1, n, dbTarif[n].toLocaleString(), d.length, sub.toLocaleString()]);
-        });
-        doc.autoTable({ startY: 25, head: [['No', 'Ekskul', 'Tarif', 'Vol', 'Total']], body: rows });
-        doc.text("Total: Rp " + grandTotal.toLocaleString(), 140, doc.lastAutoTable.finalY + 10);
-        doc.save("RAB_Honor_ICMS.pdf");
-    }
-
-    function cetakLaporanBulanan() {
-        const doc = new jsPDF();
-        doc.setFont("times", "bold");
-        doc.text("LAPORAN BULANAN EKSTRAKURIKULER", 105, 50, {align:"center"});
-        doc.text("Ditya Manggala, S.Sn", 105, 70, {align:"center"});
-
-        listEkskul.forEach(n => {
-            const ev = JSON.parse(localStorage.getItem("eval_" + n));
-            if(ev) {
-                doc.addPage();
-                doc.setFontSize(14); doc.text("EVALUASI: " + n, 20, 20);
-                doc.setFont("times", "normal"); doc.setFontSize(11);
-                doc.text("Agenda: " + ev.agenda, 20, 35, {maxWidth: 170});
-                
-                if(ev.fotos && ev.fotos.length >= 3) {
-                    doc.addPage();
-                    doc.text("LAMPIRAN FOTO " + n, 105, 15, {align:"center"});
-                    doc.addImage(ev.fotos[0], 'JPEG', 20, 25, 80, 60);
-                    doc.addImage(ev.fotos[1], 'JPEG', 110, 25, 80, 60);
-                    doc.addImage(ev.fotos[2], 'JPEG', 20, 95, 170, 100);
-                }
-            }
-        });
-        doc.save("Laporan_Bulanan_Final.pdf");
-    }
-
-    function kirimNotifEmail() {
-        const tujuan = "pembinaekstrakurikulerkeren@gmail.com";
-        let pesan = "Rekap Laporan ICMS:\n\n";
-        listEkskul.forEach(n => {
-            const d = JSON.parse(localStorage.getItem("data_" + n)) || [];
-            pesan += `- ${n}: ${d.length} Pertemuan\n`;
-        });
-        window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${tujuan}&su=REKAP_LAPORAN_ICMS&body=${encodeURIComponent(pesan)}`);
-    }
-
-    muatData();
+  function bukaAbsensi(eks) {
+    const ids = { "Badminton": "ID_DOC_BADMINTON", "Taekwondo": "ID_DOC_TAEKWONDO" };
+    window.open(`https://docs.google.com/document/d/${ids[eks]}/edit`, '_blank');
+  }
+  function downloadPDF() {
+    const idUtama = "ID_DOC_LAPORAN_BULANAN";
+    window.open(`https://docs.google.com/document/d/${idUtama}/export?format=pdf`, '_blank');
+  }
 </script>
-</body>
-</html>
