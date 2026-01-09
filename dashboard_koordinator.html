@@ -1,22 +1,85 @@
-<div class="card" style="border-top: 5px solid #bf953f; background:white; padding:20px; border-radius:15px;">
-  <h3 style="color:#0a1f44;">MONITORING PELATIH REAL-TIME</h3>
-  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-    <button class="btn" style="background:#f4f7f6; color:#0a1f44; border:1px solid #ddd;" onclick="bukaAbsensi('Badminton')">Cek Absensi Badminton</button>
-    <button class="btn" style="background:#f4f7f6; color:#0a1f44; border:1px solid #ddd;" onclick="bukaAbsensi('Taekwondo')">Cek Absensi Taekwondo</button>
-  </div>
-  <hr>
-  <button class="btn" style="background:#e74c3c" onclick="downloadPDF()">
-    <i class="fa-solid fa-file-pdf"></i> DOWNLOAD REKAP PDF
-  </button>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koordinator - Monitoring Real-Time ICMS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root { --navy: #0a1f44; --gold: #bf953f; --light: #f4f7f6; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: var(--light); padding: 20px; }
+    
+    /* LOGIKA VISUAL BRANDING */
+    header { background: white; padding: 25px; text-align: center; border-bottom: 4px solid var(--gold); border-radius: 15px; margin-bottom: 25px; }
+    .branding-ex { font-weight: 800; font-size: 26px; letter-spacing: 4px; color: var(--navy); }
+    .branding-sinergi { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; display: block; margin-top: 5px; }
+    
+    .section-title { color: var(--navy); font-weight: 800; font-size: 14px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+    
+    /* GRID UNTUK SEMUA 11 EKSKUL */
+    .grid-monitor { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-bottom: 30px; }
+    .card-eks { background: white; padding: 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; }
+    .name-container { display: flex; align-items: center; gap: 12px; }
+    .icon-eks { color: var(--gold); font-size: 18px; }
+    .eks-label { font-weight: 700; color: var(--navy); font-size: 14px; }
+    
+    .btn-view { background: white; color: var(--navy); border: 2px solid var(--navy); padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 11px; font-weight: 800; text-transform: uppercase; transition: 0.3s; }
+    .btn-view:hover { background: var(--navy); color: white; }
+    
+    /* LOGIKA PDF INSTAN */
+    .rekap-container { background: white; padding: 30px; border-radius: 15px; text-align: center; border: 2px solid var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .btn-pdf { background: #e74c3c; color: white; padding: 18px 35px; border-radius: 12px; text-decoration: none; font-weight: 800; display: inline-block; font-size: 14px; text-transform: uppercase; box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3); transition: 0.3s; }
+    .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4); }
+  </style>
+</head>
+<body>
+
+<header>
+    <div class="branding-ex">EXSCHOOL</div>
+    <span class="branding-sinergi">MONITORING KOORDINATOR REAL-TIME</span>
+</header>
+
+<div class="section-title">Pemantauan Presensi Pekanan & Tanda Tangan</div>
+
+<div class="grid-monitor">
+    <script>
+        const mappingEkskul = [
+            { n: "Badminton", id: "19R84B-xmx83uUrznZDIEyowLKf1YJB0OOK4-H2e2PK4" }, // ID dari Screenshot Bapak
+            { n: "Taekwondo", id: "ID_FILE_TAEKWONDO" },
+            { n: "Nihongo Club", id: "ID_FILE_NIHONGO" },
+            { n: "English Club", id: "ID_FILE_ENGLISH" },
+            { n: "Futsal", id: "ID_FILE_FUTSAL" },
+            { n: "Basket", id: "ID_FILE_BASKET" },
+            { n: "Renang", id: "ID_FILE_RENANG" },
+            { n: "Panahan", id: "ID_FILE_PANAHAN" },
+            { n: "Pramuka", id: "ID_FILE_PRAMUKA" },
+            { n: "Dokter Kecil", id: "ID_FILE_DOKTER_KECIL" },
+            { n: "Musik", id: "ID_FILE_MUSIK" }
+        ];
+
+        document.write(mappingEkskul.map(e => `
+            <div class="card-eks">
+                <div class="name-container">
+                    <i class="fa-solid fa-circle-check icon-eks"></i>
+                    <span class="eks-label">${e.n}</span>
+                </div>
+                <a href="https://docs.google.com/document/d/${e.id}/edit" target="_blank" class="btn-view">
+                    Cek Presensi
+                </a>
+            </div>
+        `).join(''));
+    </script>
 </div>
 
-<script>
-  function bukaAbsensi(eks) {
-    const ids = { "Badminton": "ID_DOC_BADMINTON", "Taekwondo": "ID_DOC_TAEKWONDO" };
-    window.open(`https://docs.google.com/document/d/${ids[eks]}/edit`, '_blank');
-  }
-  function downloadPDF() {
-    const idUtama = "ID_DOC_LAPORAN_BULANAN";
-    window.open(`https://docs.google.com/document/d/${idUtama}/export?format=pdf`, '_blank');
-  }
-</script>
+<div class="rekap-container">
+    <h2 style="color: var(--navy); margin-bottom: 10px;">Laporan Rekapitulasi Bulanan</h2>
+    <p style="color: #666; font-size: 13px; margin-bottom: 25px;">Data BAB II (Agenda) & BAB III (Rekomendasi) dikonversi otomatis ke format resmi.</p>
+    
+    <a href="https://docs.google.com/document/d/ID_FILE_UTAMA/export?format=pdf" class="btn-pdf">
+        <i class="fa-solid fa-file-pdf"></i> Download Rekap PDF (BAB II & III)
+    </a>
+</div>
+
+</body>
+</html>
