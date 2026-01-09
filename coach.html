@@ -6,46 +6,23 @@
   <title>Coach Dashboard - EXSCHOOL Hybrid</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+  
   <style>
-    :root { 
-      --navy: #0a1f44; 
-      --gold: #bf953f; 
-      --light-bg: #f4f7f6;
-    }
+    :root { --navy: #0a1f44; --gold: #bf953f; --light-bg: #f4f7f6; }
     body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: var(--light-bg); padding-bottom: 50px; }
-    
-    header { 
-      background: white; 
-      color: var(--navy); 
-      padding: 30px 20px; 
-      text-align: center; 
-      border-bottom: 4px solid var(--gold);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .sinergi-text {
-      font-size: 11px;
-      color: var(--gold);
-      font-weight: 700;
-      letter-spacing: 2px;
-      margin-top: 5px;
-      display: block;
-      text-transform: uppercase;
-    }
-
-    .coach-title {
-      font-size: 16px;
-      color: var(--navy);
-      font-weight: 800;
-      margin-top: 12px;
-    }
-
+    header { background: white; padding: 25px; text-align: center; border-bottom: 4px solid var(--gold); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .sinergi-text { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 2px; display: block; text-transform: uppercase; }
+    .coach-title { font-size: 16px; color: var(--navy); font-weight: 800; margin-top: 10px; }
     .card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
-    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; font-size: 14px; }
-    .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 12px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; }
+    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 14px; }
     label { font-weight: 800; display: block; margin-top: 15px; color: var(--navy); font-size: 11px; text-transform: uppercase; }
-    .pedoman-box { background: #e8f4fd; border-left: 5px solid #2980b9; padding: 15px; margin-top: 10px; border-radius: 8px; font-size: 12px; line-height: 1.6; color: #2c3e50; }
-    .riwayat-container { background: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin-top: 10px; max-height: 150px; overflow-y: auto; font-size: 12px; }
+    .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 12px; text-transform: uppercase; font-size: 12px; }
+    
+    /* Style Tanda Tangan */
+    .sig-container { border: 2px dashed #ccc; background: #fff; margin-top: 10px; border-radius: 8px; position: relative; }
+    canvas { width: 100%; height: 180px; cursor: crosshair; display: block; }
+    .btn-clear { background:#e74c3c; color:white; border:none; padding:5px 12px; border-radius:4px; font-size:10px; margin: 10px; cursor:pointer; }
   </style>
 </head>
 <body>
@@ -57,84 +34,103 @@
 </header>
 
 <div class="card">
-  <h3 style="margin-top:0; color:#2980b9; font-size: 16px;">1. Pertemuan Pekanan</h3>
+  <h3 style="margin-top:0; color:#2980b9; font-size: 16px;"><i class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</h3>
   <label>Tanggal Pertemuan</label>
   <input type="date" id="tgl">
   
   <label>Materi Latihan Pekan Ini</label>
-  <textarea id="mat" rows="3"></textarea>
+  <textarea id="mat" rows="3" placeholder="Tuliskan materi latihan..."></textarea>
   
-  <button class="btn" style="background:#2980b9" onclick="simpanPertemuan()">
-    <i class="fa-solid fa-cloud-arrow-up"></i> SIMPAN & SINKRONISASI
+  <label>Tanda Tangan Digital Pelatih</label>
+  <div class="sig-container">
+    <canvas id="signature-pad"></canvas>
+    <button type="button" class="btn-clear" onclick="signaturePad.clear()">HAPUS TTD</button>
+  </div>
+  
+  <button class="btn" style="background:#2980b9" onclick="simpanKeDaftarHadir()">
+    <i class="fa-solid fa-cloud-arrow-up"></i> SIMPAN & SINKRONISASI ABSENSI
   </button>
 </div>
 
 <div class="card">
-  <h3 style="margin-top:0; color:#1c7c54; font-size: 16px;">2. Evaluasi Bulanan (Otomatis ke Doc)</h3>
-  
-  <div class="pedoman-box">
-    <strong>📋 Petunjuk:</strong> Data di bawah ini akan langsung masuk ke tabel BAB II & III di Google Docs Pak Ditya secara berurutan.
-  </div>
-  
-  <label>Agenda Kegiatan (Hasil & Tujuan)</label>
-  <textarea id="ev_agenda" rows="2"></textarea>
-  
+  <h3 style="margin-top:0; color:#1c7c54; font-size: 16px;"><i class="fa-solid fa-file-invoice"></i> 2. Evaluasi Bulanan (BAB II & III)</h3>
+  <label>Agenda Kegiatan</label>
+  <textarea id="ev_agenda" rows="2" placeholder="Isi untuk Tabel BAB II"></textarea>
   <label>Indikator Capaian (%)</label>
-  <input type="number" id="ev_capaian" placeholder="Cth: 85">
+  <input type="number" id="ev_capaian" placeholder="Contoh: 90">
+  <label>Kendala & Solusi</label>
+  <textarea id="ev_kendala" rows="2" placeholder="Kendala..."></textarea>
+  <textarea id="ev_solusi" rows="2" placeholder="Solusi..."></textarea>
+  <label>Rekomendasi Bulan Selanjutnya (BAB III)</label>
+  <textarea id="ev_saran" rows="2" placeholder="Saran untuk bulan depan..."></textarea>
   
-  <label>Kendala yang Dihadapi</label>
-  <textarea id="ev_kendala" rows="2"></textarea>
-  
-  <label>Solusi yang Dilakukan</label>
-  <textarea id="ev_solusi" rows="2"></textarea>
-
-  <label>Rekomendasi Bulan Selanjutnya</label>
-  <textarea id="ev_saran" rows="2"></textarea>
-  
-  <button class="btn" style="background:#1c7c54" onclick="kirimKeCloud()">
-    <i class="fa-solid fa-paper-plane"></i> KIRIM LAPORAN KE PUSAT
+  <button class="btn" style="background:#1c7c54" onclick="kirimLaporanBulanan()">
+    <i class="fa-solid fa-paper-plane"></i> KIRIM LAPORAN BULANAN KE DOCS
   </button>
 </div>
 
-<div class="card" style="border-top: 4px solid #666;">
-  <h3 style="margin-top:0; font-size: 14px; color:#333;">📂 Riwayat Input</h3>
-  <div id="riwayat_list" class="riwayat-container"></div>
-</div>
-
 <script>
-  // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+  // PENTING: Masukkan URL Script Bapak di sini!
   const SCRIPT_URL = "URL_WEB_APP_ANDA"; 
 
   const ekskul = localStorage.getItem("ekskul") || "Ekskul";
   const user = localStorage.getItem("username") || "User";
+  let signaturePad;
 
-  function setContent() {
-    let displayTitle = "";
-    // Penentuan Gelar Spesifik sesuai permintaan Bapak
-    if (ekskul === "Taekwondo") {
-        displayTitle = "Sabeum (사범) Taekwondo ICMS";
-    } else if (ekskul === "Nihongo Club") {
-        displayTitle = "ICMS 日本語クラブの先生";
-    } else if (ekskul === "English Club") {
-        displayTitle = "ICMS English Club Teacher";
-    } else if (ekskul === "Pramuka") {
-        displayTitle = "Kakak Pembina Pramuka ICMS";
-    } else if (ekskul === "Musik") {
-        displayTitle = "Instruktur Musik ICMS";
-    } else if (ekskul === "Dokter Kecil") {
-        displayTitle = "Instruktur Dokter Kecil ICMS";
-    } else {
-        displayTitle = "Coach " + ekskul + " ICMS";
+  window.onload = () => {
+    const canvas = document.getElementById('signature-pad');
+    signaturePad = new SignaturePad(canvas);
+    
+    function resizeCanvas() {
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        canvas.getContext("2d").scale(ratio, ratio);
+        signaturePad.clear();
     }
+    window.onresize = resizeCanvas;
+    resizeCanvas();
+    
+    // Set Gelar Khusus Header
+    let displayTitle = "";
+    if (ekskul === "Taekwondo") { displayTitle = "Sabeum (사범) Taekwondo ICMS"; }
+    else if (ekskul === "Nihongo Club") { displayTitle = "ICMS 日本語クラブの先生"; }
+    else if (ekskul === "English Club") { displayTitle = "ICMS English Club Teacher"; }
+    else if (ekskul === "Pramuka") { displayTitle = "Kakak Pembina Pramuka ICMS"; }
+    else if (ekskul === "Musik") { displayTitle = "Instruktur Musik ICMS"; }
+    else if (ekskul === "Dokter Kecil") { displayTitle = "Instruktur Dokter Kecil ICMS"; }
+    else { displayTitle = "Coach " + ekskul + " ICMS"; }
     document.getElementById("eks_full_title").innerText = displayTitle;
-    tampilkanRiwayat();
-  }
+  };
 
-  // Fungsi Kirim ke Google Docs (Otomatis Olah Data)
-  async function kirimKeCloud() {
+  // FUNGSI 1: SIMPAN KE DAFTAR HADIR (DENGAN TTD)
+  async function simpanKeDaftarHadir() {
+    if (signaturePad.isEmpty()) return alert("Silakan tanda tangan dahulu!");
+    const tgl = document.getElementById("tgl").value;
+    const mat = document.getElementById("mat").value;
+    if (!tgl || !mat) return alert("Lengkapi Tanggal & Materi!");
+
     const data = {
+      tipe: "DAFTAR_HADIR",
       ekskul: ekskul,
       user: user,
+      tgl: tgl,
+      mat: mat,
+      ttd: signaturePad.toDataURL() 
+    };
+
+    try {
+      await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
+      alert("Berhasil! Absensi & TTD telah masuk ke Daftar Hadir.");
+      signaturePad.clear();
+    } catch (e) { alert("Gagal Sinkronisasi Absensi!"); }
+  }
+
+  // FUNGSI 2: KIRIM LAPORAN BULANAN (KE TABEL BAB II & III)
+  async function kirimLaporanBulanan() {
+    const data = {
+      tipe: "LAPORAN_BULANAN",
+      ekskul: ekskul, user: user,
       tgl: document.getElementById("tgl").value,
       agenda: document.getElementById("ev_agenda").value,
       capaian: document.getElementById("ev_capaian").value,
@@ -143,39 +139,13 @@
       saran: document.getElementById("ev_saran").value
     };
 
-    if (!data.tgl || !data.agenda) return alert("Tanggal dan Agenda wajib diisi!");
+    if (!data.agenda) return alert("Agenda wajib diisi!");
 
     try {
-      const resp = await fetch(SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(data)
-      });
-      alert("Laporan Terkirim! Data sedang disusun otomatis di Google Docs Pak Ditya.");
-    } catch (e) {
-      alert("Gagal koneksi ke pusat. Gunakan fitur WhatsApp jika darurat.");
-    }
+      await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(data) });
+      alert("Berhasil! Data Laporan masuk ke Tabel BAB II & III di Google Docs Bapak.");
+    } catch (e) { alert("Gagal mengirim laporan bulanan!"); }
   }
-
-  function simpanPertemuan() {
-    const tgl = document.getElementById("tgl").value;
-    const mat = document.getElementById("mat").value;
-    if (!tgl || !mat) return alert("Lengkapi data!");
-    
-    let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    db.push({ tgl, mat });
-    localStorage.setItem("data_" + ekskul, JSON.stringify(db));
-    alert("Data pekanan tersimpan di memori HP.");
-    tampilkanRiwayat();
-  }
-
-  function tampilkanRiwayat() {
-    const list = document.getElementById("riwayat_list");
-    const data = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    list.innerHTML = data.map(d => `<div style="padding:5px 0; border-bottom:1px solid #eee;"><b>${d.tgl}</b>: ${d.mat.substring(0,30)}..</div>`).reverse().join('');
-  }
-
-  window.onload = setContent;
 </script>
 </body>
 </html>
