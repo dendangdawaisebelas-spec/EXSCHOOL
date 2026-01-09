@@ -3,32 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EXSCHOOL ICMS - Coach Dashboard</title>
+  <title>EXSCHOOL ICMS - Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-  
   <style>
     :root { --navy: #0a1f44; --gold: #bf953f; --light: #f4f7f6; }
     body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: var(--light); padding-bottom: 40px; }
     
-    /* LOGIKA VISUAL BRANDING */
-    header { background: white; padding: 30px 20px; text-align: center; border-bottom: 4px solid var(--gold); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    /* LOGIKA VISUAL BRANDING: KONSISTEN DENGAN TEMA LOGIN */
+    header { background: white; padding: 25px 20px; text-align: center; border-bottom: 4px solid var(--gold); }
     .branding-ex { font-weight: 800; font-size: 26px; letter-spacing: 4px; color: var(--navy); text-transform: uppercase; }
-    .branding-sinergi { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; display: block; }
+    .branding-sinergi { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; display: block; margin-top: 5px; }
     
-    /* LOGIKA HEADER DINAMIS */
-    .coach-title { font-size: 15px; color: var(--navy); font-weight: 800; margin-top: 15px; }
+    /* LOGIKA HEADER DINAMIS: GELAR SPESIFIK */
+    .coach-title { font-size: 16px; color: var(--navy); font-weight: 800; margin-top: 15px; min-height: 24px; }
     
-    .card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
+    .card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
     label { font-weight: 800; display: block; margin-top: 15px; color: var(--navy); font-size: 11px; text-transform: uppercase; }
-    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; font-size: 14px; }
+    textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 14px; }
     .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 15px; text-transform: uppercase; font-size: 12px; transition: 0.3s; }
     
-    /* LOGIKA TANDA TANGAN DIGITAL */
-    .sig-container { border: 2px dashed #ccc; background: #fff; margin-top: 10px; border-radius: 8px; position: relative; overflow: hidden; }
+    /* LOGIKA TANDA TANGAN DIGITAL: KONTAINER TERKUNCI */
+    .sig-container { border: 2px dashed #ccc; background: #fff; margin-top: 10px; border-radius: 8px; position: relative; }
     canvas { width: 100%; height: 180px; display: block; cursor: crosshair; }
-    .btn-clear { position: absolute; bottom: 10px; right: 10px; padding: 6px 12px; font-size: 10px; background: #e74c3c; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-clear { position: absolute; bottom: 10px; right: 10px; padding: 6px 12px; font-size: 10px; background: #e74c3c; color: white; border: none; border-radius: 4px; }
   </style>
 </head>
 <body>
@@ -36,50 +35,49 @@
 <header>
     <div class="branding-ex">EXSCHOOL</div>
     <span class="branding-sinergi">SINERGI TERINTEGRASI</span>
-    <div id="eks_full_title" class="coach-title">Memuat Gelar...</div>
+    <div id="eks_full_title" class="coach-title">Coach ICMS</div>
 </header>
 
 <div class="card">
   <h3 style="margin:0; color:#2980b9; font-size: 16px;"><i class="fa-solid fa-calendar-check"></i> 1. Pertemuan Pekanan</h3>
   <label>Tanggal Pertemuan</label>
   <input type="date" id="tgl">
-  
   <label>Materi Latihan Pekan Ini</label>
-  <textarea id="mat" rows="3" placeholder="Tuliskan rincian materi pekan ini..."></textarea>
-  
+  <textarea id="mat" rows="3" placeholder="Tuliskan rincian materi..."></textarea>
   <label>Tanda Tangan Digital Pelatih</label>
   <div class="sig-container">
     <canvas id="signature-pad"></canvas>
     <button type="button" class="btn-clear" onclick="signaturePad.clear()">HAPUS TTD</button>
   </div>
-  
-  <button class="btn" style="background:#2980b9" onclick="simpanAbsen()">
-    <i class="fa-solid fa-cloud-arrow-up"></i> SIMPAN & SINKRONISASI
-  </button>
+  <button class="btn" style="background:#2980b9" onclick="simpanAbsen()">SIMPAN & SINKRONISASI</button>
 </div>
 
 <div class="card">
   <h3 style="margin:0; color:#1c7c54; font-size: 16px;"><i class="fa-solid fa-file-lines"></i> 2. Evaluasi Bulanan</h3>
-  <label>Agenda Kegiatan (BAB II)</label>
+  <label>Agenda Kegiatan</label>
   <textarea id="ev_agenda" rows="2" placeholder="Input untuk tabel agenda..."></textarea>
-  
   <label>Indikator Capaian (%)</label>
   <input type="number" id="ev_capaian" placeholder="Cth: 90">
-  
-  <label>Kendala yang Dihadapi</label>
-  <textarea id="ev_kendala" rows="2"></textarea>
-  
-  <label>Solusi yang Dilakukan</label>
-  <textarea id="ev_solusi" rows="2"></textarea>
-  
-  <label>Rekomendasi (BAB III)</label>
-  <textarea id="ev_saran" rows="2" placeholder="Rekomendasi untuk bulan depan..."></textarea>
-  
-  <button class="btn" style="background:#1c7c54" onclick="kirimLaporan()">
-    <i class="fa-solid fa-paper-plane"></i> KIRIM LAPORAN KE PUSAT
-  </button>
+  <label>Kendala & Hambatan</label>
+  <textarea id="ev_kendala" rows="2" placeholder="Hambatan yang ditemui..."></textarea>
+  <label>Solusi & Rekomendasi</label>
+  <textarea id="ev_saran" rows="3" placeholder="Rencana bulan depan..."></textarea>
+  <button class="btn" style="background:#1c7c54" onclick="kirimLaporan()">KIRIM LAPORAN KE PUSAT</button>
 </div>
 
 <script>
-  // URL WEB APP BAPAK
-  const SCRIPT_URL = "
+  /* TELITI: URL WEB APP BAPAK SUDAH TERPASANG BENAR */
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyiKCYaZreiKPqnXXxETSfeu7YB6gxgc-FqXzC-oogD_1_csRX1Vu25l2C857XdfkzW3g/exec"; 
+
+  const ekskul = localStorage.getItem("ekskul") || "Ekskul";
+  const user = localStorage.getItem("username") || "Coach";
+  let signaturePad;
+
+  window.onload = () => {
+    const canvas = document.getElementById('signature-pad');
+    signaturePad = new SignaturePad(canvas);
+    
+    /* LOGIKA HEADER DINAMIS: GELAR & BAHASA SPESIFIK */
+    let title = "Coach " + ekskul + " ICMS";
+    if (ekskul === "Taekwondo") title = "Sabeum (사범) Taekwondo ICMS";
+    else if (ekskul === "Nihongo Club") title
