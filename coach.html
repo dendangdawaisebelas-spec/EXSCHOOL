@@ -7,23 +7,53 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: #f4f7f6; padding-bottom: 50px; }
-    header { background: #0a1f44; color: white; padding: 25px; text-align: center; border-bottom: 4px solid #bf953f; }
+    :root { 
+      --navy: #0a1f44; 
+      --gold: #bf953f; 
+      --light-bg: #f4f7f6;
+    }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background: var(--light-bg); padding-bottom: 50px; }
+    
+    header { 
+      background: white; 
+      color: var(--navy); 
+      padding: 30px 20px; 
+      text-align: center; 
+      border-bottom: 4px solid var(--gold);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .sinergi-text {
+      font-size: 11px;
+      color: var(--gold);
+      font-weight: 700;
+      letter-spacing: 2px;
+      margin-top: 5px;
+      display: block;
+      text-transform: uppercase;
+    }
+
+    .coach-title {
+      font-size: 16px;
+      color: var(--navy);
+      font-weight: 800;
+      margin-top: 12px;
+    }
+
     .card { background: white; padding: 20px; border-radius: 15px; margin: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #eee; }
     textarea, input { width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; font-size: 14px; }
     .btn { color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 12px; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; font-size: 12px; }
-    label { font-weight: 800; display: block; margin-top: 15px; color: #0a1f44; font-size: 11px; text-transform: uppercase; }
+    label { font-weight: 800; display: block; margin-top: 15px; color: var(--navy); font-size: 11px; text-transform: uppercase; }
     .pedoman-box { background: #e8f4fd; border-left: 5px solid #2980b9; padding: 15px; margin-top: 10px; border-radius: 8px; font-size: 12px; line-height: 1.6; color: #2c3e50; }
-    .info-wajib { color: #e74c3c; font-size: 11px; font-weight: bold; margin-top: 5px; display: block; }
-    .riwayat-container { background: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin-top: 10px; max-height: 200px; overflow-y: auto; font-size: 12px; }
-    .sync-status { font-size: 9px; font-weight: bold; padding: 3px 8px; border-radius: 20px; float: right; }
+    .riwayat-container { background: #fafafa; border: 1px solid #eee; border-radius: 10px; padding: 15px; margin-top: 10px; max-height: 150px; overflow-y: auto; font-size: 12px; }
   </style>
 </head>
 <body>
 
 <header>
-  <div id="eks_title" style="letter-spacing: 2px;">MEMUAT...</div>
-  <div style="font-size: 10px; margin-top: 5px; opacity: 0.8;">Sinergi Terintegrasi • powered by dendangdawaisebelas</div>
+    <div style="font-weight: 800; font-size: 26px; letter-spacing: 4px; color: var(--navy);">EXSCHOOL</div>
+    <span class="sinergi-text">SINERGI TERINTEGRASI</span>
+    <div id="eks_full_title" class="coach-title">Memuat Gelar...</div>
 </header>
 
 <div class="card">
@@ -40,137 +70,112 @@
 </div>
 
 <div class="card">
-  <h3 style="margin-top:0; color:#1c7c54; font-size: 16px;">2. Evaluasi Bulanan (Format Pembina)</h3>
+  <h3 style="margin-top:0; color:#1c7c54; font-size: 16px;">2. Evaluasi Bulanan (Otomatis ke Doc)</h3>
   
   <div class="pedoman-box">
-    <strong>📋 Struktur Laporan BAB II & III:</strong><br>
-    • <strong>Agenda:</strong> Program yang terlaksana bulan ini.<br>
-    • <strong>Capaian:</strong> Indikator keberhasilan (%).<br>
-    • <strong>Kendala:</strong> Hambatan teknis/non-teknis.<br>
-    • <strong>Solusi/Saran:</strong> Langkah perbaikan & rekomendasi.
+    <strong>📋 Petunjuk:</strong> Data di bawah ini akan langsung masuk ke tabel BAB II & III di Google Docs Pak Ditya secara berurutan.
   </div>
   
-  <label>Agenda Kegiatan (BAB II)</label>
-  <textarea id="ev_agenda" rows="2" placeholder="Tujuan & hasil kegiatan..."></textarea>
+  <label>Agenda Kegiatan (Hasil & Tujuan)</label>
+  <textarea id="ev_agenda" rows="2"></textarea>
   
   <label>Indikator Capaian (%)</label>
-  <textarea id="ev_capaian" rows="2" placeholder="Persentase keberhasilan siswa..."></textarea>
+  <input type="number" id="ev_capaian" placeholder="Cth: 85">
   
-  <label>Kendala & Hambatan</label>
-  <textarea id="ev_kendala" rows="2" placeholder="Hambatan yang ditemui..."></textarea>
+  <label>Kendala yang Dihadapi</label>
+  <textarea id="ev_kendala" rows="2"></textarea>
   
-  <label>Solusi & Rekomendasi (BAB III)</label>
-  <textarea id="ev_solusi" rows="2" placeholder="Tindakan konkret & rencana depan..."></textarea>
+  <label>Solusi yang Dilakukan</label>
+  <textarea id="ev_solusi" rows="2"></textarea>
+
+  <label>Rekomendasi Bulan Selanjutnya</label>
+  <textarea id="ev_saran" rows="2"></textarea>
   
-  <label style="margin-top:20px;">📸 Dokumentasi (Wajib 3 Foto):</label>
-  <span class="info-wajib">*Foto bukti interaksi aktif untuk lampiran laporan.</span>
-  
-  <input type="file" id="f1" accept="image/*" style="margin-top:10px;">
-  <input type="file" id="f2" accept="image/*" style="margin-top:5px;">
-  <input type="file" id="f3" accept="image/*" style="margin-top:5px;">
-  
-  <button class="btn" style="background:#1c7c54" onclick="kirimLaporanWA()">
-    <i class="fa-brands fa-whatsapp"></i> KIRIM LAPORAN (WA PAK DITYA)
+  <button class="btn" style="background:#1c7c54" onclick="kirimKeCloud()">
+    <i class="fa-solid fa-paper-plane"></i> KIRIM LAPORAN KE PUSAT
   </button>
 </div>
 
 <div class="card" style="border-top: 4px solid #666;">
-  <h3 style="margin-top:0; font-size: 14px; color:#333;">📂 Riwayat & Cadangan (.txt)</h3>
+  <h3 style="margin-top:0; font-size: 14px; color:#333;">📂 Riwayat Input</h3>
   <div id="riwayat_list" class="riwayat-container"></div>
-  <button class="btn" style="background:#666; font-size: 11px; padding: 12px;" onclick="eksporBackup()">
-    <i class="fa-solid fa-file-export"></i> DOWNLOAD CADANGAN DATA (.TXT)
-  </button>
 </div>
 
 <script>
-  // URL Web App Google Apps Script
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxOr4oIpgLc5gI0XcRqWVIMwW7xp9PG57upw68LXDwa9khvBc8hFeM3hvqotRx0_fVTgQ/exec"; 
+  // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+  const SCRIPT_URL = "URL_WEB_APP_ANDA"; 
+
   const ekskul = localStorage.getItem("ekskul") || "Ekskul";
   const user = localStorage.getItem("username") || "User";
-  document.getElementById("eks_title").innerText = "COACH " + ekskul;
 
-  // Placeholder Spesifik
-  const placeholders = {
-    "Taekwondo": "Cth: Latihan tendangan Dolyo Chagi & Poomsae dasar...",
-    "Futsal": "Cth: Teknik control bola & koordinasi serangan balik...",
-    "Musik": "Cth: Praktik progresi akord & teknik petikan dasar...",
-    "Pramuka": "Cth: Pendalaman sandi Morse & pionering tiang...",
-    "English Club": "Cth: Speaking drill & kosa kata harian asrama..."
-  };
-  document.getElementById("mat").placeholder = placeholders[ekskul] || "Tuliskan rincian materi pekan ini...";
+  function setContent() {
+    let displayTitle = "";
+    // Penentuan Gelar Spesifik sesuai permintaan Bapak
+    if (ekskul === "Taekwondo") {
+        displayTitle = "Sabeum (사범) Taekwondo ICMS";
+    } else if (ekskul === "Nihongo Club") {
+        displayTitle = "ICMS 日本語クラブの先生";
+    } else if (ekskul === "English Club") {
+        displayTitle = "ICMS English Club Teacher";
+    } else if (ekskul === "Pramuka") {
+        displayTitle = "Kakak Pembina Pramuka ICMS";
+    } else if (ekskul === "Musik") {
+        displayTitle = "Instruktur Musik ICMS";
+    } else if (ekskul === "Dokter Kecil") {
+        displayTitle = "Instruktur Dokter Kecil ICMS";
+    } else {
+        displayTitle = "Coach " + ekskul + " ICMS";
+    }
+    document.getElementById("eks_full_title").innerText = displayTitle;
+    tampilkanRiwayat();
+  }
 
-  // 1. Simpan Pekanan (Hybrid)
-  async function simpanPertemuan() {
-    const tgl = document.getElementById("tgl").value;
-    const mat = document.getElementById("mat").value;
-    if (!tgl || !mat) return alert("Mohon lengkapi data!");
+  // Fungsi Kirim ke Google Docs (Otomatis Olah Data)
+  async function kirimKeCloud() {
+    const data = {
+      ekskul: ekskul,
+      user: user,
+      tgl: document.getElementById("tgl").value,
+      agenda: document.getElementById("ev_agenda").value,
+      capaian: document.getElementById("ev_capaian").value,
+      kendala: document.getElementById("ev_kendala").value,
+      solusi: document.getElementById("ev_solusi").value,
+      saran: document.getElementById("ev_saran").value
+    };
 
-    let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    db.push({ tgl, mat, tipe: "Pekanan", status: "Backup OK" });
-    localStorage.setItem("data_" + ekskul, JSON.stringify(db));
+    if (!data.tgl || !data.agenda) return alert("Tanggal dan Agenda wajib diisi!");
 
     try {
       const resp = await fetch(SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
-        body: JSON.stringify({ tgl, mat, ekskul, user, tipe: "Pekanan" })
+        body: JSON.stringify(data)
       });
-      alert("Sukses! Data tersimpan di HP & Cloud.");
+      alert("Laporan Terkirim! Data sedang disusun otomatis di Google Docs Pak Ditya.");
     } catch (e) {
-      alert("Tersimpan di HP (Offline Backup). Sinkronisasi Cloud tertunda.");
+      alert("Gagal koneksi ke pusat. Gunakan fitur WhatsApp jika darurat.");
     }
+  }
+
+  function simpanPertemuan() {
+    const tgl = document.getElementById("tgl").value;
+    const mat = document.getElementById("mat").value;
+    if (!tgl || !mat) return alert("Lengkapi data!");
+    
+    let db = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
+    db.push({ tgl, mat });
+    localStorage.setItem("data_" + ekskul, JSON.stringify(db));
+    alert("Data pekanan tersimpan di memori HP.");
     tampilkanRiwayat();
   }
 
-  // 2. Kirim WhatsApp (Sesuai Template Bapak)
-  function kirimLaporanWA() {
-    const agenda = document.getElementById("ev_agenda").value;
-    const capaian = document.getElementById("ev_capaian").value;
-    const kendala = document.getElementById("ev_kendala").value;
-    const solusi = document.getElementById("ev_solusi").value;
-
-    if (!agenda) return alert("Agenda Wajib Diisi!");
-
-    const pesan = `*LAPORAN EKSKUL ICMS*%0A` +
-                  `------------------------------%0A` +
-                  `*Ekskul:* ${ekskul}%0A` +
-                  `*Pelatih:* ${user}%0A%0A` +
-                  `*1. AGENDA (BAB II):*%0A${agenda}%0A%0A` +
-                  `*2. CAPAIAN (%):*%0A${capaian || '-'}%0A%0A` +
-                  `*3. KENDALA:*%0A${kendala || '-'}%0A%0A` +
-                  `*4. SOLUSI/SARAN (BAB III):*%0A${solusi || '-'}`;
-
-    window.open(`https://wa.me/6288269097225?text=${pesan}`);
-  }
-
-  // 3. Tampilkan Riwayat
   function tampilkanRiwayat() {
     const list = document.getElementById("riwayat_list");
     const data = JSON.parse(localStorage.getItem("data_" + ekskul)) || [];
-    if(data.length === 0) {
-      list.innerHTML = "<p style='color:#999'>Belum ada data tersimpan.</p>";
-      return;
-    }
-    list.innerHTML = data.map(d => `
-      <div style="border-bottom:1px solid #eee; padding:10px 0;">
-        <span class="sync-status" style="background:#e8f5e9; color:#2e7d32;">BACKUP OK</span>
-        <b>${d.tgl}</b><br>${d.mat.substring(0,60)}...
-      </div>
-    `).reverse().join('');
+    list.innerHTML = data.map(d => `<div style="padding:5px 0; border-bottom:1px solid #eee;"><b>${d.tgl}</b>: ${d.mat.substring(0,30)}..</div>`).reverse().join('');
   }
 
-  // 4. Download Backup
-  function eksporBackup() {
-    const data = localStorage.getItem("data_" + ekskul);
-    const blob = new Blob([data], {type: "text/plain"});
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "Backup_Laporan_" + ekskul + ".txt";
-    link.click();
-  }
-
-  window.onload = tampilkanRiwayat;
+  window.onload = setContent;
 </script>
 </body>
 </html>
-
