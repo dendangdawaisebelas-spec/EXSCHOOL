@@ -176,8 +176,19 @@
         const u = document.getElementById("user").value.toLowerCase().trim();
         const p = document.getElementById("pass").value.trim();
 
+        // DAFTAR USER LENGKAP (Sesuai Spesifikasi Poin 1 & Permintaan Terakhir)
         const users = [
             {u:"manggalaraditya", p:"savepalestine", r:"koordinator"},
+            // Akun Pimpinan (Hak Monitoring & Diskusi)
+            {u:"yayasanicms", p:"yayasan2026", r:"pimpinan"},
+            {u:"direkturicms", p:"direktur2026", r:"pimpinan"},
+            {u:"kepseksmp", p:"kepseksmp2026", r:"pimpinan"},
+            {u:"kepseksma", p:"kepseksma2026", r:"pimpinan"},
+            {u:"wakasisicms", p:"wakasisicms2026", r:"pimpinan"},
+            // Akun Finansial & OTM
+            {u:"bendahara", p:"bendaharaekskulicms2026", r:"bendahara"},
+            {u:"orangtuamuridekskul", p:"otmekskul2026", r:"otm"},
+            // Akun Pelatih
             {u:"musik", p:"icms2026", r:"coach", e:"Musik"},
             {u:"nihongo", p:"icms2026", r:"coach", e:"Nihongo Club"},
             {u:"dokcil", p:"icms2026", r:"coach", e:"Dokter Kecil"},
@@ -196,8 +207,20 @@
         if (acc) {
             localStorage.setItem("role", acc.r);
             localStorage.setItem("username", acc.u);
-            localStorage.setItem("ekskul", acc.e);
-            window.location.href = (acc.r === "koordinator") ? "dashboard_koordinator.html" : "coach.html";
+            localStorage.setItem("ekskul", acc.e || "");
+
+            // LOGIKA NAVIGASI TERINTEGRASI
+            if (acc.r === "koordinator") {
+                window.location.href = "dashboard_koordinator.html";
+            } else if (acc.r === "pimpinan") {
+                window.location.href = "monitoring_pimpinan.html";
+            } else if (acc.r === "bendahara") {
+                window.location.href = "bendahara.html";
+            } else if (acc.r === "otm") {
+                window.location.href = "otm.html";
+            } else {
+                window.location.href = "coach.html";
+            }
         } else {
             alert("Akses Ditolak: Kredensial tidak valid.");
         }
