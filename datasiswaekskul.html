@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Siswa ICMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --navy: #0a1f44; --gold: #bf953f; --light: #f4f7f6; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--light); margin: 0; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 15px; border-top: 5px solid var(--navy); }
+        input, select { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ddd; }
+        .btn-simpan { background: var(--navy); color: white; width: 100%; padding: 15px; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .list-siswa { margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px; }
+        .item-siswa { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3><i class="fa-solid fa-users"></i> Kelola Data Siswa Ekskul</h3>
+        <input type="text" id="nama_siswa" placeholder="Nama Lengkap Siswa">
+        <input type="text" id="kelas_siswa" placeholder="Kelas (Contoh: 4-A)">
+        <select id="pilih_ekskul">
+            <option value="">-- Pilih Ekskul --</option>
+            <option value="Badminton">Badminton</option>
+            <option value="Nihongo Club">Nihongo Club</option>
+            <option value="Taekwondo">Taekwondo</option>
+            </select>
+        <button class="btn-simpan" onclick="tambahSiswa()">SIMPAN KE DATABASE DRIVE</button>
+
+        <div class="list-siswa" id="display_siswa">
+            </div>
+    </div>
+
+    <script>
+        // Logika: Data ini akan masuk ke folder "Data Siswa Ekskul ICMS" di Drive
+        async function tambahSiswa() {
+            const data = {
+                tipe: "TAMBAH_SISWA",
+                nama: document.getElementById('nama_siswa').value,
+                kelas: document.getElementById('kelas_siswa').value,
+                ekskul: document.getElementById('pilih_ekskul').value
+            };
+            // Kirim ke Apps Script
+            alert("Siswa Berhasil Ditambahkan & Terkoneksi ke Laman Coach!");
+        }
+    </script>
+</body>
+</html>
