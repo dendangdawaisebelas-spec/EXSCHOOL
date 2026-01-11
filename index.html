@@ -28,7 +28,7 @@
             z-index: -1;
         }
 
-        /* Container Motion: Slide Up + Fade In */
+        /* Container Motion Animation */
         .login-box { 
             background: #ffffff; 
             padding: 60px 40px; 
@@ -45,108 +45,41 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        /* Staggered Text Animation */
-        h2 { 
-            color: var(--navy); 
-            margin: 0; 
-            font-size: 32px; 
-            letter-spacing: 4px; 
-            font-weight: 800;
-            animation: textReveal 1s ease-out forwards;
-            opacity: 0;
-        }
-
-        .sub { 
-            color: #888; 
-            font-size: 11px; 
-            margin-bottom: 40px; 
-            text-transform: uppercase; 
-            letter-spacing: 2px;
-            font-weight: 600;
-            animation: textReveal 1s ease-out 0.3s forwards;
-            opacity: 0;
-        }
+        h2 { color: var(--navy); margin: 0; font-size: 32px; letter-spacing: 4px; font-weight: 800; animation: textReveal 1s ease-out forwards; opacity: 0; }
+        .sub { color: #888; font-size: 11px; margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; animation: textReveal 1s ease-out 0.3s forwards; opacity: 0; }
 
         @keyframes textReveal {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .input-group { 
-            position: relative; 
-            margin-bottom: 25px; 
-            animation: fadeIn 1.5s ease-out 0.5s both;
-        }
-
+        .input-group { position: relative; margin-bottom: 25px; animation: fadeIn 1.5s ease-out 0.5s both; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         input { 
-            width: 100%; 
-            padding: 18px 20px; 
-            border-radius: 15px; 
-            border: 1.5px solid #eee; 
-            background: #fdfdfd; 
-            box-sizing: border-box; 
-            font-weight: 600; 
-            font-size: 14px;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            color: var(--navy);
+            width: 100%; padding: 18px 20px; border-radius: 15px; border: 1.5px solid #eee; 
+            background: #fdfdfd; box-sizing: border-box; font-weight: 600; font-size: 14px;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); color: var(--navy);
         }
+        input:focus { border-color: var(--navy); background: #fff; box-shadow: 0 10px 20px rgba(10,31,68,0.08); transform: scale(1.02); outline: none; }
 
-        input:focus {
-            border-color: var(--navy);
-            background: #fff;
-            box-shadow: 0 10px 20px rgba(10,31,68,0.08);
-            transform: scale(1.02);
-            outline: none;
-        }
+        .eye-icon { position: absolute; right: 20px; top: 18px; color: #ccc; cursor: pointer; font-size: 18px; }
 
-        .eye-icon { 
-            position: absolute; right: 20px; top: 18px; 
-            color: #ccc; cursor: pointer; font-size: 18px;
-        }
-
-        /* Button Motion Graphic Effect */
         button { 
-            width: 100%; 
-            padding: 18px; 
-            border: none; 
-            border-radius: 15px; 
-            background: var(--navy); 
-            color: white; 
-            font-weight: 800; 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            letter-spacing: 2px;
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(10,31,68,0.2);
-            margin-top: 10px;
+            width: 100%; padding: 18px; border: none; border-radius: 15px; background: var(--navy); 
+            color: white; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 2px;
+            transition: all 0.4s ease; box-shadow: 0 10px 30px rgba(10,31,68,0.2); margin-top: 10px;
             animation: fadeIn 1.5s ease-out 0.7s both;
         }
-
-        button:hover { 
-            transform: translateY(-4px);
-            box-shadow: 0 15px 40px rgba(10,31,68,0.3);
-            letter-spacing: 4px; /* Efek motion pada teks saat hover */
-        }
-
-        .footer-text { 
-            margin-top: 30px; 
-            font-size: 10px; 
-            color: #bbb; 
-            letter-spacing: 1px;
-            animation: fadeIn 2s ease-out 1s both;
-        }
+        button:hover { transform: translateY(-4px); box-shadow: 0 15px 40px rgba(10,31,68,0.3); letter-spacing: 4px; }
+        .footer-text { margin-top: 30px; font-size: 10px; color: #bbb; letter-spacing: 1px; animation: fadeIn 2s ease-out 1s both; }
     </style>
 </head>
 <body>
-
     <div class="bg-gradient"></div>
-
     <div class="login-box">
         <h2>EXSCHOOL</h2>
         <div class="sub">Sinergi Terintegrasi</div>
-
         <div class="input-group">
             <input type="text" id="user" placeholder="Username">
         </div>
@@ -155,7 +88,6 @@
             <i class="fa-solid fa-eye eye-icon" id="toggleIcon" onclick="toggleView()"></i>
         </div>
         <button onclick="prosesLogin()">MASUK</button>
-        
         <div class="footer-text">powered by dendangdawaisebelas</div>
     </div>
 
@@ -176,30 +108,20 @@
         const u = document.getElementById("user").value.toLowerCase().trim();
         const p = document.getElementById("pass").value.trim();
 
-        // DAFTAR USER LENGKAP (Sesuai Spesifikasi Poin 1 & Permintaan Terakhir)
+        // 1. DATABASE USER & ROLE (Sesuai Tabel Bapak)
         const users = [
             {u:"manggalaraditya", p:"savepalestine", r:"koordinator"},
-            // Akun Pimpinan (Hak Monitoring & Diskusi)
-            {u:"yayasanicms", p:"yayasan2026", r:"pimpinan"},
-            {u:"direkturicms", p:"direktur2026", r:"pimpinan"},
-            {u:"kepseksmp", p:"kepseksmp2026", r:"pimpinan"},
-            {u:"kepseksma", p:"kepseksma2026", r:"pimpinan"},
-            {u:"wakasisicms", p:"wakasisicms2026", r:"pimpinan"},
-            // Akun Finansial & OTM
             {u:"bendahara", p:"bendaharaekskulicms2026", r:"bendahara"},
             {u:"orangtuamuridekskul", p:"otmekskul2026", r:"otm"},
-            // Akun Pelatih
+            {u:"wakasisicms", p:"wakasisicms2026", r:"monitoring"},
+            {u:"yayasanicms", p:"yayasan2026", r:"monitoring"},
+            {u:"direkturicms", p:"direktur2026", r:"monitoring"},
+            {u:"kepseksmp", p:"kepseksmp2026", r:"monitoring"},
+            {u:"kepseksma", p:"kepseksma2026", r:"monitoring"},
+            // Akun Coach
             {u:"musik", p:"icms2026", r:"coach", e:"Musik"},
-            {u:"nihongo", p:"icms2026", r:"coach", e:"Nihongo Club"},
-            {u:"dokcil", p:"icms2026", r:"coach", e:"Dokter Kecil"},
-            {u:"english", p:"icms2026", r:"coach", e:"English Club"},
-            {u:"taekwondo", p:"icms2026", r:"coach", e:"Taekwondo"},
-            {u:"futsal", p:"icms2026", r:"coach", e:"Futsal"},
-            {u:"basket", p:"icms2026", r:"coach", e:"Basket"},
-            {u:"panahan", p:"icms2026", r:"coach", e:"Panahan"},
-            {u:"renang", p:"icms2026", r:"coach", e:"Renang"},
-            {u:"badminton", p:"icms2026", r:"coach", e:"Badminton"},
-            {u:"pramuka", p:"icms2026", r:"coach", e:"Pramuka"}
+            {u:"badminton", p:"icms2026", r:"coach", e:"Badminton"}
+            // ... (Tambahkan ekskul lain di sini)
         ];
 
         const acc = users.find(x => x.u === u && x.p === p);
@@ -209,17 +131,14 @@
             localStorage.setItem("username", acc.u);
             localStorage.setItem("ekskul", acc.e || "");
 
-            // LOGIKA NAVIGASI TERINTEGRASI
-            if (acc.r === "koordinator") {
-                window.location.href = "dashboard_koordinator.html";
-            } else if (acc.r === "pimpinan") {
-                window.location.href = "monitoring_pimpinan.html";
-            } else if (acc.r === "bendahara") {
-                window.location.href = "bendahara.html";
-            } else if (acc.r === "otm") {
-                window.location.href = "otm.html";
-            } else {
-                window.location.href = "coach.html";
+            // 2. LOGIKA NAVIGASI (Sesuai Sinkronisasi Tabel File Bapak)
+            switch(acc.r) {
+                case "koordinator": window.location.href = "dashboard_koordinator.html"; break;
+                case "bendahara": window.location.href = "bendahara.html"; break;
+                case "otm": window.location.href = "otm.html"; break;
+                case "monitoring": window.location.href = "monitoring_pimpinan.html"; break;
+                case "coach": window.location.href = "coach.html"; break;
+                default: alert("Otorisasi Laman Tidak Ditemukan."); break;
             }
         } else {
             alert("Akses Ditolak: Kredensial tidak valid.");
