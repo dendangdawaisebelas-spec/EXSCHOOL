@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Portal Orang Tua - ICMS</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .status-lunas { color: white; background: green; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+        .status-belum { color: white; background: red; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <header style="text-align: center; color: #0a1f44;">
+        <h2>Monitoring Ekskul Anak</h2>
+    </header>
+
+    <div class="card">
+        <h4><i class="fa-solid fa-calendar-day"></i> Kehadiran Terakhir</h4>
+        <p id="absen_anak">Memuat data absensi dari Coach...</p>
+    </div>
+
+    <div class="card">
+        <h4><i class="fa-solid fa-wallet"></i> Status Pembayaran</h4>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span>Bulan Januari 2026</span>
+            <span class="status-belum" id="status_bayar">BELUM LUNAS</span>
+        </div>
+        <hr>
+        <label>Unggah Bukti Transfer:</label>
+        <input type="file" id="bukti_tf" style="margin-top:10px;">
+        <button onclick="uploadBukti()" style="margin-top:10px; width:100%; padding:10px; background:#bf953f; color:white; border:none; border-radius:5px;">KIRIM KE BENDAHARA</button>
+    </div>
+
+    <script>
+        function uploadBukti() {
+            alert("Bukti terkirim! Menunggu validasi Bendahara.");
+        }
+    </script>
+</body>
+</html>
