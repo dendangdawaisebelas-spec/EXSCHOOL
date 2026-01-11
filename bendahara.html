@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <title>Panel Keuangan Bendahara</title>
+    <style>
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #0a1f44; color: white; }
+        .btn-notif { background: #e67e22; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h3>Verifikasi Pembayaran Ekskul</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Nama Siswa</th>
+                <th>Ekskul</th>
+                <th>Bukti TF</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Andi Pratama</td>
+                <td>Badminton</td>
+                <td><a href="#">Lihat Gambar</a></td>
+                <td>
+                    <button onclick="setLunas('Andi')" style="background: green; color:white; border:none; padding:5px;">VALIDASI LUNAS</button>
+                    <button class="btn-notif" onclick="kirimTagihan()">KIRIM TAGIHAN</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function kirimTagihan() {
+            alert("Notifikasi terkirim: 'Mohon lakukan pembayaran paling lambat tanggal 5'");
+        }
+        function setLunas(nama) {
+            alert("Status " + nama + " sekarang LUNAS dan terupdate di laman Orang Tua.");
+        }
+    </script>
+</body>
+</html>
