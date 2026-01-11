@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Pimpinan - ICMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --navy: #0a1f44; --gold: #bf953f; --light: #f4f7f6; --green: #27ae60; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--light); margin: 0; }
+        
+        /* Header Khusus Pimpinan */
+        header { background: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .title { font-weight: 800; font-size: 20px; color: var(--navy); text-transform: uppercase; }
+        .role-badge { background: var(--navy); color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; margin-top: 5px; display: inline-block; }
+
+        .container { padding: 20px; max-width: 1100px; margin: auto; }
+        
+        /* Kartu Statistik */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 15px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .stat-card h2 { color: var(--navy); margin: 5px 0; font-size: 28px; }
+        .stat-card p { color: #666; font-size: 12px; font-weight: 600; margin: 0; }
+
+        /* Tabel Monitoring */
+        .table-container { background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--navy); color: white; padding: 15px; text-align: left; font-size: 13px; }
+        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 14px; }
+        
+        .btn-view { background: white; border: 1.5px solid var(--navy); color: var(--navy); padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold; transition: 0.3s; }
+        .btn-view:hover { background: var(--navy); color: white; }
+
+        /* Floating Button Diskusi (Sesuai Permintaan) */
+        .fab-diskusi { position: fixed; bottom: 30px; right: 30px; background: var(--green); color: white; padding: 15px 25px; border-radius: 50px; text-decoration: none; font-weight: 800; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4); transition: 0.3s; z-index: 1000; }
+        .fab-diskusi:hover { transform: scale(1.05); background: #219150; }
+
+        .tag-view-only { text-align: center; background: #fff3cd; color: #856404; padding: 8px; font-size: 11px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="tag-view-only"><i class="fa-solid fa-lock"></i> MODE MONITORING PIMPINAN: DATA BERSIFAT VIEW-ONLY</div>
+
+<header>
+    <div class="title">Sinergi Terintegrasi ICMS</div>
+    <div class="role-badge" id="display_role">MEMUAT AKSES...</div>
+</header>
+
+<div class="container">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <p><i class="fa-solid fa-layer-group"></i> TOTAL UNIT EKSKUL</p>
+            <h2>11</h2>
+        </div>
+        <div class="stat-card">
+            <p><i class="fa-solid fa-user-check"></i> RATA-RATA KEHADIRAN</p>
+            <h2 style="color: var(--green);">89%</h2>
+        </div>
+        <div class="stat-card">
+            <p><i class="fa-solid fa-file-invoice"></i> LAPORAN TERKIRIM</p>
+            <h2 style="color: var(--gold);">8 / 11</h2>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>UNIT EKSKUL</th>
+                    <th>PELATIH / COACH</th>
+                    <th>STATUS ABSENSI</th>
+                    <th>LAPORAN DOKUMEN</th>
+                </tr>
+            </thead>
+            <tbody id="content_table">
+                <tr>
+                    <td><b>Badminton</b></td>
+                    <td>Coach Badminton</td>
+                    <td><span style="color: var(--green);">● Terisi (Pekan 3)</span></td>
+                    <td><a href="#" class="btn-view"><i class="fa-solid fa-file-pdf"></i> LIHAT</a></td>
+                </tr>
+                <tr>
+                    <td><b>Taekwondo</b></td>
+                    <td>Sabeum Taekwondo</td>
+                    <td><span style="color: var(--green);">● Terisi (Pekan 3)</span></td>
+                    <td><a href="#" class="btn-view"><i class="fa-solid fa-file-pdf"></i> LIHAT</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="diskusi.html" class="fab-diskusi">
+    <i class="fa-solid fa-comments"></i> RUANG DISKUSI
+</a>
+
+<script>
+    window.onload = () => {
+        // Menampilkan nama jabatan di badge atas (Poin 1.d)
+        const user = localStorage.getItem("nama_user") || "Pimpinan";
+        document.getElementById("display_role").innerText = user.toUpperCase();
+    };
+</script>
+
+</body>
+</html>
